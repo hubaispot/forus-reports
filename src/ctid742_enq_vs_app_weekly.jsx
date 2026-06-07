@@ -12,7 +12,7 @@ const data = [
   { week: "11–17 May",    enq: 3,  app: 2,  full: true  },
   { week: "18–24 May",    enq: 14, app: 6,  full: true  },
   { week: "25–31 May",    enq: 12, app: 12, full: true  },
-  { week: "1–7 Jun",      enq: 17, app: 13, full: true  },
+  { week: "1–7 Jun ⚡",   enq: 22, app: 16, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -83,28 +83,28 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 7 Jun 2026 · Unique contacts · last form only per contact · all 8 weeks complete
+          13 Apr – 7 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
       {/* Notable insight banner */}
       <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#fb923c" }}>📌 Key insight: </strong>
-        W8 (1–7 Jun) closes as the <strong style={{ color:"#f1f5f9" }}>busiest week of the period</strong> with 30 submissions —
-        17 enquiries and 13 applications (43% app rate). The overall trend shows a strong recovery from the mid-period dip
-        (W4–W5: 5–6 submissions/week), with the final 3 weeks averaging 28 submissions/week.
-        W7 (25–31 May) was the strongest application week with 12 apps — a 50% conversion rate.
+        <strong style={{ color:"#fb923c" }}>📌 Key characteristic: </strong>
+        CTID742 shows a <strong style={{ color:"#f1f5f9" }}>strong surge in W8 (1–7 Jun)</strong> —
+        the current partial week already leads all prior weeks with 22 enquiries and 16 applications (38 total).
+        W7 (25–31 May) marked the first week where applications matched enquiries (12 each, 50% app rate),
+        signalling growing intent. Overall app rate sits at <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk (all 8 wks)`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (all 8 wks)`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 complete weeks",               color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",                   color:"#34d399"   },
-          { label:"W8 Final (1–7 Jun)", value:`17e / 13a`,     sub:"all 8 weeks complete ✓",         color:"#38bdf8"   },
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
+          { label:"This week (partial)",value:`${data[7].enq}e / ${data[7].app}a`, sub:"⚡ partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -136,15 +136,15 @@ export default function App() {
               <ReferenceLine y={overallApp} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value:`Avg ${overallApp}%`, fill:"#64748b", fontSize:11, position:"insideTopRight" }}/>
               <Line dataKey="appRate" name="Application rate" type="monotone"
-                stroke="#38bdf8" strokeWidth={2.5}
-                dot={{ r:6, fill:"#38bdf8", strokeWidth:0 }} connectNulls/>
+                stroke="#34d399" strokeWidth={2.5}
+                dot={{ r:6, fill:"#34d399", strokeWidth:0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,22]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,30]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -204,20 +204,15 @@ export default function App() {
               );
             })}
             <tr style={{ background:"#0f172a", borderTop:"2px solid #334155" }}>
-              <td colSpan={2} style={{ padding:"11px 14px", color:"#94a3b8", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Total / Avg</td>
+              <td colSpan={2} style={{ padding:"11px 14px", color:"#94a3b8", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Total</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.enq, fontSize:15 }}>{totalEnq}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.app, fontSize:15 }}>{totalApp}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:"#f1f5f9", fontSize:15 }}>{total}</td>
-              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#38bdf8", fontSize:13 }}>{overallApp}%</td>
+              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{overallApp}%</td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      {/* Footer note */}
-      <p style={{ margin:"16px 0 0", fontSize:11, color:"#475569", textAlign:"center" }}>
-        Source: HubSpot CRM · CONTACT object · recent_conversion_event_name CONTAINS_TOKEN "CTID742" · unique contacts at most recent submission · pulled 7 Jun 2026 · all 8 weeks now complete
-      </p>
     </div>
   );
 }
