@@ -4,13 +4,15 @@ import CTID786 from "./ctid786_enq_vs_app_weekly";
 import CTID379 from "./ctid379_enq_vs_app_weekly";
 import CTID785 from "./ctid785_enq_vs_app_weekly";
 import ELC5M22413 from "./5m22413_enq_vs_app_weekly";
+import CTID771 from "./ctid771_enq_vs_app_weekly";
 
 const tabs = [
-  { id: "742",     label: "CTID742 · SNA L5&6",      Component: CTID742     },
-  { id: "786",     label: "CTID786 · Care Skills",    Component: CTID786     },
-  { id: "379",     label: "CTID379 · SNA L6 Online",  Component: CTID379     },
-  { id: "785",     label: "CTID785 · ELC L5",         Component: CTID785     },
-  { id: "5m22413", label: "5M22413 · ELC L5&6",       Component: ELC5M22413  },
+  { id: "742",     label: "CTID742 · SNA L5&6",        Component: CTID742     },
+  { id: "786",     label: "CTID786 · Care Skills",      Component: CTID786     },
+  { id: "379",     label: "CTID379 · SNA L6 Online",    Component: CTID379     },
+  { id: "785",     label: "CTID785 · ELC L5",           Component: CTID785     },
+  { id: "5m22413", label: "5M22413 · ELC L5&6",         Component: ELC5M22413  },
+  { id: "771",     label: "CTID771 · Healthcare MA L5", Component: CTID771     },
 ];
 
 export default function App() {
