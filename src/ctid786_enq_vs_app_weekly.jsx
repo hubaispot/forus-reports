@@ -7,17 +7,13 @@ import {
 const data = [
   { week: "13–19 Apr",    enq: 8,  app: 6,  full: true  },
   { week: "20–26 Apr",    enq: 6,  app: 5,  full: true  },
-  { week: "27 Apr–3 May", enq: 7,  app: 1,  full: true  },
+  { week: "27 Apr–3 May", enq: 6,  app: 1,  full: true  },
   { week: "4–10 May",     enq: 4,  app: 6,  full: true  },
   { week: "11–17 May",    enq: 1,  app: 3,  full: true  },
   { week: "18–24 May",    enq: 10, app: 6,  full: true  },
   { week: "25–31 May",    enq: 4,  app: 7,  full: true  },
-  { week: "1–7 Jun ⚡",   enq: 2,  app: 4,  full: false },
-].map(d => ({
-  ...d,
-  total: d.enq + d.app,
-  appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0
-}));
+  { week: "1–7 Jun",      enq: 3,  app: 4,  full: true  },
+].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
 const totalEnq   = data.reduce((s, d) => s + d.enq, 0);
@@ -56,7 +52,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Sun)</p>}
     </div>
   );
 };
@@ -81,7 +76,7 @@ export default function App() {
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
         <p style={{ color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 6px" }}>
-          HubSpot · Care Skills &amp; Care of the Older Person – Live and Online (CTID786)
+          HubSpot · Care Skills & Care of the Older Person L5 – Live and Online (CTID786)
         </p>
         <h1 style={{ margin: "0 0 4px", fontSize: 22, fontWeight: 700, color: "#f8fafc" }}>
           Weekly Form Submissions — Enquiry vs Application
@@ -95,20 +90,19 @@ export default function App() {
       <div style={{ background: "rgba(52,211,153,0.08)", border: "1px solid #34d399", borderRadius: 8,
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID786 shows a <strong style={{ color: "#f1f5f9" }}>strong and accelerating application rate ({overallApp}%)</strong> —
-        W5 through W8 all hit 60%+ app rates, suggesting growing course awareness and intent.
-        W6 was the busiest week overall with 16 total submissions, driven by a surge in enquiries.
-        The current partial week (W8) is already tracking at a 67% app rate.
+        CTID786 shows a <strong style={{ color: "#f1f5f9" }}>strengthening application trend</strong> —
+        W4 through W8 all reached 57%+ app rates, with 3 of the last 4 full weeks hitting the 🔥 60% threshold.
+        W6 had the highest enquiry spike (10) of the period; W3 is the only clear outlier at 14%.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",     value: totalEnq,              sub: `avg ${avgEnq}/wk`,   color: COLORS.enq  },
-          { label: "Total Applications",  value: totalApp,              sub: `avg ${avgApp}/wk`,   color: COLORS.app  },
-          { label: "Total Submissions",   value: total,                 sub: "8 weeks",            color: "#f1f5f9"   },
-          { label: "Overall App Rate",    value: overallApp + "%",      sub: "apps ÷ total",       color: "#34d399"   },
-          { label: "This week (partial)", value: `${data[7].enq}e / ${data[7].app}a`, sub: "⚡ 1–7 Jun", color: "#fbbf24" },
+          { label: "Total Enquiries",    value: totalEnq,           sub: `avg ${avgEnq}/wk`,  color: COLORS.enq  },
+          { label: "Total Applications", value: totalApp,           sub: `avg ${avgApp}/wk`,  color: COLORS.app  },
+          { label: "Total Submissions",  value: total,              sub: "8 weeks",            color: "#f1f5f9"   },
+          { label: "Overall App Rate",   value: overallApp + "%",   sub: "apps ÷ total",       color: "#34d399"   },
+          { label: "Peak Week",          value: "W6",               sub: "18–24 May · 16 total", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -119,7 +113,7 @@ export default function App() {
         ))}
       </div>
 
-      {/* Tab Toggle */}
+      {/* Toggle */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view === "stacked"} onClick={setView}>Stacked</Tab>
@@ -163,7 +157,7 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
-      {/* Data Table */}
+      {/* Table */}
       <div style={{ background: "#1e293b", borderRadius: 12, border: "1px solid #334155", overflow: "hidden" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
@@ -184,9 +178,7 @@ export default function App() {
                 <tr key={i} style={{ borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
                   background: i % 2 === 0 ? "#1e293b" : "#162032" }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
                     {wowEnq !== null && <span style={{ fontSize: 10, marginLeft: 4, color: wowEnq > 0 ? "#34d399" : wowEnq < 0 ? "#f87171" : "#64748b" }}>
@@ -217,7 +209,6 @@ export default function App() {
           </tbody>
         </table>
       </div>
-
     </div>
   );
 }
