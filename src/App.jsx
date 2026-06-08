@@ -2,11 +2,13 @@ import { useState } from "react";
 import CTID742 from "./ctid742_enq_vs_app_weekly";
 import CTID786 from "./ctid786_enq_vs_app_weekly";
 import CTID379 from "./ctid379_enq_vs_app_weekly";
+import CTID785 from "./ctid785_enq_vs_app_weekly";
 
 const tabs = [
   { id: "742", label: "CTID742 · SNA L5&6",      Component: CTID742 },
   { id: "786", label: "CTID786 · Care Skills",    Component: CTID786 },
   { id: "379", label: "CTID379 · SNA L6 Online",  Component: CTID379 },
+  { id: "785", label: "CTID785 · ELC L5",         Component: CTID785 },
 ];
 
 export default function App() {
@@ -18,7 +20,7 @@ export default function App() {
       <div style={{
         display: "flex", gap: 8, padding: "12px 24px",
         background: "#0f172a", borderBottom: "1px solid #1e293b",
-        position: "sticky", top: 0, zIndex: 100
+        position: "sticky", top: 0, zIndex: 100, flexWrap: "wrap"
       }}>
         {tabs.map(t => (
           <button key={t.id} onClick={() => setActive(t.id)} style={{
