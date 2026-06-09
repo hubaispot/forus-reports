@@ -12,7 +12,8 @@ const data = [
   { week: "11–17 May",    enq: 3,  app: 2,  full: true  },
   { week: "18–24 May",    enq: 14, app: 6,  full: true  },
   { week: "25–31 May",    enq: 12, app: 12, full: true  },
-  { week: "1–7 Jun ⚡",   enq: 22, app: 16, full: false },
+  { week: "1–7 Jun",      enq: 22, app: 16, full: true  },
+  { week: "8–9 Jun ⚡",   enq: 8,  app: 4,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -83,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 7 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 9 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -92,9 +93,9 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fb923c" }}>📌 Key characteristic: </strong>
         CTID742 shows a <strong style={{ color:"#f1f5f9" }}>strong surge in W8 (1–7 Jun)</strong> —
-        the current partial week already leads all prior weeks with 22 enquiries and 16 applications (38 total).
-        W7 (25–31 May) marked the first week where applications matched enquiries (12 each, 50% app rate),
-        signalling growing intent. Overall app rate sits at <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
+        the biggest completed week with 38 total submissions (22 enq / 16 app).
+        W7 (25–31 May) was the first week where applications matched enquiries (12 each, 50% app rate).
+        W9 is underway with 8 enquiries and 4 applications in just ~1.5 days. Overall app rate sits at <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
       </div>
 
       {/* KPIs */}
@@ -102,9 +103,9 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"9 weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"This week (partial)",value:`${data[7].enq}e / ${data[7].app}a`, sub:"⚡ partial", color:"#fbbf24" },
+          { label:"This week (partial)",value:`${data[8].enq}e / ${data[8].app}a`, sub:"⚡ partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
