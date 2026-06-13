@@ -8,8 +8,10 @@ import {
 // SNA
 import CTID742enq  from "./ctid742_enq_vs_app_weekly";
 import CTID379enq  from "./ctid379_enq_vs_app_weekly";
+import SNAOAenq    from "./sna_online_anytime_enq_vs_app_weekly";
 import CTID742rev  from "./ctid742_combined_weekly";
 import CTID379rev  from "./ctid379_combined_weekly";
+import SNAOArev    from "./sna_oa_combined_weekly";
 // Healthcare
 import CTID771enq  from "./ctid771_enq_vs_app_weekly";
 import CTID786enq  from "./ctid786_enq_vs_app_weekly";
@@ -42,6 +44,32 @@ const sna379Data = [
   { week: "W8", enq: 6, app: 6,  full: true  },
   { week: "W9", enq: 3, app: 3,  full: false },
 ].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
+
+// SNA Online Anytime — Enquiry & Application (CTID490 + CTID423)
+const snaOAData = [
+  { week: "W1", enq: 3, app: 1, full: true  },
+  { week: "W2", enq: 0, app: 1, full: true  },
+  { week: "W3", enq: 0, app: 1, full: true  },
+  { week: "W4", enq: 0, app: 0, full: true  },
+  { week: "W5", enq: 1, app: 2, full: true  },
+  { week: "W6", enq: 1, app: 1, full: true  },
+  { week: "W7", enq: 0, app: 2, full: true  },
+  { week: "W8", enq: 3, app: 2, full: true  },
+  { week: "W9", enq: 1, app: 0, full: false },
+].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
+
+// SNA Online Anytime — Revenue (CTID490 + CTID423)
+const snaOARevData = [
+  { week: "W1", forms: 4,  regs: 3, revenue: 1204.80, full: true  },
+  { week: "W2", forms: 1,  regs: 2, revenue:  880.00, full: true  },
+  { week: "W3", forms: 1,  regs: 1, revenue:  462.00, full: true  },
+  { week: "W4", forms: 0,  regs: 1, revenue:  462.00, full: true  },
+  { week: "W5", forms: 3,  regs: 3, revenue: 1248.80, full: true  },
+  { week: "W6", forms: 2,  regs: 0, revenue:    0.00, full: true  },
+  { week: "W7", forms: 2,  regs: 1, revenue:  320.00, full: true  },
+  { week: "W8", forms: 5,  regs: 0, revenue:    0.00, full: true  },
+  { week: "W9", forms: 1,  regs: 0, revenue:    0.00, full: false },
+].map(d => ({ ...d, cr: d.forms>0 ? +(d.regs/d.forms*100).toFixed(1) : 0 }));
 
 // SNA — Revenue
 const sna742RevData = [
@@ -117,10 +145,12 @@ const elc5m22413Data = [
 
 // ── INSIGHTS ──────────────────────────────────────────────────────────────────
 const INSIGHTS = {
-  "742-enqApp":  { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 is accelerating strongly — W8 (1–7 Jun) is the peak week at 35 total submissions (20 enquiries + 15 applications). Overall app rate is 38% across 9 weeks." },
-  "379-enqApp":  { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 has a consistently high application rate (67%) — applications outnumber or match enquiries in 7 of 9 weeks. Strong direct-intent audience." },
-  "742-revenue": { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 generated €27,296.81 in expected revenue from 38 registrations across 9 weeks. W8 was the peak revenue week at €7,983.55 in a single week." },
-  "379-revenue": { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 generated €14,850.00 in expected revenue from 33 registrations. W7 (25–31 May) was the standout week with 7 registrations from only 3 forms." },
+  "742-enqApp":     { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 is accelerating strongly — W8 (1–7 Jun) is the peak week at 35 total submissions (20 enquiries + 15 applications). Overall app rate is 38% across 9 weeks." },
+  "379-enqApp":     { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 has a consistently high application rate (67%) — applications outnumber or match enquiries in 7 of 9 weeks. Strong direct-intent audience." },
+  "snaOA-enqApp":   { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   text: "SNA Online Anytime (CTID490 + CTID423) shows strong direct-application intent — 59% overall app rate across 9 weeks, with W2, W3 and W7 seeing applications only and zero enquiries. Low but steady volume averaging 1.1 applications per completed week." },
+  "742-revenue":    { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 generated €27,296.81 in expected revenue from 38 registrations across 9 weeks. W8 was the peak revenue week at €7,983.55 in a single week." },
+  "379-revenue":    { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 generated €14,850.00 in expected revenue from 33 registrations. W7 (25–31 May) was the standout week with 7 registrations from only 3 forms." },
+  "snaOA-revenue":  { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   text: "SNA Online Anytime generated €4,577.60 in expected revenue from 11 registrations across 9 weeks. Overall conversion rate is 61%. W2 and W4 show direct Paythen registrations with no prior HubSpot form — some learners find and register for this course without enquiring first." },
   "771-enqApp":  { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID771 is heavily enquiry-led — only 2 of 16 submissions over 8 weeks were applications (13% app rate). Applications are isolated to W2 and W4." },
   "786-enqApp":  { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID786 shows strong application intent — W4–W8 all delivered 57%+ app rates with 3 of those 5 weeks hitting 60%+. Overall app rate is 47%." },
   "785-enqApp":  { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",   text: "CTID785 shows 0 application form submissions across all 8 weeks — all contacts are enquiry-only. Action recommended: verify application form is published and linked." },
@@ -160,17 +190,19 @@ const NAV = {
     label: "SNA", color: "#38bdf8",
     enqApp: {
       courses: [
-        { id: "742",    label: "CTID742 · SNA L5&6",     Component: CTID742enq, data: sna742Data,    insightKey: "742-enqApp"  },
-        { id: "379",    label: "CTID379 · SNA L6 Online", Component: CTID379enq, data: sna379Data,    insightKey: "379-enqApp"  },
+        { id: "742",   label: "CTID742 · SNA L5&6",       Component: CTID742enq, data: sna742Data,   insightKey: "742-enqApp"    },
+        { id: "379",   label: "CTID379 · SNA L6 Online",   Component: CTID379enq, data: sna379Data,   insightKey: "379-enqApp"    },
+        { id: "snaOA", label: "SNA Online Anytime",         Component: SNAOAenq,   data: snaOAData,   insightKey: "snaOA-enqApp"  },
       ],
-      combined: mergeEnqApp([sna742Data, sna379Data]),
+      combined: mergeEnqApp([sna742Data, sna379Data, snaOAData]),
     },
     revenue: {
       courses: [
-        { id: "742rev", label: "CTID742 · SNA L5&6",     Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue" },
-        { id: "379rev", label: "CTID379 · SNA L6 Online", Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue" },
+        { id: "742rev",   label: "CTID742 · SNA L5&6",     Component: CTID742rev, data: sna742RevData,   insightKey: "742-revenue"   },
+        { id: "379rev",   label: "CTID379 · SNA L6 Online", Component: CTID379rev, data: sna379RevData,   insightKey: "379-revenue"   },
+        { id: "snaOArev", label: "SNA Online Anytime",       Component: SNAOArev,   data: snaOARevData,   insightKey: "snaOA-revenue" },
       ],
-      combined: mergeRevenue([sna742RevData, sna379RevData]),
+      combined: mergeRevenue([sna742RevData, sna379RevData, snaOARevData]),
     },
   },
   Healthcare: {
