@@ -4,16 +4,21 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
+// ── DATA ─────────────────────────────────────────────────────────────────────
+// CTID742 — SNA Level 5 & 6 (Live and Online)
+// Reporting cycle: Mon 13 Apr – Sun 14 Jun 2026 (W1–W9, all full weeks)
+// Methodology: last form only per contact · IST/BST week boundaries
+// ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Apr",    enq: 10, app: 9,  full: true  },
-  { week: "20–26 Apr",    enq: 13, app: 2,  full: true  },
-  { week: "27 Apr–3 May", enq: 14, app: 6,  full: true  },
-  { week: "4–10 May",     enq: 5,  app: 1,  full: true  },
-  { week: "11–17 May",    enq: 3,  app: 2,  full: true  },
-  { week: "18–24 May",    enq: 13, app: 6,  full: true  },
-  { week: "25–31 May",    enq: 13, app: 12, full: true  },
-  { week: "1–7 Jun",      enq: 20, app: 15, full: true  },
-  { week: "8–11 Jun ⚡",  enq: 10, app: 4,  full: false },
+  { week: "13–19 Apr",    enq: 9,  app: 9,  full: true },
+  { week: "20–26 Apr",    enq: 13, app: 2,  full: true },
+  { week: "27 Apr–3 May", enq: 14, app: 5,  full: true },
+  { week: "4–10 May",     enq: 5,  app: 1,  full: true },
+  { week: "11–17 May",    enq: 3,  app: 2,  full: true },
+  { week: "18–24 May",    enq: 13, app: 5,  full: true },
+  { week: "25–31 May",    enq: 13, app: 11, full: true },
+  { week: "1–7 Jun",      enq: 18, app: 15, full: true },
+  { week: "8–14 Jun",     enq: 15, app: 7,  full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -36,8 +41,10 @@ const CustomTooltip = ({ active, payload, label }) => {
   const enq = payload.find(p => p.dataKey === "enq")?.value ?? 0;
   const app = payload.find(p => p.dataKey === "app")?.value ?? 0;
   return (
-    <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
-      padding: "10px 14px", fontSize: 13, color: "#f1f5f9", minWidth: 210 }}>
+    <div style={{
+      background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
+      padding: "10px 14px", fontSize: 13, color: "#f1f5f9", minWidth: 210
+    }}>
       <p style={{ fontWeight: 700, marginBottom: 8, color: "#cbd5e1" }}>{label}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
@@ -46,8 +53,10 @@ const CustomTooltip = ({ active, payload, label }) => {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
           <span style={{ color: COLORS.app }}>● Application form</span><strong>{app}</strong>
         </div>
-        <div style={{ borderTop: "1px solid #334155", marginTop: 4, paddingTop: 4,
-          display: "flex", flexDirection: "column", gap: 3 }}>
+        <div style={{
+          borderTop: "1px solid #334155", marginTop: 4, paddingTop: 4,
+          display: "flex", flexDirection: "column", gap: 3
+        }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: "#94a3b8" }}>Total</span><strong>{enq + app}</strong>
           </div>
@@ -57,7 +66,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -76,42 +84,52 @@ export default function App() {
   const [view, setView] = useState("grouped");
 
   return (
-    <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
-      fontFamily: "'Inter','Segoe UI',sans-serif", color: "#f1f5f9" }}>
+    <div style={{
+      background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
+      fontFamily: "'Inter','Segoe UI',sans-serif", color: "#f1f5f9"
+    }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <p style={{ color: "#64748b", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 6px" }}>
+        <p style={{
+          color: "#64748b", fontSize: 12, textTransform: "uppercase",
+          letterSpacing: "0.08em", margin: "0 0 6px"
+        }}>
           HubSpot · SNA Level 5 &amp; 6 – Live and Online (CTID742)
         </p>
         <h1 style={{ margin: "0 0 4px", fontSize: 22, fontWeight: 700, color: "#f8fafc" }}>
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 11 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 14 Jun 2026 · 9 full weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
-      {/* Notable insight banner */}
-      <div style={{ background: "rgba(251,146,60,0.08)", border: "1px solid #fb923c", borderRadius: 8,
-        padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
-        <strong style={{ color: "#fb923c" }}>📌 Key insight: </strong>
-        CTID742 is <strong style={{ color: "#f1f5f9" }}>accelerating strongly</strong> —
-        W8 (1–7 Jun) is the peak week at <strong style={{ color: "#f1f5f9" }}>35 total submissions</strong> (20 enquiries + 15 applications),
-        and W9 has already reached 14 in just 4 days. Overall app rate is <strong style={{ color: "#f1f5f9" }}>{overallApp}%</strong> across 9 weeks.
+      {/* Insight banner */}
+      <div style={{
+        background: "rgba(52,211,153,0.08)", border: "1px solid #34d399", borderRadius: 8,
+        padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
+      }}>
+        <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong late-cycle surge</strong> —
+        W7, W8 and W9 account for 40 of 57 total applications (70%). W8 (1–7 Jun) was the peak week with
+        33 total submissions and 15 applications. Enquiry volume has also been consistently high since W6,
+        suggesting sustained marketing effectiveness into the final weeks of the cycle.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,  color: COLORS.enq  },
-          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,  color: COLORS.app  },
-          { label: "Total Submissions",  value: total,          sub: "9 weeks",            color: "#f1f5f9"   },
-          { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",       color: "#34d399"   },
-          { label: "This week (Mon–Thu)", value: `${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub: "⚡ partial", color: "#fbbf24" },
+          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`, color: COLORS.enq  },
+          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`, color: COLORS.app  },
+          { label: "Total Submissions",  value: total,          sub: "9 full weeks",     color: "#f1f5f9"   },
+          { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",     color: "#34d399"   },
+          { label: "W9 (full week)",     value: data[8].total,  sub: `${data[8].enq}e / ${data[8].app}a`, color: "#cbd5e1" },
         ].map(k => (
-          <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
-            flex: "1 1 110px", border: "1px solid #334155" }}>
+          <div key={k.label} style={{
+            background: "#1e293b", borderRadius: 10, padding: "12px 18px",
+            flex: "1 1 110px", border: "1px solid #334155"
+          }}>
             <p style={{ margin: "0 0 3px", fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
             <p style={{ margin: "0 0 2px", fontSize: 22, fontWeight: 800, color: k.color, lineHeight: 1 }}>{k.value}</p>
             <p style={{ margin: 0, fontSize: 10, color: "#64748b" }}>{k.sub}</p>
@@ -127,8 +145,10 @@ export default function App() {
       </div>
 
       {/* Chart */}
-      <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
-        border: "1px solid #334155", marginBottom: 20 }}>
+      <div style={{
+        background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
+        border: "1px solid #334155", marginBottom: 20
+      }}>
         <ResponsiveContainer width="100%" height={300}>
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
@@ -148,7 +168,7 @@ export default function App() {
               barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 25]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 22]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
@@ -169,9 +189,11 @@ export default function App() {
           <thead>
             <tr style={{ background: "#0f172a" }}>
               {["Wk", "Dates", "Enquiry", "Application", "Total", "App Rate"].map((h, i) => (
-                <th key={h} style={{ padding: "11px 14px", textAlign: i <= 1 ? "left" : "center",
+                <th key={h} style={{
+                  padding: "11px 14px", textAlign: i <= 1 ? "left" : "center",
                   color: "#64748b", fontWeight: 600, fontSize: 11, textTransform: "uppercase",
-                  letterSpacing: "0.06em", borderBottom: "1px solid #334155" }}>{h}</th>
+                  letterSpacing: "0.06em", borderBottom: "1px solid #334155"
+                }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -181,27 +203,30 @@ export default function App() {
               const wowApp = i > 0 ? row.app - data[i - 1].app : null;
               const rateHigh = row.appRate >= 60 && row.total > 0;
               return (
-                <tr key={i} style={{ borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
-                  background: i % 2 === 0 ? "#1e293b" : "#162032" }}>
+                <tr key={i} style={{
+                  borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
+                  background: i % 2 === 0 ? "#1e293b" : "#162032"
+                }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
-                    {wowEnq !== null && <span style={{ fontSize: 10, marginLeft: 4, color: wowEnq > 0 ? "#34d399" : wowEnq < 0 ? "#f87171" : "#64748b" }}>
-                      {wowEnq > 0 ? `▲${wowEnq}` : wowEnq < 0 ? `▼${Math.abs(wowEnq)}` : "="}
-                    </span>}
+                    {wowEnq !== null && (
+                      <span style={{ fontSize: 10, marginLeft: 4, color: wowEnq > 0 ? "#34d399" : wowEnq < 0 ? "#f87171" : "#64748b" }}>
+                        {wowEnq > 0 ? `▲${wowEnq}` : wowEnq < 0 ? `▼${Math.abs(wowEnq)}` : "="}
+                      </span>
+                    )}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.app, fontSize: 15 }}>
                     {row.app}
-                    {wowApp !== null && <span style={{ fontSize: 10, marginLeft: 4, color: wowApp > 0 ? "#34d399" : wowApp < 0 ? "#f87171" : "#64748b" }}>
-                      {wowApp > 0 ? `▲${wowApp}` : wowApp < 0 ? `▼${Math.abs(wowApp)}` : "="}
-                    </span>}
+                    {wowApp !== null && (
+                      <span style={{ fontSize: 10, marginLeft: 4, color: wowApp > 0 ? "#34d399" : wowApp < 0 ? "#f87171" : "#64748b" }}>
+                        {wowApp > 0 ? `▲${wowApp}` : wowApp < 0 ? `▼${Math.abs(wowApp)}` : "="}
+                      </span>
+                    )}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: "#f1f5f9", fontSize: 15 }}>{row.total}</td>
-                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, fontSize: 12,
-                    color: rateHigh ? "#34d399" : COLORS.rate }}>
+                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, fontSize: 12, color: rateHigh ? "#34d399" : COLORS.rate }}>
                     {row.total > 0 ? row.appRate + "%" : "—"}{rateHigh ? " 🔥" : ""}
                   </td>
                 </tr>
@@ -217,6 +242,7 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 }

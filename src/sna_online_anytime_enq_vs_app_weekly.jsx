@@ -5,18 +5,18 @@ import {
 } from "recharts";
 
 // CTID490 + CTID423 merged — SNA Online Anytime
-// W1–W8: Mon 13 Apr – Sun 7 Jun 2026 (full weeks)
-// W9: Mon 8 Jun – Sat 13 Jun 2026 (partial ⚡)
+// W1–W9: Mon 13 Apr – Sun 14 Jun 2026 (9 full weeks)
+// W9 confirmed: enq=2, app=0 (fetched 15 Jun 2026)
 export const data = [
-  { week: "13–19 Apr",    enq: 3, app: 1, full: true  },
-  { week: "20–26 Apr",    enq: 0, app: 1, full: true  },
-  { week: "27 Apr–3 May", enq: 0, app: 1, full: true  },
-  { week: "4–10 May",     enq: 0, app: 0, full: true  },
-  { week: "11–17 May",    enq: 1, app: 2, full: true  },
-  { week: "18–24 May",    enq: 1, app: 1, full: true  },
-  { week: "25–31 May",    enq: 0, app: 2, full: true  },
-  { week: "1–7 Jun",      enq: 3, app: 2, full: true  },
-  { week: "8–13 Jun ⚡",  enq: 1, app: 0, full: false },
+  { week: "13–19 Apr",    enq: 3, app: 1, full: true },
+  { week: "20–26 Apr",    enq: 0, app: 1, full: true },
+  { week: "27 Apr–3 May", enq: 0, app: 1, full: true },
+  { week: "4–10 May",     enq: 0, app: 0, full: true },
+  { week: "11–17 May",    enq: 1, app: 2, full: true },
+  { week: "18–24 May",    enq: 1, app: 1, full: true },
+  { week: "25–31 May",    enq: 0, app: 2, full: true },
+  { week: "1–7 Jun",      enq: 3, app: 2, full: true },
+  { week: "8–14 Jun",     enq: 2, app: 0, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -56,7 +56,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Sat)</p>}
     </div>
   );
 };
@@ -87,7 +86,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 13 Jun 2026 · Unique contacts · last form only per contact · CTID490 &amp; CTID423 combined
+          13 Apr – 14 Jun 2026 · 9 full weeks · Unique contacts · last form only per contact · CTID490 &amp; CTID423 combined
         </p>
       </div>
 
@@ -96,21 +95,19 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         SNA Online Anytime shows <strong style={{ color:"#f1f5f9" }}>strong direct-application intent ({overallApp}% overall app rate)</strong> —
-        applications match or exceed enquiries in most weeks, with W2, W3 and W7 seeing applications only.
-        Volume is low but steady, averaging {avgApp} applications/week across completed weeks.
+        enquiries and applications are perfectly balanced across the cycle (10 each), with 4 weeks seeing
+        applications only (W2, W3, W5, W7). W9 closed with enquiries only, suggesting W9 applicants
+        may convert in the following cycle. Volume is low but steady, averaging {avgApp} applications/week.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"9 weeks",           color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          ...(data[data.length-1].full
-            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:"This week (Mon–Sat)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
-          ),
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,   color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"9 full weeks",        color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",        color:"#34d399"   },
+          { label:"W9 (8–14 Jun)",      value:data[8].total,   sub:`${data[8].enq}e / ${data[8].app}a`,  color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -186,9 +183,7 @@ export default function App() {
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
-                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
