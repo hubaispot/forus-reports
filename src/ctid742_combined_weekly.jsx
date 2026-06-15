@@ -10,7 +10,7 @@ import {
 // Forms = enq + app from HubSpot JSX (unique contacts, last form only per contact)
 // Registrations + Revenue from Paythen (Status = Registered, IST boundaries)
 // ─────────────────────────────────────────────────────────────────────────────
-const data = [
+export const data = [
   { week: "13–19 Apr",    forms: 19, regs: 6,  revenue: 4354.78, full: true  },
   { week: "20–26 Apr",    forms: 15, regs: 4,  revenue: 2800.95, full: true  },
   { week: "27 Apr–3 May", forms: 20, regs: 1,  revenue:  689.00, full: true  },

@@ -10,7 +10,7 @@ import {
 // Registrations & Revenue: from Paythen "Courses Expected Revenue CTID" (deduplicated)
 // Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W9 = Mon 8 Jun – Fri 12 Jun.
 // ─────────────────────────────────────────────────────────────────────────────
-const data = [
+export const data = [
   { week: "13–19 Apr",    forms: 9,  regs: 6,  revenue: 2706.00, full: true  },
   { week: "20–26 Apr",    forms: 2,  regs: 2,  revenue: 902.00,  full: true  },
   { week: "27 Apr–3 May", forms: 5,  regs: 1,  revenue: 440.00,  full: true  },

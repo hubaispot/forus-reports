@@ -13,7 +13,7 @@ export const data = [
   { week: "18–24 May",    enq: 13, app: 6,  full: true  },
   { week: "25–31 May",    enq: 13, app: 12, full: true  },
   { week: "1–7 Jun",      enq: 20, app: 15, full: true  },
-  { week: "8–14 Jun",  enq: 15, app: 7,  full: true },
+  { week: "8–11 Jun ⚡",  enq: 10, app: 4,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -88,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 11 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -96,10 +96,9 @@ export default function App() {
       <div style={{ background: "rgba(251,146,60,0.08)", border: "1px solid #fb923c", borderRadius: 8,
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Key insight: </strong>
-        CTID742 closed the 9-week cycle strongly —
-        W8 (1–7 Jun) remains the <strong style={{ color: "#f1f5f9" }}>peak week at 35 total submissions</strong> (20 enq + 15 app),
-        with W9 (8–14 Jun) completing at <strong style={{ color: "#f1f5f9" }}>22 total</strong> (15 enq + 7 app) — the second strongest week.
-        Overall app rate is <strong style={{ color: "#f1f5f9" }}>{overallApp}%</strong> across all 9 completed weeks.
+        CTID742 is <strong style={{ color: "#f1f5f9" }}>accelerating strongly</strong> —
+        W8 (1–7 Jun) is the peak week at <strong style={{ color: "#f1f5f9" }}>35 total submissions</strong> (20 enquiries + 15 applications),
+        and W9 has already reached 14 in just 4 days. Overall app rate is <strong style={{ color: "#f1f5f9" }}>{overallApp}%</strong> across 9 weeks.
       </div>
 
       {/* KPIs */}
@@ -109,10 +108,7 @@ export default function App() {
           { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,  color: COLORS.app  },
           { label: "Total Submissions",  value: total,          sub: "9 weeks",            color: "#f1f5f9"   },
           { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",       color: "#34d399"   },
-          ...(data[data.length-1].full
-            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
-          ),
+          { label: "This week (Mon–Thu)", value: `${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub: "⚡ partial", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 110px", border: "1px solid #334155" }}>

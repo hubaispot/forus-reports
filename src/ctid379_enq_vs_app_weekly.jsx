@@ -18,7 +18,7 @@ export const data = [
   { week: "18–24 May",      enq: 4, app: 2,  full: true  },
   { week: "25–31 May",      enq: 1, app: 2,  full: true  },
   { week: "1–7 Jun",        enq: 6, app: 6,  full: true  },
-  { week: "8–14 Jun",       enq: 4, app: 6,  full: true  },
+  { week: "8–11 Jun ⚡",    enq: 3, app: 3,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -68,7 +68,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       </div>
       {!d?.full && (
         <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>
-          ⚡ Partial week (Mon–Fri)
+          ⚡ Partial week (Mon–Thu)
         </p>
       )}
     </div>
@@ -106,7 +106,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 11 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -120,7 +120,7 @@ export default function App() {
         <strong style={{ color: "#f1f5f9" }}>
           consistently high application rate ({overallApp}%)
         </strong>{" "}
-        — applications outnumber or match enquiries in 8 of 9 weeks. Strong direct-intent
+        — applications outnumber or match enquiries in 7 of 9 weeks. Strong direct-intent
         audience. W8 (1–7 Jun) was the busiest week with 12 total submissions.
       </div>
 
@@ -139,7 +139,7 @@ export default function App() {
                 color: "#cbd5e1"
               }]
             : [{
-                label: "This week (Mon–Fri)",
+                label: "This week (Mon–Thu)",
                 value: `${data[data.length - 1].enq}e / ${data[data.length - 1].app}a`,
                 sub: "⚡ partial",
                 color: "#fbbf24"

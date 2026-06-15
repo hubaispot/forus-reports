@@ -13,7 +13,7 @@ import {
 // W2 CR >100%: 2 regs from 1 form (1 direct Paythen registration, no HubSpot record).
 // W4 CR —: 1 reg from 0 forms (direct Paythen registration, no HubSpot record).
 // ─────────────────────────────────────────────────────────────────────────────
-const data = [
+export const data = [
   { week: "13–19 Apr",    forms: 4,  regs: 3,  revenue: 1204.80, full: true  },
   { week: "20–26 Apr",    forms: 1,  regs: 2,  revenue:  880.00, full: true  },
   { week: "27 Apr–3 May", forms: 1,  regs: 1,  revenue:  462.00, full: true  },
