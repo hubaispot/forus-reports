@@ -9,7 +9,7 @@ import {
 // W1–W8: full weeks (Mon–Sun IST), W9: partial week (Mon 8 Jun – Thu 11 Jun ⚡)
 // All boundaries IST/BST (UTC+1). Counts = unique contacts, last form only.
 // ─────────────────────────────────────────────────────────────────────────────
-const data = [
+export const data = [
   { week: "13–19 Apr",      enq: 1, app: 8,  full: true  },
   { week: "20–26 Apr",      enq: 0, app: 2,  full: true  },
   { week: "27 Apr–3 May",   enq: 1, app: 4,  full: true  },

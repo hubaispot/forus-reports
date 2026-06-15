@@ -4,185 +4,87 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ── IMPORTS — real course files ───────────────────────────────────────────────
-// SNA
-import CTID742enq  from "./ctid742_enq_vs_app_weekly";
-import CTID379enq  from "./ctid379_enq_vs_app_weekly";
-import SNAOAenq    from "./sna_online_anytime_enq_vs_app_weekly";
-import CTID742rev  from "./ctid742_combined_weekly";
-import CTID379rev  from "./ctid379_combined_weekly";
-import SNAOArev    from "./sna_oa_combined_weekly";
-// Healthcare
-import CTID771enq  from "./ctid771_enq_vs_app_weekly";
-import CTID786enq  from "./ctid786_enq_vs_app_weekly";
-// ELC
-import CTID785enq  from "./ctid785_enq_vs_app_weekly";
-import M5M22413enq from "./5m22413_enq_vs_app_weekly";
-
-// ── DATA — extracted from each course file for merged combined views ───────────
+// ── IMPORTS — course components + exported data arrays ────────────────────────
 // SNA — Enquiry & Application
-const sna742Data = [
-  { week: "W1", enq: 10, app: 9,  full: true  },
-  { week: "W2", enq: 13, app: 2,  full: true  },
-  { week: "W3", enq: 14, app: 6,  full: true  },
-  { week: "W4", enq: 5,  app: 1,  full: true  },
-  { week: "W5", enq: 3,  app: 2,  full: true  },
-  { week: "W6", enq: 13, app: 6,  full: true  },
-  { week: "W7", enq: 13, app: 12, full: true  },
-  { week: "W8", enq: 20, app: 15, full: true  },
-  { week: "W9", enq: 10, app: 4,  full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
-
-const sna379Data = [
-  { week: "W1", enq: 1, app: 8,  full: true  },
-  { week: "W2", enq: 0, app: 2,  full: true  },
-  { week: "W3", enq: 1, app: 4,  full: true  },
-  { week: "W4", enq: 3, app: 3,  full: true  },
-  { week: "W5", enq: 1, app: 2,  full: true  },
-  { week: "W6", enq: 4, app: 2,  full: true  },
-  { week: "W7", enq: 1, app: 2,  full: true  },
-  { week: "W8", enq: 6, app: 6,  full: true  },
-  { week: "W9", enq: 3, app: 3,  full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
-
-// SNA Online Anytime — Enquiry & Application (CTID490 + CTID423)
-const snaOAData = [
-  { week: "W1", enq: 3, app: 1, full: true  },
-  { week: "W2", enq: 0, app: 1, full: true  },
-  { week: "W3", enq: 0, app: 1, full: true  },
-  { week: "W4", enq: 0, app: 0, full: true  },
-  { week: "W5", enq: 1, app: 2, full: true  },
-  { week: "W6", enq: 1, app: 1, full: true  },
-  { week: "W7", enq: 0, app: 2, full: true  },
-  { week: "W8", enq: 3, app: 2, full: true  },
-  { week: "W9", enq: 1, app: 0, full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
-
-// SNA Online Anytime — Revenue (CTID490 + CTID423)
-const snaOARevData = [
-  { week: "W1", forms: 4,  regs: 3, revenue: 1204.80, full: true  },
-  { week: "W2", forms: 1,  regs: 2, revenue:  880.00, full: true  },
-  { week: "W3", forms: 1,  regs: 1, revenue:  462.00, full: true  },
-  { week: "W4", forms: 0,  regs: 1, revenue:  462.00, full: true  },
-  { week: "W5", forms: 3,  regs: 3, revenue: 1248.80, full: true  },
-  { week: "W6", forms: 2,  regs: 0, revenue:    0.00, full: true  },
-  { week: "W7", forms: 2,  regs: 1, revenue:  320.00, full: true  },
-  { week: "W8", forms: 5,  regs: 0, revenue:    0.00, full: true  },
-  { week: "W9", forms: 1,  regs: 0, revenue:    0.00, full: false },
-].map(d => ({ ...d, cr: d.forms>0 ? +(d.regs/d.forms*100).toFixed(1) : 0 }));
-
+import CTID742enq,  { data as sna742Raw   } from "./ctid742_enq_vs_app_weekly__1_";
+import CTID379enq,  { data as sna379Raw   } from "./ctid379_enq_vs_app_weekly__1_";
+import SNAOAenq,    { data as snaOARaw    } from "./sna_online_anytime_enq_vs_app_weekly";
 // SNA — Revenue
-const sna742RevData = [
-  { week: "W1", forms: 19, regs: 6,  revenue: 4354.78, full: true  },
-  { week: "W2", forms: 15, regs: 4,  revenue: 2800.95, full: true  },
-  { week: "W3", forms: 20, regs: 1,  revenue:  689.00, full: true  },
-  { week: "W4", forms:  6, regs: 1,  revenue:  733.95, full: true  },
-  { week: "W5", forms:  5, regs: 4,  revenue: 2911.34, full: true  },
-  { week: "W6", forms: 19, regs: 2,  revenue: 1443.44, full: true  },
-  { week: "W7", forms: 25, regs: 6,  revenue: 4313.80, full: true  },
-  { week: "W8", forms: 35, regs: 11, revenue: 7983.55, full: true  },
-  { week: "W9", forms: 16, regs: 3,  revenue: 2067.00, full: false },
-].map(d => ({ ...d, cr: d.forms>0 ? +(d.regs/d.forms*100).toFixed(1) : 0 }));
-
-const sna379RevData = [
-  { week: "W1", forms: 9,  regs: 6, revenue: 2706.00, full: true  },
-  { week: "W2", forms: 2,  regs: 2, revenue:  902.00, full: true  },
-  { week: "W3", forms: 5,  regs: 1, revenue:  440.00, full: true  },
-  { week: "W4", forms: 6,  regs: 1, revenue:  440.00, full: true  },
-  { week: "W5", forms: 3,  regs: 3, revenue: 1364.00, full: true  },
-  { week: "W6", forms: 6,  regs: 4, revenue: 1804.00, full: true  },
-  { week: "W7", forms: 3,  regs: 7, revenue: 3146.00, full: true  },
-  { week: "W8", forms: 12, regs: 6, revenue: 2706.00, full: true  },
-  { week: "W9", forms: 6,  regs: 3, revenue: 1342.00, full: false },
-].map(d => ({ ...d, cr: d.forms>0 ? +(d.regs/d.forms*100).toFixed(1) : 0 }));
-
+import CTID742rev,  { data as sna742RevRaw  } from "./ctid742_combined_weekly";
+import CTID379rev,  { data as sna379RevRaw  } from "./ctid379_combined_weekly";
+import SNAOArev,    { data as snaOARevRaw   } from "./sna_oa_combined_weekly";
 // Healthcare — Enquiry & Application
-const hc771Data = [
-  { week: "W1", enq: 2, app: 0, full: true  },
-  { week: "W2", enq: 1, app: 1, full: true  },
-  { week: "W3", enq: 3, app: 0, full: true  },
-  { week: "W4", enq: 4, app: 1, full: true  },
-  { week: "W5", enq: 0, app: 0, full: true  },
-  { week: "W6", enq: 1, app: 0, full: true  },
-  { week: "W7", enq: 1, app: 0, full: true  },
-  { week: "W8", enq: 2, app: 0, full: true  },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
-
-const hc786Data = [
-  { week: "W1", enq: 8, app: 6, full: true  },
-  { week: "W2", enq: 6, app: 5, full: true  },
-  { week: "W3", enq: 6, app: 1, full: true  },
-  { week: "W4", enq: 4, app: 6, full: true  },
-  { week: "W5", enq: 1, app: 3, full: true  },
-  { week: "W6", enq: 9, app: 6, full: true  },
-  { week: "W7", enq: 4, app: 6, full: true  },
-  { week: "W8", enq: 3, app: 4, full: true  },
-  { week: "W9", enq: 1, app: 2, full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
-
+import CTID771enq,  { data as hc771Raw    } from "./ctid771_enq_vs_app_weekly";
+import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly__2_";
 // ELC — Enquiry & Application
-const elc785Data = [
-  { week: "W1", enq: 5, app: 0, full: true  },
-  { week: "W2", enq: 3, app: 0, full: true  },
-  { week: "W3", enq: 5, app: 0, full: true  },
-  { week: "W4", enq: 2, app: 0, full: true  },
-  { week: "W5", enq: 5, app: 0, full: true  },
-  { week: "W6", enq: 7, app: 0, full: true  },
-  { week: "W7", enq: 4, app: 0, full: true  },
-  { week: "W8", enq: 6, app: 0, full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
+import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
+import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
 
-const elc5m22413Data = [
-  { week: "W1", enq: 0, app: 0, full: true  },
-  { week: "W2", enq: 3, app: 5, full: true  },
-  { week: "W3", enq: 0, app: 1, full: true  },
-  { week: "W4", enq: 0, app: 5, full: true  },
-  { week: "W5", enq: 0, app: 1, full: true  },
-  { week: "W6", enq: 1, app: 3, full: true  },
-  { week: "W7", enq: 4, app: 7, full: true  },
-  { week: "W8", enq: 5, app: 2, full: false },
-].map(d => ({ ...d, total: d.enq+d.app, appRate: (d.enq+d.app)>0 ? +(d.app/(d.enq+d.app)*100).toFixed(0) : 0 }));
+// ── NORMALISE — ensure every row has the fields the combined merge needs ───────
+// enq/app files: add total + appRate if not already present
+const normaliseEnq = rows => rows.map(d => ({
+  ...d,
+  total:   d.total   ?? (d.enq + d.app),
+  appRate: d.appRate ?? ((d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0),
+}));
 
-// ── INSIGHTS ──────────────────────────────────────────────────────────────────
-const INSIGHTS = {
-  "742-enqApp":     { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 is accelerating strongly — W8 (1–7 Jun) is the peak week at 35 total submissions (20 enquiries + 15 applications). Overall app rate is 38% across 9 weeks." },
-  "379-enqApp":     { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 has a consistently high application rate (67%) — applications outnumber or match enquiries in 7 of 9 weeks. Strong direct-intent audience." },
-  "snaOA-enqApp":   { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   text: "SNA Online Anytime (CTID490 + CTID423) shows strong direct-application intent — 59% overall app rate across 9 weeks, with W2, W3 and W7 seeing applications only and zero enquiries. Low but steady volume averaging 1.1 applications per completed week." },
-  "742-revenue":    { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID742 generated €27,296.81 in expected revenue from 38 registrations across 9 weeks. W8 was the peak revenue week at €7,983.55 in a single week." },
-  "379-revenue":    { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID379 generated €14,850.00 in expected revenue from 33 registrations. W7 (25–31 May) was the standout week with 7 registrations from only 3 forms." },
-  "snaOA-revenue":  { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",   text: "SNA Online Anytime generated €4,577.60 in expected revenue from 11 registrations across 9 weeks. Overall conversion rate is 61%. W2 and W4 show direct Paythen registrations with no prior HubSpot form — some learners find and register for this course without enquiring first." },
-  "771-enqApp":  { color: "#fb923c", bg: "rgba(251,146,60,0.08)",   text: "CTID771 is heavily enquiry-led — only 2 of 16 submissions over 8 weeks were applications (13% app rate). Applications are isolated to W2 and W4." },
-  "786-enqApp":  { color: "#34d399", bg: "rgba(52,211,153,0.08)",   text: "CTID786 shows strong application intent — W4–W8 all delivered 57%+ app rates with 3 of those 5 weeks hitting 60%+. Overall app rate is 47%." },
-  "785-enqApp":  { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",   text: "CTID785 shows 0 application form submissions across all 8 weeks — all contacts are enquiry-only. Action recommended: verify application form is published and linked." },
-  "5m22413-enqApp": { color: "#34d399", bg: "rgba(52,211,153,0.08)", text: "5M22413 has an exceptionally high application rate (67%) — applications dominate enquiries in 5 of 7 completed weeks. Many contacts go directly to the application form." },
-};
+// revenue files: add cr if not already present
+const normaliseRev = rows => rows.map(d => ({
+  ...d,
+  cr: d.cr ?? (d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0),
+}));
+
+const sna742Data    = normaliseEnq(sna742Raw);
+const sna379Data    = normaliseEnq(sna379Raw);
+const snaOAData     = normaliseEnq(snaOARaw);
+const hc771Data     = normaliseEnq(hc771Raw);
+const hc786Data     = normaliseEnq(hc786Raw);
+const elc785Data    = normaliseEnq(elc785Raw);
+const elc5mData     = normaliseEnq(elc5mRaw);
+const sna742RevData = normaliseRev(sna742RevRaw);
+const sna379RevData = normaliseRev(sna379RevRaw);
+const snaOARevData  = normaliseRev(snaOARevRaw);
 
 // ── MERGE HELPERS ─────────────────────────────────────────────────────────────
 function mergeEnqApp(datasets) {
   const len = Math.max(...datasets.map(d => d.length));
   return Array.from({ length: len }, (_, i) => {
-    const week = datasets[0][i]?.week ?? `W${i+1}`;
+    const week = `W${i + 1}`;
     const enq  = datasets.reduce((s, ds) => s + (ds[i]?.enq ?? 0), 0);
     const app  = datasets.reduce((s, ds) => s + (ds[i]?.app ?? 0), 0);
     const full = datasets.every(ds => ds[i]?.full !== false);
-    return { week, enq, app, full, total: enq+app, appRate: (enq+app)>0 ? +(app/(enq+app)*100).toFixed(0) : 0 };
+    return { week, enq, app, full, total: enq + app, appRate: (enq + app) > 0 ? +(app / (enq + app) * 100).toFixed(0) : 0 };
   });
 }
 
 function mergeRevenue(datasets) {
   const len = Math.max(...datasets.map(d => d.length));
   return Array.from({ length: len }, (_, i) => {
-    const week    = datasets[0][i]?.week ?? `W${i+1}`;
+    const week    = `W${i + 1}`;
     const forms   = datasets.reduce((s, ds) => s + (ds[i]?.forms   ?? 0), 0);
     const regs    = datasets.reduce((s, ds) => s + (ds[i]?.regs    ?? 0), 0);
     const revenue = datasets.reduce((s, ds) => s + (ds[i]?.revenue ?? 0), 0);
     const full    = datasets.every(ds => ds[i]?.full !== false);
-    return { week, forms, regs, revenue, full, cr: forms>0 ? +(regs/forms*100).toFixed(1) : 0 };
+    return { week, forms, regs, revenue, full, cr: forms > 0 ? +(regs / forms * 100).toFixed(1) : 0 };
   });
 }
 
 const fmt = n => "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const COLORS = { enq: "#fb923c", app: "#38bdf8", rate: "#a78bfa", forms: "#fb923c", regs: "#38bdf8", rev: "#34d399", cr: "#a78bfa" };
+
+// ── INSIGHTS ──────────────────────────────────────────────────────────────────
+const INSIGHTS = {
+  "742-enqApp":    { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  text: "CTID742 is accelerating strongly — W8 (1–7 Jun) is the peak week at 35 total submissions (20 enquiries + 15 applications). Overall app rate is 38% across 9 weeks." },
+  "379-enqApp":    { color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "CTID379 has a consistently high application rate (67%) — applications outnumber or match enquiries in 7 of 9 weeks. Strong direct-intent audience." },
+  "snaOA-enqApp":  { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  text: "SNA Online Anytime (CTID490 + CTID423) shows strong direct-application intent — 59% overall app rate across 9 weeks, with W2, W3 and W7 seeing applications only and zero enquiries. Low but steady volume averaging 1.1 applications per completed week." },
+  "742-revenue":   { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  text: "CTID742 generated €27,296.81 in expected revenue from 38 registrations across 9 weeks. W8 was the peak revenue week at €7,983.55 in a single week." },
+  "379-revenue":   { color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "CTID379 generated €14,850.00 in expected revenue from 33 registrations. W7 (25–31 May) was the standout week with 7 registrations from only 3 forms." },
+  "snaOA-revenue": { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  text: "SNA Online Anytime generated €4,577.60 in expected revenue from 11 registrations across 9 weeks. Overall conversion rate is 61%. W2 and W4 show direct Paythen registrations with no prior HubSpot form — some learners find and register without enquiring first." },
+  "771-enqApp":    { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  text: "CTID771 is heavily enquiry-led — only 2 of 16 submissions over 8 weeks were applications (13% app rate). Applications are isolated to W2 and W4." },
+  "786-enqApp":    { color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "CTID786 shows strong application intent — W4–W8 all delivered 57%+ app rates with 3 of those 5 weeks hitting 60%+. Overall app rate is 47%." },
+  "785-enqApp":    { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",  text: "CTID785 shows 0 application form submissions across all 8 weeks — all contacts are enquiry-only. Action recommended: verify application form is published and linked." },
+  "5m22413-enqApp":{ color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "5M22413 has an exceptionally high application rate (67%) — applications dominate enquiries in 5 of 7 completed weeks. Many contacts go directly to the application form." },
+};
 
 // ── NAV STRUCTURE ─────────────────────────────────────────────────────────────
 const NAV = {
@@ -190,19 +92,19 @@ const NAV = {
     label: "SNA", color: "#38bdf8",
     enqApp: {
       courses: [
-        { id: "742",   label: "CTID742 · SNA L5&6",       Component: CTID742enq, data: sna742Data,   insightKey: "742-enqApp"    },
-        { id: "379",   label: "CTID379 · SNA L6 Online",   Component: CTID379enq, data: sna379Data,   insightKey: "379-enqApp"    },
-        { id: "snaOA", label: "SNA Online Anytime",         Component: SNAOAenq,   data: snaOAData,   insightKey: "snaOA-enqApp"  },
+        { id: "742",      label: "CTID742 · SNA L5&6",      Component: CTID742enq, data: sna742Data,  insightKey: "742-enqApp"     },
+        { id: "379",      label: "CTID379 · SNA L6 Online",  Component: CTID379enq, data: sna379Data,  insightKey: "379-enqApp"     },
+        { id: "snaOA",    label: "SNA Online Anytime",        Component: SNAOAenq,   data: snaOAData,  insightKey: "snaOA-enqApp"   },
       ],
-      combined: mergeEnqApp([sna742Data, sna379Data, snaOAData]),
+      get combined() { return mergeEnqApp([sna742Data, sna379Data, snaOAData]); },
     },
     revenue: {
       courses: [
-        { id: "742rev",   label: "CTID742 · SNA L5&6",     Component: CTID742rev, data: sna742RevData,   insightKey: "742-revenue"   },
-        { id: "379rev",   label: "CTID379 · SNA L6 Online", Component: CTID379rev, data: sna379RevData,   insightKey: "379-revenue"   },
-        { id: "snaOArev", label: "SNA Online Anytime",       Component: SNAOArev,   data: snaOARevData,   insightKey: "snaOA-revenue" },
+        { id: "742rev",   label: "CTID742 · SNA L5&6",      Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue"   },
+        { id: "379rev",   label: "CTID379 · SNA L6 Online",  Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue"   },
+        { id: "snaOArev", label: "SNA Online Anytime",        Component: SNAOArev,   data: snaOARevData,  insightKey: "snaOA-revenue" },
       ],
-      combined: mergeRevenue([sna742RevData, sna379RevData, snaOARevData]),
+      get combined() { return mergeRevenue([sna742RevData, sna379RevData, snaOARevData]); },
     },
   },
   Healthcare: {
@@ -212,7 +114,7 @@ const NAV = {
         { id: "771", label: "CTID771 · Healthcare MA L5", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
         { id: "786", label: "CTID786 · Care Skills",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
       ],
-      combined: mergeEnqApp([hc771Data, hc786Data]),
+      get combined() { return mergeEnqApp([hc771Data, hc786Data]); },
     },
     revenue: { placeholder: true },
   },
@@ -220,10 +122,10 @@ const NAV = {
     label: "ELC", color: "#34d399",
     enqApp: {
       courses: [
-        { id: "785",     label: "CTID785 · ELC L5 LO",      Component: CTID785enq,  data: elc785Data,     insightKey: "785-enqApp"     },
-        { id: "5m22413", label: "5M22413 · ELC L5&6",        Component: M5M22413enq, data: elc5m22413Data, insightKey: "5m22413-enqApp" },
+        { id: "785",     label: "CTID785 · ELC L5 LO", Component: CTID785enq,  data: elc785Data, insightKey: "785-enqApp"      },
+        { id: "5m22413", label: "5M22413 · ELC L5&6",  Component: M5M22413enq, data: elc5mData,  insightKey: "5m22413-enqApp"  },
       ],
-      combined: mergeEnqApp([elc785Data, elc5m22413Data]),
+      get combined() { return mergeEnqApp([elc785Data, elc5mData]); },
     },
     revenue: { placeholder: true },
   },
@@ -265,7 +167,7 @@ const EnqTooltip = ({ active, payload }) => {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}><span style={{ color: COLORS.enq }}>● Enquiry</span><strong>{enq}</strong></div>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}><span style={{ color: COLORS.app }}>● Application</span><strong>{app}</strong></div>
         <div style={{ borderTop: "1px solid #334155", marginTop: 4, paddingTop: 4, display: "flex", flexDirection: "column", gap: 3 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>Total</span><strong>{enq+app}</strong></div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: "#94a3b8" }}>Total</span><strong>{enq + app}</strong></div>
           <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ color: COLORS.rate }}>App rate</span><strong style={{ color: COLORS.rate }}>{d?.appRate}%</strong></div>
         </div>
       </div>
@@ -300,9 +202,9 @@ function EnqAppCombined({ data, title, subtitle }) {
   const totalEnq   = data.reduce((s, d) => s + d.enq, 0);
   const totalApp   = data.reduce((s, d) => s + d.app, 0);
   const total      = totalEnq + totalApp;
-  const avgEnq     = fullWeeks.length ? (fullWeeks.reduce((s,d)=>s+d.enq,0)/fullWeeks.length).toFixed(1) : "—";
-  const avgApp     = fullWeeks.length ? (fullWeeks.reduce((s,d)=>s+d.app,0)/fullWeeks.length).toFixed(1) : "—";
-  const overallApp = total > 0 ? Math.round(totalApp/total*100) : 0;
+  const avgEnq     = fullWeeks.length ? (fullWeeks.reduce((s,d) => s+d.enq,0)/fullWeeks.length).toFixed(1) : "—";
+  const avgApp     = fullWeeks.length ? (fullWeeks.reduce((s,d) => s+d.app,0)/fullWeeks.length).toFixed(1) : "—";
+  const overallApp = total > 0 ? Math.round(totalApp / total * 100) : 0;
   const maxY       = Math.ceil(Math.max(...data.map(d => view==="stacked" ? d.total : Math.max(d.enq, d.app))) * 1.2);
 
   return (
@@ -341,7 +243,7 @@ function EnqAppCombined({ data, title, subtitle }) {
               <Tooltip content={<EnqTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={overallApp} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallApp}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }}/>
-              <Line dataKey="appRate" name="App rate" type="monotone" stroke={COLORS.rate} strokeWidth={2.5} dot={{ r: 5, fill: COLORS.rate, strokeWidth: 0 }} connectNulls/>
+              <Line dataKey="appRate" type="monotone" stroke={COLORS.rate} strokeWidth={2.5} dot={{ r: 5, fill: COLORS.rate, strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
@@ -367,8 +269,8 @@ function EnqAppCombined({ data, title, subtitle }) {
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const wowEnq  = i > 0 ? row.enq - data[i-1].enq : null;
-              const wowApp  = i > 0 ? row.app - data[i-1].app : null;
+              const wowEnq   = i > 0 ? row.enq - data[i-1].enq : null;
+              const wowApp   = i > 0 ? row.app - data[i-1].app : null;
               const rateHigh = row.appRate >= 60 && row.total > 0;
               return (
                 <tr key={i} style={{ borderBottom: i<data.length-1?"1px solid #1e2d3d":"none", background: i%2===0?"#1e293b":"#162032" }}>
@@ -408,7 +310,7 @@ function RevenueCombined({ data, title, subtitle }) {
   const totalRev   = data.reduce((s, d) => s + d.revenue, 0);
   const avgForms   = fullWeeks.length ? (fullWeeks.reduce((s,d)=>s+d.forms,0)/fullWeeks.length).toFixed(1) : "—";
   const avgRegs    = fullWeeks.length ? (fullWeeks.reduce((s,d)=>s+d.regs,0)/fullWeeks.length).toFixed(1) : "—";
-  const overallCR  = totalForms > 0 ? +(totalRegs/totalForms*100).toFixed(1) : 0;
+  const overallCR  = totalForms > 0 ? +(totalRegs / totalForms * 100).toFixed(1) : 0;
   const maxRev     = Math.ceil(Math.max(...data.map(d => d.revenue)) * 1.2);
 
   return (
@@ -420,10 +322,10 @@ function RevenueCombined({ data, title, subtitle }) {
       </div>
       <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
         {[
-          { label: "Total Forms",    value: totalForms,     sub: `avg ${avgForms}/wk`, color: COLORS.forms },
-          { label: "Total Regs",     value: totalRegs,      sub: `avg ${avgRegs}/wk`,  color: COLORS.regs  },
-          { label: "Conv. Rate",     value: overallCR+"%",  sub: "regs ÷ forms",       color: COLORS.cr    },
-          { label: "Total Revenue",  value: fmt(totalRev),  sub: `${data.length} weeks`, color: COLORS.rev },
+          { label: "Total Forms",   value: totalForms,    sub: `avg ${avgForms}/wk`, color: COLORS.forms },
+          { label: "Total Regs",    value: totalRegs,     sub: `avg ${avgRegs}/wk`,  color: COLORS.regs  },
+          { label: "Conv. Rate",    value: overallCR+"%", sub: "regs ÷ forms",       color: COLORS.cr    },
+          { label: "Total Revenue", value: fmt(totalRev), sub: `${data.length} weeks`, color: COLORS.rev },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px", flex: "1 1 100px", border: "1px solid #334155" }}>
             <p style={{ margin: "0 0 3px", fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
@@ -447,7 +349,7 @@ function RevenueCombined({ data, title, subtitle }) {
               <Tooltip content={<RevTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={overallCR} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }}/>
-              <Line dataKey="cr" name="Conv rate" type="monotone" stroke={COLORS.cr} strokeWidth={2.5} dot={{ r: 5, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
+              <Line dataKey="cr" type="monotone" stroke={COLORS.cr} strokeWidth={2.5} dot={{ r: 5, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
           ) : view === "revenue" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
@@ -455,7 +357,7 @@ function RevenueCombined({ data, title, subtitle }) {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => "€"+(v/1000).toFixed(0)+"k"} domain={[0, maxRev]}/>
               <Tooltip content={<RevTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" name="Revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
+              <Bar dataKey="revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>

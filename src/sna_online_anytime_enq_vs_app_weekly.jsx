@@ -7,7 +7,7 @@ import {
 // CTID490 + CTID423 merged — SNA Online Anytime
 // W1–W8: Mon 13 Apr – Sun 7 Jun 2026 (full weeks)
 // W9: Mon 8 Jun – Sat 13 Jun 2026 (partial ⚡)
-const data = [
+export const data = [
   { week: "13–19 Apr",    enq: 3, app: 1, full: true  },
   { week: "20–26 Apr",    enq: 0, app: 1, full: true  },
   { week: "27 Apr–3 May", enq: 0, app: 1, full: true  },
