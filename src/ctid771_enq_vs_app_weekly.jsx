@@ -5,6 +5,7 @@ import {
 } from "recharts";
 
 export const data = [
+  { week: "13–19 Apr",    enq: 2, app: 0,  full: true  },
   { week: "20–26 Apr",    enq: 1, app: 1,  full: true  },
   { week: "27 Apr–3 May", enq: 3, app: 0,  full: true  },
   { week: "4–10 May",     enq: 4, app: 1,  full: true  },
@@ -82,7 +83,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          20 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -90,7 +91,7 @@ export default function App() {
       <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fb923c" }}>📌 Key characteristic: </strong>
-        CTID771 remains <strong style={{ color:"#f1f5f9" }}>heavily enquiry-led</strong> — only 2 of 18 submissions over 8 weeks were applications ({overallApp}% app rate).
+        CTID771 remains <strong style={{ color:"#f1f5f9" }}>heavily enquiry-led</strong> — only 2 of 20 submissions over 9 weeks were applications ({overallApp}% app rate).
         {" "}W9 (8–14 Jun) posted the <strong style={{ color:"#f1f5f9" }}>joint-highest enquiry week (4)</strong>, matching W3, with zero applications — the conversion gap continues to widen.
       </div>
 
@@ -99,9 +100,9 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"9 weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"W9 (8–14 Jun)",      value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
+          { label:"W9 (8–14 Jun)",      value:`${data[8].enq}e / ${data[8].app}a`, sub:"complete", color:"#94a3b8" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
