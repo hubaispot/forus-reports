@@ -13,7 +13,7 @@ const data = [
   { week: "18–24 May",    enq: 13, app: 6,  full: true  },
   { week: "25–31 May",    enq: 13, app: 12, full: true  },
   { week: "1–7 Jun",      enq: 20, app: 15, full: true  },
-  { week: "8–11 Jun ⚡",  enq: 10, app: 4,  full: false },
+  { week: "8–14 Jun",  enq: 15, app: 7,  full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Fri)</p>}
     </div>
   );
 };
@@ -88,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 11 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -108,7 +108,7 @@ export default function App() {
           { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,  color: COLORS.app  },
           { label: "Total Submissions",  value: total,          sub: "9 weeks",            color: "#f1f5f9"   },
           { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",       color: "#34d399"   },
-          { label: "This week (Mon–Thu)", value: `${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub: "⚡ partial", color: "#fbbf24" },
+          { label: "This week (Mon–Fri)", value: `${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub: "⚡ partial", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 110px", border: "1px solid #334155" }}>

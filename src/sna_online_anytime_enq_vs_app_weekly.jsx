@@ -16,7 +16,7 @@ const data = [
   { week: "18–24 May",    enq: 1, app: 1, full: true  },
   { week: "25–31 May",    enq: 0, app: 2, full: true  },
   { week: "1–7 Jun",      enq: 3, app: 2, full: true  },
-  { week: "8–13 Jun ⚡",  enq: 1, app: 0, full: false },
+  { week: "8–14 Jun",     enq: 2, app: 0, full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -87,7 +87,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 13 Jun 2026 · Unique contacts · last form only per contact · CTID490 &amp; CTID423 combined
+          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact · CTID490 &amp; CTID423 combined
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         SNA Online Anytime shows <strong style={{ color:"#f1f5f9" }}>strong direct-application intent ({overallApp}% overall app rate)</strong> —
         applications match or exceed enquiries in most weeks, with W2, W3 and W7 seeing applications only.
-        Volume is low but steady, averaging {avgApp} applications/week across completed weeks.
+        Volume is low but steady across the 9-week cycle, averaging {avgApp} applications/week.
       </div>
 
       {/* KPIs */}
@@ -105,7 +105,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"9 weeks",           color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"9 full weeks",      color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           ...(data[data.length-1].full
             ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
