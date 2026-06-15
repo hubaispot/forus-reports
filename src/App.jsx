@@ -434,7 +434,7 @@ export default function App() {
   const handleType = t => { setReportType(t); setCourseId("combined"); };
 
   const isRevPlaceholder = !deptData.placeholder && deptData.revenue?.placeholder;
-  const currentCourses   = !deptData.placeholder && !isRevPlaceholder ? (deptData[reportType]?.courses ?? []) : [];
+  const currentCourses   = !deptData.placeholder ? (deptData[reportType]?.courses ?? []) : [];
   const currentCourse    = currentCourses.find(c => c.id === courseId);
   const CourseComponent  = currentCourse?.Component;
 
