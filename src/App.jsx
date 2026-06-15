@@ -6,8 +6,8 @@ import {
 
 // ── IMPORTS — course components + exported data arrays ────────────────────────
 // SNA — Enquiry & Application
-import CTID742enq,  { data as sna742Raw   } from "./ctid742_enq_vs_app_weekly__1_";
-import CTID379enq,  { data as sna379Raw   } from "./ctid379_enq_vs_app_weekly__1_";
+import CTID742enq,  { data as sna742Raw   } from "./ctid742_enq_vs_app_weekly";
+import CTID379enq,  { data as sna379Raw   } from "./ctid379_enq_vs_app_weekly";
 import SNAOAenq,    { data as snaOARaw    } from "./sna_online_anytime_enq_vs_app_weekly";
 // SNA — Revenue
 import CTID742rev,  { data as sna742RevRaw  } from "./ctid742_combined_weekly";
