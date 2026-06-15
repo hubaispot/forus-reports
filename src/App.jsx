@@ -49,7 +49,7 @@ const snaOARevData  = normaliseRev(snaOARevRaw);
 function mergeEnqApp(datasets) {
   const len = Math.max(...datasets.map(d => d.length));
   return Array.from({ length: len }, (_, i) => {
-    const week = `W${i + 1}`;
+    const week = datasets.find(ds => ds[i]?.week)?.[i].week ?? `W${i + 1}`;
     const enq  = datasets.reduce((s, ds) => s + (ds[i]?.enq ?? 0), 0);
     const app  = datasets.reduce((s, ds) => s + (ds[i]?.app ?? 0), 0);
     const full = datasets.every(ds => ds[i]?.full !== false);
@@ -60,7 +60,7 @@ function mergeEnqApp(datasets) {
 function mergeRevenue(datasets) {
   const len = Math.max(...datasets.map(d => d.length));
   return Array.from({ length: len }, (_, i) => {
-    const week    = `W${i + 1}`;
+    const week    = datasets.find(ds => ds[i]?.week)?.[i].week ?? `W${i + 1}`;
     const forms   = datasets.reduce((s, ds) => s + (ds[i]?.forms   ?? 0), 0);
     const regs    = datasets.reduce((s, ds) => s + (ds[i]?.regs    ?? 0), 0);
     const revenue = datasets.reduce((s, ds) => s + (ds[i]?.revenue ?? 0), 0);
