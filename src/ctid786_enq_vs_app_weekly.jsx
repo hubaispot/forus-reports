@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Apr",    label: "W1", enq: 8,  app: 6,  full: true  },
-  { week: "20–26 Apr",    label: "W2", enq: 6,  app: 5,  full: true  },
-  { week: "27 Apr–3 May", label: "W3", enq: 6,  app: 1,  full: true  },
-  { week: "4–10 May",     label: "W4", enq: 4,  app: 6,  full: true  },
-  { week: "11–17 May",    label: "W5", enq: 1,  app: 3,  full: true  },
-  { week: "18–24 May",    label: "W6", enq: 9,  app: 6,  full: true  },
-  { week: "25–31 May",    label: "W7", enq: 4,  app: 6,  full: true  },
-  { week: "1–7 Jun",      label: "W8", enq: 3,  app: 4,  full: true  },
-  { week: "8–11 Jun ⚡",  label: "W9", enq: 1,  app: 2,  full: false },
+  { week: "13–19 Apr",  label: "W1", enq: 8,  app: 6,  full: true },
+  { week: "20–26 Apr",  label: "W2", enq: 6,  app: 5,  full: true },
+  { week: "27 Apr–3 May", label: "W3", enq: 6, app: 1, full: true },
+  { week: "4–10 May",   label: "W4", enq: 4,  app: 6,  full: true },
+  { week: "11–17 May",  label: "W5", enq: 1,  app: 3,  full: true },
+  { week: "18–24 May",  label: "W6", enq: 9,  app: 6,  full: true },
+  { week: "25–31 May",  label: "W7", enq: 4,  app: 6,  full: true },
+  { week: "1–7 Jun",    label: "W8", enq: 3,  app: 4,  full: true },
+  { week: "8–14 Jun",   label: "W9", enq: 1,  app: 5,  full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -59,11 +59,6 @@ const CustomTooltip = ({ active, payload }) => {
           </div>
         </div>
       </div>
-      {!d?.full && (
-        <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>
-          ⚡ Partial week — Mon 8 Jun to Thu 11 Jun 23:59 IST
-        </p>
-      )}
     </div>
   );
 };
@@ -95,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 11 Jun 2026 · IST boundaries · Unique contacts · ⚡ W9 partial (Mon–Thu)
+          13 Apr – 14 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -104,19 +99,19 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W4–W8 all delivered 57%+ app rates with 3 of those 5 weeks hitting 60%+ 🔥.
-        W9 is 4 days in — 1 enquiry and 2 applications already, putting it at 67% early app rate.
-        W3 remains the only clear outlier at 14%.
+        Strong close to the reporting cycle — W9 delivered the highest app rate of all 9 weeks at 83% 🔥,
+        with 5 applications against just 1 enquiry. W4–W9 have all hit 57%+ conversion,
+        a consistent improvement from the 43–45% seen in W1–W2. W3 remains the only outlier at 14%.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk (W1–W8)`,  color: COLORS.enq },
-          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk (W1–W8)`,  color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "W1–W9 incl. partial",        color: "#f1f5f9"  },
-          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total (all weeks)",   color: "#34d399"  },
-          { label: "W9 so far ⚡",       value: "1e / 2a",        sub: "Mon–Thu 8–11 Jun IST",       color: "#fbbf24"  },
+          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,      color: COLORS.enq },
+          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,      color: COLORS.app },
+          { label: "Total Submissions",  value: total,            sub: "9 full weeks",           color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",           color: "#34d399"  },
+          { label: "Best Week",          value: "W9",             sub: "83% · 8–14 Jun",         color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -147,18 +142,13 @@ export default function App() {
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false}
                 tickLine={false} tickFormatter={v => v + "%"} domain={[0, 110]}/>
-              <Tooltip content={<CustomTooltip/>}
-                cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={overallApp} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallApp}%`, fill: "#64748b", fontSize: 11,
                   position: "insideTopRight" }}/>
               <Line dataKey="appRate" name="Application rate" type="monotone"
                 stroke="#34d399" strokeWidth={2.5}
-                dot={({ cx, cy, index }) => (
-                  <circle key={index} cx={cx} cy={cy} r={6}
-                    fill={data[index]?.full ? "#34d399" : "#fbbf24"}
-                    stroke="none"/>
-                )} connectNulls/>
+                dot={{ r: 6, fill: "#34d399", strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
@@ -168,8 +158,7 @@ export default function App() {
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false}
                 tickLine={false} domain={[0, 14]}/>
-              <Tooltip content={<CustomTooltip/>}
-                cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
               <Bar dataKey="enq" name="enq" fill={COLORS.enq}
@@ -198,9 +187,7 @@ export default function App() {
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const wowEnq  = i > 0 ? row.enq - data[i-1].enq : null;
-              const wowApp  = i > 0 ? row.app - data[i-1].app : null;
-              const rateHigh = row.appRate >= 60 && row.total > 0 && row.full;
+              const rateHigh = row.appRate >= 60 && row.total > 0;
               const delta = (val, prev) => {
                 if (prev === null) return null;
                 if (val > prev) return <span style={{ fontSize: 10, marginLeft: 4, color: "#34d399" }}>▲{val - prev}</span>;
@@ -210,17 +197,10 @@ export default function App() {
               return (
                 <tr key={i} style={{
                   borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
-                  background: !row.full ? "rgba(251,191,36,0.04)" : i % 2 === 0 ? "#1e293b" : "#162032"
+                  background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>{row.label}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}
-                    {!row.full && (
-                      <span style={{ marginLeft: 6, fontSize: 10, color: "#fbbf24",
-                        background: "rgba(251,191,36,0.12)", borderRadius: 4,
-                        padding: "1px 5px" }}>partial</span>
-                    )}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}{delta(row.enq, i > 0 ? data[i-1].enq : null)}
@@ -233,10 +213,8 @@ export default function App() {
                     fontWeight: 700, color: "#f1f5f9", fontSize: 15 }}>{row.total}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, fontSize: 12,
-                    color: !row.full ? "#fbbf24" : rateHigh ? "#34d399" : COLORS.rate }}>
-                    {row.total > 0 ? row.appRate + "%" : "—"}
-                    {rateHigh && " 🔥"}
-                    {!row.full && row.total > 0 && <span style={{ fontSize: 10, marginLeft: 3 }}>⚡</span>}
+                    color: rateHigh ? "#34d399" : COLORS.rate }}>
+                    {row.total > 0 ? row.appRate + "%" : "—"}{rateHigh ? " 🔥" : ""}
                   </td>
                 </tr>
               );
@@ -244,7 +222,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W9 incl. partial)
+                Total (9 full weeks)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.enq, fontSize: 15 }}>{totalEnq}</td>

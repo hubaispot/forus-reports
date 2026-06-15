@@ -5,7 +5,6 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Apr",    enq: 2, app: 0,  full: true  },
   { week: "20–26 Apr",    enq: 1, app: 1,  full: true  },
   { week: "27 Apr–3 May", enq: 3, app: 0,  full: true  },
   { week: "4–10 May",     enq: 4, app: 1,  full: true  },
@@ -13,6 +12,7 @@ export const data = [
   { week: "18–24 May",    enq: 1, app: 0,  full: true  },
   { week: "25–31 May",    enq: 1, app: 0,  full: true  },
   { week: "1–7 Jun",      enq: 2, app: 0,  full: true  },
+  { week: "8–14 Jun",     enq: 4, app: 0,  full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : null }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -52,7 +52,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -83,7 +82,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 7 Jun 2026 · Unique contacts · last form only per contact
+          20 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -91,8 +90,8 @@ export default function App() {
       <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fb923c" }}>📌 Key characteristic: </strong>
-        CTID771 is <strong style={{ color:"#f1f5f9" }}>heavily enquiry-led</strong> — only 2 of 16 submissions over 8 weeks were applications ({overallApp}% app rate).
-        {" "}W5 (11–17 May) recorded <strong style={{ color:"#f1f5f9" }}>zero activity</strong>. Applications are isolated to W2 and W4, suggesting the application form may have low visibility or the intake timeline does not yet drive urgency.
+        CTID771 remains <strong style={{ color:"#f1f5f9" }}>heavily enquiry-led</strong> — only 2 of 18 submissions over 8 weeks were applications ({overallApp}% app rate).
+        {" "}W9 (8–14 Jun) posted the <strong style={{ color:"#f1f5f9" }}>joint-highest enquiry week (4)</strong>, matching W3, with zero applications — the conversion gap continues to widen.
       </div>
 
       {/* KPIs */}
@@ -102,7 +101,7 @@ export default function App() {
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
           { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"W8 (1–7 Jun)",       value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
+          { label:"W9 (8–14 Jun)",      value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -181,11 +180,9 @@ export default function App() {
               const rateHigh = row.appRate !== null && row.appRate >= 60 && row.total > 0;
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
-                  background:i%2===0?"#1e293b":"#162032" }}>
+                  background:i%2===0?"1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
-                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
