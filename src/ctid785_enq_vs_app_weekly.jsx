@@ -4,7 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-const data = [
+export const data = [
   { week: "14–20 Apr",    enq: 5, app: 0, full: true  },
   { week: "21–27 Apr",    enq: 3, app: 0, full: true  },
   { week: "28 Apr–4 May", enq: 5, app: 0, full: true  },
@@ -12,7 +12,7 @@ const data = [
   { week: "12–18 May",    enq: 5, app: 0, full: true  },
   { week: "19–25 May",    enq: 7, app: 0, full: true  },
   { week: "26 May–1 Jun", enq: 4, app: 0, full: true  },
-  { week: "1–7 Jun",      enq: 5, app: 0, full: true  },
+  { week: "2–7 Jun ⚡",   enq: 6, app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -91,25 +91,44 @@ export default function App() {
       <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Key finding: </strong>
-        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 8 completed weeks — all {total} contacts are enquiry-only.
-        This strongly indicates the application form is not yet live, not correctly tagged in HubSpot, or not linked in course communications.
-        <strong style={{ color:"#fbbf24" }}> Action required: verify the application form is published and linked for this course.</strong>
+        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 8 weeks — all {total} contacts are enquiry-only.
+        This may indicate the application form is not yet live, not linked in communications, or that the course cohort date has not been announced.
+        <strong style={{ color:"#fbbf24" }}> Action recommended: verify application form is published and linked for this course.</strong>
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,    color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:"none received",        color:"#64748b"   },
-          { label:"Total Submissions",  value:total,           sub:"8 completed weeks",    color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",         color:"#fbbf24"   },
-          { label:"W8 (1–7 Jun)",       value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:"none received",      color:"#64748b"   },
+          { label:"Total Submissions",  value:total,           sub:"8 weeks",            color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",       color:"#fbbf24"   },
+          { label:"This week (Sat)",    value:`${data[7].enq}e / ${data[7].app}a`, sub:"⚡ partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
             <p style={{ margin:"0 0 3px", fontSize:10, color:"#64748b", textTransform:"uppercase", letterSpacing:"0.06em" }}>{k.label}</p>
             <p style={{ margin:"0 0 2px", fontSize:22, fontWeight:800, color:k.color, lineHeight:1 }}>{k.value}</p>
             <p style={{ margin:0, fontSize:10, color:"#64748b" }}>{k.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Comparison strip */}
+      <div style={{ display:"flex", gap:8, marginBottom:20, flexWrap:"wrap" }}>
+        {[
+          { label:"CTID742 (SNA L5&6)",   total:138, rate:38 },
+          { label:"CTID786 (Care Skills)", total:81,  rate:47 },
+          { label:"CTID379 (SNA L6)",      total:39,  rate:67 },
+          { label:"CTID785 (ELC L5)",      total,     rate:overallApp, highlight:true },
+        ].map(c => (
+          <div key={c.label} style={{ background: c.highlight ? "rgba(251,191,36,0.08)" : "#1e293b",
+            border:`1px solid ${c.highlight ? "#fbbf24" : "#334155"}`,
+            borderRadius:8, padding:"8px 14px", fontSize:12, flex:"1 1 150px" }}>
+            <span style={{ color:"#64748b" }}>{c.label}: </span>
+            <strong style={{ color:"#f1f5f9" }}>{c.total} submissions</strong>
+            <span style={{ color:"#64748b" }}> · </span>
+            <strong style={{ color: c.highlight ? "#fbbf24" : COLORS.rate }}>{c.rate}% app rate</strong>
           </div>
         ))}
       </div>

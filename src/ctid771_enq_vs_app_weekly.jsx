@@ -4,7 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-const data = [
+export const data = [
   { week: "13–19 Apr",    enq: 2, app: 0,  full: true  },
   { week: "20–26 Apr",    enq: 1, app: 1,  full: true  },
   { week: "27 Apr–3 May", enq: 3, app: 0,  full: true  },
