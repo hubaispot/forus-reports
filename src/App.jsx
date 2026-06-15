@@ -15,7 +15,7 @@ import CTID379rev,  { data as sna379RevRaw  } from "./ctid379_combined_weekly";
 import SNAOArev,    { data as snaOARevRaw   } from "./sna_oa_combined_weekly";
 // Healthcare — Enquiry & Application
 import CTID771enq,  { data as hc771Raw    } from "./ctid771_enq_vs_app_weekly";
-import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly__2_";
+import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
