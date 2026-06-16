@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "14–20 Apr",    enq: 5, app: 0, full: true  },
-  { week: "21–27 Apr",    enq: 3, app: 0, full: true  },
-  { week: "28 Apr–4 May", enq: 5, app: 0, full: true  },
-  { week: "5–11 May",     enq: 2, app: 0, full: true  },
-  { week: "12–18 May",    enq: 5, app: 0, full: true  },
-  { week: "19–25 May",    enq: 7, app: 0, full: true  },
-  { week: "26 May–1 Jun", enq: 4, app: 0, full: true  },
-  { week: "2–7 Jun ⚡",   enq: 6, app: 0, full: false },
+  { week: "21–27 Apr",    enq: 3, app: 0, full: true },
+  { week: "28 Apr–4 May", enq: 5, app: 0, full: true },
+  { week: "5–11 May",     enq: 2, app: 0, full: true },
+  { week: "12–18 May",    enq: 5, app: 0, full: true },
+  { week: "19–25 May",    enq: 7, app: 0, full: true },
+  { week: "26 May–1 Jun", enq: 4, app: 0, full: true },
+  { week: "1–7 Jun",      enq: 5, app: 0, full: true },
+  { week: "8–14 Jun",     enq: 4, app: 0, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -52,7 +52,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -74,7 +73,6 @@ export default function App() {
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
       fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9" }}>
 
-      {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
           HubSpot · ELC Level 5 – Live and Online (CTID785)
@@ -83,27 +81,25 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          14 Apr – 7 Jun 2026 · Unique contacts · last form only per contact
+          21 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
-      {/* Notable insight banner */}
       <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Key finding: </strong>
-        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 8 weeks — all {total} contacts are enquiry-only.
-        This may indicate the application form is not yet live, not linked in communications, or that the course cohort date has not been announced.
-        <strong style={{ color:"#fbbf24" }}> Action recommended: verify application form is published and linked for this course.</strong>
+        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 9 completed weeks — all {total} contacts are enquiry-only.
+        This strongly indicates the application form is not yet live, not correctly tagged in HubSpot, or not linked in course communications.
+        <strong style={{ color:"#fbbf24" }}> Action required: verify the application form is published and linked for this course.</strong>
       </div>
 
-      {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:"none received",      color:"#64748b"   },
-          { label:"Total Submissions",  value:total,           sub:"8 weeks",            color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",       color:"#fbbf24"   },
-          { label:"This week (Sat)",    value:`${data[7].enq}e / ${data[7].app}a`, sub:"⚡ partial", color:"#fbbf24" },
+          { label:"Total Enquiries",    value:totalEnq,       sub:`avg ${avgEnq}/wk`,      color:COLORS.enq },
+          { label:"Total Applications", value:totalApp,       sub:"none received",          color:"#64748b"  },
+          { label:"Total Submissions",  value:total,          sub:"9 completed weeks",      color:"#f1f5f9"  },
+          { label:"Overall App Rate",   value:overallApp+"%", sub:"apps ÷ total",           color:"#fbbf24"  },
+          { label:"W9 (8–14 Jun)",      value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -114,33 +110,12 @@ export default function App() {
         ))}
       </div>
 
-      {/* Comparison strip */}
-      <div style={{ display:"flex", gap:8, marginBottom:20, flexWrap:"wrap" }}>
-        {[
-          { label:"CTID742 (SNA L5&6)",   total:138, rate:38 },
-          { label:"CTID786 (Care Skills)", total:81,  rate:47 },
-          { label:"CTID379 (SNA L6)",      total:39,  rate:67 },
-          { label:"CTID785 (ELC L5)",      total,     rate:overallApp, highlight:true },
-        ].map(c => (
-          <div key={c.label} style={{ background: c.highlight ? "rgba(251,191,36,0.08)" : "#1e293b",
-            border:`1px solid ${c.highlight ? "#fbbf24" : "#334155"}`,
-            borderRadius:8, padding:"8px 14px", fontSize:12, flex:"1 1 150px" }}>
-            <span style={{ color:"#64748b" }}>{c.label}: </span>
-            <strong style={{ color:"#f1f5f9" }}>{c.total} submissions</strong>
-            <span style={{ color:"#64748b" }}> · </span>
-            <strong style={{ color: c.highlight ? "#fbbf24" : COLORS.rate }}>{c.rate}% app rate</strong>
-          </div>
-        ))}
-      </div>
-
-      {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
-      {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
@@ -177,7 +152,6 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
-      {/* Table */}
       <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
@@ -197,10 +171,8 @@ export default function App() {
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
-                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
-                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+2}</td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
