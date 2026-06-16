@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "14–20 Apr",    enq: 0, app: 0, full: true  },
-  { week: "21–27 Apr",    enq: 3, app: 5, full: true  },
-  { week: "28 Apr–4 May", enq: 0, app: 1, full: true  },
-  { week: "5–11 May",     enq: 0, app: 5, full: true  },
-  { week: "12–18 May",    enq: 0, app: 1, full: true  },
-  { week: "19–25 May",    enq: 1, app: 3, full: true  },
-  { week: "26 May–1 Jun", enq: 4, app: 7, full: true  },
-  { week: "1–7 Jun ⚡",   enq: 5, app: 2, full: false },
+  { week: "13–19 Apr",    enq: 0, app: 0, full: true },
+  { week: "20–26 Apr",    enq: 3, app: 5, full: true },
+  { week: "27 Apr–3 May", enq: 0, app: 1, full: true },
+  { week: "4–10 May",     enq: 0, app: 5, full: true },
+  { week: "11–17 May",    enq: 0, app: 1, full: true },
+  { week: "18–24 May",    enq: 1, app: 3, full: true },
+  { week: "25–31 May",    enq: 4, app: 7, full: true },
+  { week: "1–7 Jun",      enq: 6, app: 3, full: true  },
+  { week: "8–14 Jun",      enq: 1, app: 2, full: true  },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -56,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Sun)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -87,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          14 Apr – 7 Jun 2026 · Unique contacts · last form only per contact
+          13 Apr – 14 Jun 2026 · 9 complete weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -96,19 +97,18 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         ELC 5M22413 has an <strong style={{ color: "#f1f5f9" }}>exceptionally high application rate ({overallApp}%)</strong> —
-        applications dominate enquiries in 5 of 7 completed weeks 🔥. Many contacts go directly to the application
-        form, indicating very strong course intent. W8 (current partial week) shows a reversal with enquiries
-        outpacing applications — worth monitoring as the week is still open.
+        7 of 9 completed weeks hit the 60%+ threshold 🔥. W8 was the only week where enquiries outpaced
+        applications; W9 closed with a 67% app rate, confirming the course continues to attract high-intent contacts.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",     value: totalEnq,            sub: `avg ${avgEnq}/wk (full weeks)`, color: COLORS.enq  },
-          { label: "Total Applications",  value: totalApp,            sub: `avg ${avgApp}/wk (full weeks)`, color: COLORS.app  },
-          { label: "Total Submissions",   value: total,               sub: "8 weeks",                       color: "#f1f5f9"   },
-          { label: "Overall App Rate",    value: overallApp + "%",    sub: "apps ÷ total",                  color: "#34d399"   },
-          { label: "This week (partial)", value: `${data[7].enq}e / ${data[7].app}a`, sub: "⚡ 1–7 Jun",  color: "#fbbf24"   },
+          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`, color: COLORS.enq },
+          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`, color: COLORS.app },
+          { label: "Total Submissions",  value: total,            sub: "9 complete weeks", color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",     color: "#34d399"  },
+          { label: "Peak Week",          value: "W7",             sub: "25–31 May · 11 submissions", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -148,7 +148,7 @@ export default function App() {
               barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 10]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 12]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
