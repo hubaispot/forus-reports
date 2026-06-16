@@ -101,16 +101,16 @@ const NAV = {
     label: "SNA", color: "#38bdf8",
     enqApp: {
       courses: [
-        { id: "742",      label: "CTID742 · SNA L5&6 LO",    Component: CTID742enq, data: sna742Data,  insightKey: "742-enqApp"     },
-        { id: "379",      label: "CTID379 · SNA L6 LO",      Component: CTID379enq, data: sna379Data,  insightKey: "379-enqApp"     },
+        { id: "742",      label: "SNA L5&6 LO",               Component: CTID742enq, data: sna742Data,  insightKey: "742-enqApp"     },
+        { id: "379",      label: "SNA L6 LO",                 Component: CTID379enq, data: sna379Data,  insightKey: "379-enqApp"     },
         { id: "snaOA",    label: "SNA Online Anytime",        Component: SNAOAenq,   data: snaOAData,  insightKey: "snaOA-enqApp"   },
       ],
       get combined() { return mergeEnqApp([sna742Data, sna379Data, snaOAData]); },
     },
     revenue: {
       courses: [
-        { id: "742rev",   label: "CTID742 · SNA L5&6 LO",    Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue"   },
-        { id: "379rev",   label: "CTID379 · SNA L6 LO",      Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue"   },
+        { id: "742rev",   label: "SNA L5&6 LO",               Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue"   },
+        { id: "379rev",   label: "SNA L6 LO",                 Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue"   },
         { id: "snaOArev", label: "SNA Online Anytime",        Component: SNAOArev,   data: snaOARevData,  insightKey: "snaOA-revenue" },
       ],
       get combined() { return mergeRevenue([sna742RevData, sna379RevData, snaOARevData]); },
