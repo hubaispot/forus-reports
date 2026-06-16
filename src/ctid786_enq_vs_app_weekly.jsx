@@ -154,7 +154,7 @@ export default function App() {
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
               barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }}
+              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 10 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false}
                 tickLine={false} domain={[0, 14]}/>
