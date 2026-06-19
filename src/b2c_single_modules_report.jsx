@@ -203,10 +203,10 @@ const Pill = ({ label, active, color, onClick }) => (
 
 // ─── STAT CARD ───────────────────────────────────────────────────────────────
 const Stat = ({ label, value, sub, color }) => (
-  <div style={{ background:C.card, borderRadius:10, padding:"12px 16px", flex:"1 1 100px", border:`1px solid ${C.border}` }}>
-    <p style={{ margin:"0 0 3px", fontSize:10, color:C.muted, textTransform:"uppercase", letterSpacing:"0.06em" }}>{label}</p>
-    <p style={{ margin:"0 0 2px", fontSize:22, fontWeight:800, color: color||C.text, lineHeight:1 }}>{value}</p>
-    <p style={{ margin:0, fontSize:10, color:C.muted }}>{sub}</p>
+  <div style={{ background:C.card, borderRadius:10, padding:"16px 20px", flex:"1 1 100px", border:`1px solid ${C.border}` }}>
+    <p style={{ margin:"0 0 4px", fontSize:10, color:C.muted, textTransform:"uppercase", letterSpacing:"0.06em" }}>{label}</p>
+    <p style={{ margin:"0 0 3px", fontSize:26, fontWeight:800, color: color||C.text, lineHeight:1 }}>{value}</p>
+    <p style={{ margin:0, fontSize:11, color:C.muted }}>{sub}</p>
   </div>
 );
 
@@ -294,14 +294,14 @@ export default function App() {
   const accentColor = selDept !== "All" ? DEPT_COLOR[selDept] : C.app;
 
   return (
-    <div style={{ background:C.bg, minHeight:"100vh", padding:"28px 24px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text }}>
+    <div style={{ background:C.bg, minHeight:"100vh", padding:"36px 32px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text }}>
 
       {/* ── Header ── */}
       <div style={{ marginBottom:20 }}>
         <p style={{ color:C.muted, fontSize:11, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 5px" }}>
           HubSpot · B2C (Single Modules) Pipeline
         </p>
-        <h1 style={{ margin:"0 0 4px", fontSize:21, fontWeight:700 }}>
+        <h1 style={{ margin:"0 0 4px", fontSize:28, fontWeight:700 }}>
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>

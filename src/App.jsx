@@ -472,7 +472,7 @@ export default function App() {
       </div>
 
       {deptData.standalone ? (
-        (() => { const StandaloneComp = deptData.standalone; return <StandaloneComp />; })()
+        (() => { const StandaloneComp = deptData.standalone; return <div style={{ background: "#0f172a" }}><StandaloneComp /></div>; })()
       ) : deptData.placeholder ? (
         <Placeholder message={`${deptData.label} department — reports coming soon`} />
       ) : (
