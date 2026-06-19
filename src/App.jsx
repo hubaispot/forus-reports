@@ -22,6 +22,8 @@ import CTID786rev,  { data as hc786RevRaw } from "./ctid786_combined_weekly";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
+// B2C Single Modules
+import B2CSingleModules from "./b2c_single_modules_report";
 
 // ── NORMALISE — ensure every row has the fields the combined merge needs ───────
 // enq/app files: add total + appRate if not already present
@@ -101,16 +103,16 @@ const NAV = {
     label: "SNA", color: "#38bdf8",
     enqApp: {
       courses: [
-        { id: "742",      label: "SNA L5&6 LO",               Component: CTID742enq, data: sna742Data,  insightKey: "742-enqApp"     },
-        { id: "379",      label: "SNA L6 LO",                 Component: CTID379enq, data: sna379Data,  insightKey: "379-enqApp"     },
+        { id: "742",      label: "CTID742 · SNA L5&6",      Component: CTID742enq, data: sna742Data,  insightKey: "742-enqApp"     },
+        { id: "379",      label: "CTID379 · SNA L6 Online",  Component: CTID379enq, data: sna379Data,  insightKey: "379-enqApp"     },
         { id: "snaOA",    label: "SNA Online Anytime",        Component: SNAOAenq,   data: snaOAData,  insightKey: "snaOA-enqApp"   },
       ],
       get combined() { return mergeEnqApp([sna742Data, sna379Data, snaOAData]); },
     },
     revenue: {
       courses: [
-        { id: "742rev",   label: "SNA L5&6 LO",               Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue"   },
-        { id: "379rev",   label: "SNA L6 LO",                 Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue"   },
+        { id: "742rev",   label: "CTID742 · SNA L5&6",      Component: CTID742rev, data: sna742RevData, insightKey: "742-revenue"   },
+        { id: "379rev",   label: "CTID379 · SNA L6 Online",  Component: CTID379rev, data: sna379RevData, insightKey: "379-revenue"   },
         { id: "snaOArev", label: "SNA Online Anytime",        Component: SNAOArev,   data: snaOARevData,  insightKey: "snaOA-revenue" },
       ],
       get combined() { return mergeRevenue([sna742RevData, sna379RevData, snaOARevData]); },
@@ -148,6 +150,10 @@ const NAV = {
   Business: {
     label: "Business", color: "#a78bfa",
     placeholder: true,
+  },
+  B2C: {
+    label: "B2C", color: "#f472b6",
+    standalone: B2CSingleModules,
   },
 };
 
@@ -465,7 +471,9 @@ export default function App() {
         ))}
       </div>
 
-      {deptData.placeholder ? (
+      {deptData.standalone ? (
+        (() => { const StandaloneComp = deptData.standalone; return <StandaloneComp />; })()
+      ) : deptData.placeholder ? (
         <Placeholder message={`${deptData.label} department — reports coming soon`} />
       ) : (
         <>
