@@ -312,18 +312,18 @@ export default function App() {
   const accentColor = selDept !== "All" ? DEPT_COLOR[selDept] : C.app;
 
   return (
-    <div style={{ background:C.bg, minHeight:"100vh", padding:"28px 24px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text }}>
+    <div style={{ background:C.bg, minHeight:"100vh", padding:"28px 24px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text, textAlign:"left" }}>
 
       {/* ── Header ── */}
       <div style={{ marginBottom:20 }}>
         <p style={{ color:C.muted, fontSize:11, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 5px" }}>
           HubSpot · B2C (Single Modules) Pipeline
         </p>
-        <h1 style={{ margin:"0 0 4px", fontSize:21, fontWeight:700 }}>
+        <h1 style={{ margin:"0 0 4px", fontSize:21, fontWeight:700, color:C.text }}>
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 19 Jun 2026 · deal create date · ⚡ W3 partial week
+          1 Jun – 22 Jun 2026 · deal create date · W4 opens today
         </p>
       </div>
 
