@@ -4,15 +4,26 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 19 Jun 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 22 Jun 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // Deduplication applied (keep most recent per person/course):
-//   Won dropped:  505708538048 (Kania Kania — earlier of 2; kept 505719685355)
+//   App excluded: 506376313071 (Jean Baeyens — test deal)
 //   App dropped:  506633816254 (Paul Garry  — earlier of 2; kept 506625732814)
 //   App dropped:  506889283801 (Oran Molloy — earlier of 2; kept 506956136670)
+//   Won dropped:  505699441903 (Kinga Kania — same person as Kania Kania x2; kept latest 505719685355)
+//   Won dropped:  505708538048 (Kania Kania — earlier of 2; kept 505719685355)
+const EXCLUDED_IDS = new Set([
+  "506376313071", // test deal
+  "506633816254", // Paul Garry dup (older)
+  "506889283801", // Oran Molloy dup (older)
+  "505699441903", // Kinga/Kania Kania dup (oldest)
+  "505708538048", // Kania Kania dup (middle)
+]);
+
 const RAW_DEALS = [
   { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon",                                         createdate:"2026-06-02T22:05:18Z", stage:"app" },
   { id:"505699441903", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kinga Kania",                                  createdate:"2026-06-09T09:14:49Z", stage:"won" },
+  { id:"505708538048", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                                  createdate:"2026-06-09T09:17:24Z", stage:"won" },
   { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                                  createdate:"2026-06-09T09:43:02Z", stage:"won" },
   { id:"505755864306", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) for Shannon Campbell",                                     createdate:"2026-06-09T16:09:14Z", stage:"app" },
   { id:"505797144800", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (Existing Learners) (5N1356 OA EX DHC) -  for Noel Byrne",           createdate:"2026-06-10T10:33:18Z", stage:"app" },
@@ -32,11 +43,15 @@ const RAW_DEALS = [
   { id:"506565664988", dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Rathbone Rathbone",                    createdate:"2026-06-17T19:06:56Z", stage:"app" },
   { id:"506587284673", dealname:"Psychology - Online Anytime 1:1 (5N0754 OA DHC) -  for Vilija Dockute",                                                createdate:"2026-06-17T15:37:17Z", stage:"won" },
   { id:"506625732814", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T10:41:16Z", stage:"app" },
+  { id:"506633816254", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T09:21:35Z", stage:"app" },
   { id:"506690291950", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T10:44:57Z", stage:"won" },
-  { id:"506928341208", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Emma Galvin",                              createdate:"2026-06-18T15:44:43Z", stage:"app" },
+  { id:"506889283801", dealname:"Accounting Manual and Computerised - Online Anytime 1:1 (5N1348 OA DBU) -  for Oran Molloy",                           createdate:"2026-06-18T15:36:03Z", stage:"app" },
   { id:"506956136670", dealname:"Accounting Manual and Computerised - Online Anytime 1:1 (5N1348 OA DBU) -  for Oran Molloy",                           createdate:"2026-06-18T15:39:40Z", stage:"app" },
-  { id:"506965245175", dealname:"Care Support - Online Anytime 1:1 (Existing Learners) (5N0758 OA EX DHC) -  for Emma Galvin",                          createdate:"2026-06-18T15:55:36Z", stage:"app" },
   { id:"507064310994", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for lorraine mcdermott",                                           createdate:"2026-06-19T10:09:13Z", stage:"app" },
+  { id:"507146335419", dealname:"Work Experience (Business Studies) - Online Anytime 1:1 (5N1356 OA DBU) -  for Irene Geoghegan",                       createdate:"2026-06-19T13:38:43Z", stage:"won" },
+  { id:"507419788478", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Ethna Killern",                                    createdate:"2026-06-19T14:53:08Z", stage:"won" },
+  { id:"507502432457", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Jimin George",                                                 createdate:"2026-06-20T21:26:15Z", stage:"app" },
+  { id:"507511290071", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Irene Geoghegan",                             createdate:"2026-06-20T11:59:29Z", stage:"app" },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -53,7 +68,9 @@ const DEPT_COLOR = {
 };
 
 function parseDeal(d) {
-  const m = d.dealname.match(/\(([^)]+)\)/);
+  // Use LAST parenthetical as the code block — handles "(Existing Learners) (5N... OA DHC)" patterns
+  const allParens = [...d.dealname.matchAll(/\(([^)]+)\)/g)];
+  const m = allParens.length > 0 ? allParens[allParens.length - 1] : null;
   const codeBlock = m ? m[1] : "";
   const tokens = codeBlock.split(/\s+/);
   const courseCode = tokens[0] || "";
@@ -68,7 +85,7 @@ function parseDeal(d) {
     if (DEPT_MAP[t])  deptCode  = t;
   }
 
-  const dept     = DEPT_MAP[deptCode]  || "Healthcare"; // EX DHC deals still belong to Healthcare
+  const dept     = DEPT_MAP[deptCode]  || "Other";
   const delivery = DELIV_MAP[delivCode] || "Online Anytime";
 
   // Base course name = everything before the opening bracket, stripped of delivery type suffix
@@ -105,15 +122,16 @@ function parseDeal(d) {
   return { ...d, courseName, courseLabel, courseCode, level, delivCode, delivery, dept, deptCode, location, dt };
 }
 
-const DEALS = RAW_DEALS.map(parseDeal);
+const DEALS = RAW_DEALS.filter(d => !EXCLUDED_IDS.has(d.id)).map(parseDeal);
 
 // ─── WEEK BUCKETS (Mon 1 Jun = W1, Europe/Dublin / IST UTC+1) ────────────────
-// W1: 1–7 Jun | W2: 8–14 Jun | W3: 15 Jun → 19 Jun 14:49 IST (partial ⚡)
+// W1: 1–7 Jun | W2: 8–14 Jun | W3: 15–21 Jun (closed) | W4: 22–28 Jun ⚡ (partial)
 // UTC offsets: IST = UTC+1 → Mon 00:00 IST = Sun 23:00 UTC prior day
 const WEEKS = [
-  { wk:"W1", label:"1–7 Jun",      start:new Date("2026-05-31T23:00:00Z"), end:new Date("2026-06-07T22:59:59Z"), full:true  },
-  { wk:"W2", label:"8–14 Jun",     start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
-  { wk:"W3", label:"15–19 Jun ⚡", start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-19T13:49:47Z"), full:false },
+  { wk:"W1", label:"1–7 Jun",       start:new Date("2026-05-31T23:00:00Z"), end:new Date("2026-06-07T22:59:59Z"), full:true  },
+  { wk:"W2", label:"8–14 Jun",      start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
+  { wk:"W3", label:"15–21 Jun",     start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
+  { wk:"W4", label:"22–28 Jun ⚡",  start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-22T22:59:59Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -203,10 +221,10 @@ const Pill = ({ label, active, color, onClick }) => (
 
 // ─── STAT CARD ───────────────────────────────────────────────────────────────
 const Stat = ({ label, value, sub, color }) => (
-  <div style={{ background:C.card, borderRadius:10, padding:"16px 20px", flex:"1 1 100px", border:`1px solid ${C.border}` }}>
-    <p style={{ margin:"0 0 4px", fontSize:10, color:C.muted, textTransform:"uppercase", letterSpacing:"0.06em" }}>{label}</p>
-    <p style={{ margin:"0 0 3px", fontSize:26, fontWeight:800, color: color||C.text, lineHeight:1 }}>{value}</p>
-    <p style={{ margin:0, fontSize:11, color:C.muted }}>{sub}</p>
+  <div style={{ background:C.card, borderRadius:10, padding:"12px 16px", flex:"1 1 100px", border:`1px solid ${C.border}` }}>
+    <p style={{ margin:"0 0 3px", fontSize:10, color:C.muted, textTransform:"uppercase", letterSpacing:"0.06em" }}>{label}</p>
+    <p style={{ margin:"0 0 2px", fontSize:22, fontWeight:800, color: color||C.text, lineHeight:1 }}>{value}</p>
+    <p style={{ margin:0, fontSize:10, color:C.muted }}>{sub}</p>
   </div>
 );
 
@@ -294,14 +312,14 @@ export default function App() {
   const accentColor = selDept !== "All" ? DEPT_COLOR[selDept] : C.app;
 
   return (
-    <div style={{ background:C.bg, minHeight:"100vh", padding:"36px 32px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text, textAlign:"left" }}>
+    <div style={{ background:C.bg, minHeight:"100vh", padding:"28px 24px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text }}>
 
       {/* ── Header ── */}
       <div style={{ marginBottom:20 }}>
         <p style={{ color:C.muted, fontSize:11, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 5px" }}>
           HubSpot · B2C (Single Modules) Pipeline
         </p>
-        <h1 style={{ margin:"0 0 4px", fontSize:28, fontWeight:700, color:C.text }}>
+        <h1 style={{ margin:"0 0 4px", fontSize:21, fontWeight:700 }}>
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
@@ -568,7 +586,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 19 Jun 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 22 Jun 2026 · deal create date as week anchor
       </p>
     </div>
   );
