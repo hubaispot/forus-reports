@@ -22,8 +22,6 @@ import CTID786rev,  { data as hc786RevRaw } from "./ctid786_combined_weekly";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
-// B2C Single Modules
-import B2CSingleModules from "./b2c_single_modules_report";
 
 // ── NORMALISE — ensure every row has the fields the combined merge needs ───────
 // enq/app files: add total + appRate if not already present
@@ -122,16 +120,16 @@ const NAV = {
     label: "Healthcare", color: "#f87171",
     enqApp: {
       courses: [
-        { id: "771", label: "CTID771 · Healthcare MA L5", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
-        { id: "786", label: "CTID786 · Care Skills",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
-        { id: "770", label: "CTID770 · Healthcare L5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
+        { id: "771", label: "CTID771 · Healthcare Support MA Level 5 LO", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
+        { id: "786", label: "CTID786 · CS & COOP Level 5 LO",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
+        { id: "770", label: "CTID770 · Healthcare Support MA Level 5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
       ],
       get combined() { return mergeEnqApp([hc771Data, hc786Data, hc770Data]); },
     },
     revenue: {
       courses: [
-        { id: "786rev", label: "CTID786 · Care Skills",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
-        { id: "770rev", label: "CTID770 · Healthcare L5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
+        { id: "786rev", label: "CTID786 · CS & COOP Level 5 LO",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
+        { id: "770rev", label: "CTID770 · Healthcare Support MA Level 5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
       ],
       get combined() { return mergeRevenue([hc786RevData, hc770RevData]); },
     },
@@ -150,10 +148,6 @@ const NAV = {
   Business: {
     label: "Business", color: "#a78bfa",
     placeholder: true,
-  },
-  B2C: {
-    label: "B2C", color: "#f472b6",
-    standalone: B2CSingleModules,
   },
 };
 
@@ -471,9 +465,7 @@ export default function App() {
         ))}
       </div>
 
-      {deptData.standalone ? (
-        (() => { const StandaloneComp = deptData.standalone; return <div style={{ background: "#0f172a" }}><StandaloneComp /></div>; })()
-      ) : deptData.placeholder ? (
+      {deptData.placeholder ? (
         <Placeholder message={`${deptData.label} department — reports coming soon`} />
       ) : (
         <>
