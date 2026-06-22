@@ -6,52 +6,38 @@ import {
 
 // ─── RAW DEAL DATA (fetched 22 Jun 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
-// Deduplication applied (keep most recent per person/course):
-//   App excluded: 506376313071 (Jean Baeyens — test deal)
-//   App dropped:  506633816254 (Paul Garry  — earlier of 2; kept 506625732814)
-//   App dropped:  506889283801 (Oran Molloy — earlier of 2; kept 506956136670)
-//   Won dropped:  505699441903 (Kinga Kania — same person as Kania Kania x2; kept latest 505719685355)
-//   Won dropped:  505708538048 (Kania Kania — earlier of 2; kept 505719685355)
-const EXCLUDED_IDS = new Set([
-  "506376313071", // test deal
-  "506633816254", // Paul Garry dup (older)
-  "506889283801", // Oran Molloy dup (older)
-  "505699441903", // Kinga/Kania Kania dup (oldest)
-  "505708538048", // Kania Kania dup (middle)
-]);
-
+// amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
+// Excluded: 506633816254 (Paul Garry dup app), 506889283801 (Oran Molloy dup app),
+//           505699441903 + 505708538048 (Kinga/Kania Kania dup won x2), 506376313071 (test)
 const RAW_DEALS = [
-  { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon",                                         createdate:"2026-06-02T22:05:18Z", stage:"app" },
-  { id:"505699441903", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kinga Kania",                                  createdate:"2026-06-09T09:14:49Z", stage:"won" },
-  { id:"505708538048", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                                  createdate:"2026-06-09T09:17:24Z", stage:"won" },
-  { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                                  createdate:"2026-06-09T09:43:02Z", stage:"won" },
-  { id:"505755864306", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) for Shannon Campbell",                                     createdate:"2026-06-09T16:09:14Z", stage:"app" },
-  { id:"505797144800", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (Existing Learners) (5N1356 OA EX DHC) -  for Noel Byrne",           createdate:"2026-06-10T10:33:18Z", stage:"app" },
-  { id:"505898201284", dealname:"Care Support - Online Anytime 1:1 (Existing Learners) (5N0758 OA EX DHC) -  for Kitumetsi",                            createdate:"2026-06-12T05:38:15Z", stage:"app" },
-  { id:"505929233655", dealname:"Safety and Health at Work - Online Anytime 1:1 (5N1794 OA DHC) -  for Amy Broderick",                                  createdate:"2026-06-12T15:47:01Z", stage:"app" },
-  { id:"505981272309", dealname:"Community Inclusion - Online Anytime 1:1 (5N1740 OA DSC) -  for Richard Walsh",                                        createdate:"2026-06-13T16:12:03Z", stage:"app" },
-  { id:"505989396699", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Janine Doherty",                                   createdate:"2026-06-14T07:28:13Z", stage:"won" },
-  { id:"506186736882", dealname:"Biology - Online Anytime 1:1 (5N2746 OA DHC) -  for Nurul Islam",                                                      createdate:"2026-06-16T11:34:11Z", stage:"won" },
-  { id:"506199597246", dealname:"Applied Behavioural Analysis - Online Anytime 1:1 (5N1729 OA DSC) -  for Samantha Adamson",                            createdate:"2026-06-16T17:17:27Z", stage:"app" },
-  { id:"506203345126", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Leanne Noonan",                                    createdate:"2026-06-16T18:57:10Z", stage:"app" },
-  { id:"506231288040", dealname:"Anatomy and Physiology - Online Anytime 1:1 (5N0749 OA DHC) -  for Mc loughlin Mc loughlin",                           createdate:"2026-06-16T20:36:09Z", stage:"app" },
-  { id:"506253296845", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Kate Galvin",                             createdate:"2026-06-17T10:27:20Z", stage:"app" },
-  { id:"506268626117", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Edel Ryan",                                        createdate:"2026-06-17T06:44:06Z", stage:"app" },
-  { id:"506298626274", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Janice Uí Thuama",                                 createdate:"2026-06-17T13:03:27Z", stage:"won" },
-  { id:"506376313071", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Jean Baeyens test",                                createdate:"2026-06-17T12:30:10Z", stage:"app" },
-  { id:"506517127362", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Laurem Hickey",                                    createdate:"2026-06-17T17:05:16Z", stage:"app" },
-  { id:"506565664988", dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Rathbone Rathbone",                    createdate:"2026-06-17T19:06:56Z", stage:"app" },
-  { id:"506587284673", dealname:"Psychology - Online Anytime 1:1 (5N0754 OA DHC) -  for Vilija Dockute",                                                createdate:"2026-06-17T15:37:17Z", stage:"won" },
-  { id:"506625732814", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T10:41:16Z", stage:"app" },
-  { id:"506633816254", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T09:21:35Z", stage:"app" },
-  { id:"506690291950", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                       createdate:"2026-06-18T10:44:57Z", stage:"won" },
-  { id:"506889283801", dealname:"Accounting Manual and Computerised - Online Anytime 1:1 (5N1348 OA DBU) -  for Oran Molloy",                           createdate:"2026-06-18T15:36:03Z", stage:"app" },
-  { id:"506956136670", dealname:"Accounting Manual and Computerised - Online Anytime 1:1 (5N1348 OA DBU) -  for Oran Molloy",                           createdate:"2026-06-18T15:39:40Z", stage:"app" },
-  { id:"507064310994", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for lorraine mcdermott",                                           createdate:"2026-06-19T10:09:13Z", stage:"app" },
-  { id:"507146335419", dealname:"Work Experience (Business Studies) - Online Anytime 1:1 (5N1356 OA DBU) -  for Irene Geoghegan",                       createdate:"2026-06-19T13:38:43Z", stage:"won" },
-  { id:"507419788478", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Ethna Killern",                                    createdate:"2026-06-19T14:53:08Z", stage:"won" },
-  { id:"507502432457", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Jimin George",                                                 createdate:"2026-06-20T21:26:15Z", stage:"app" },
-  { id:"507511290071", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Irene Geoghegan",                             createdate:"2026-06-20T11:59:29Z", stage:"app" },
+  { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon",                                    createdate:"2026-06-02T22:05:18.651Z", stage:"app", amount:455 },
+  { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                             createdate:"2026-06-09T09:43:02.446Z", stage:"won", amount:295 },
+  { id:"505755864306", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) for Shannon Campbell",                                createdate:"2026-06-09T16:09:14.751Z", stage:"app", amount:295 },
+  { id:"505797144800", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (Existing Learners) (5N1356 OA EX DHC) -  for Noel Byrne",      createdate:"2026-06-10T10:33:18.548Z", stage:"app", amount:295 },
+  { id:"505898201284", dealname:"Care Support - Online Anytime 1:1 (Existing Learners) (5N0758 OA EX DHC) -  for Kitumetsi ",                       createdate:"2026-06-12T05:38:15.990Z", stage:"app", amount:295 },
+  { id:"505929233655", dealname:"Safety and Health at Work - Online Anytime 1:1 (5N1794 OA DHC) -  for Amy Broderick",                             createdate:"2026-06-12T15:47:01.229Z", stage:"app", amount:295 },
+  { id:"505981272309", dealname:"Community Inclusion - Online Anytime 1:1 (5N1740 OA DSC) -  for Richard Walsh",                                   createdate:"2026-06-13T16:12:03.430Z", stage:"app", amount:295 },
+  { id:"505989396699", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Janine Doherty",                              createdate:"2026-06-14T07:28:13.054Z", stage:"won", amount:295 },
+  { id:"506186736882", dealname:"Biology - Online Anytime 1:1 (5N2746 OA DHC) -  for Nurul Islam",                                                 createdate:"2026-06-16T11:34:11.786Z", stage:"won", amount:295 },
+  { id:"506199597246", dealname:"Applied Behavioural Analysis - Online Anytime 1:1 (5N1729 OA DSC) -  for Samantha Adamson",                       createdate:"2026-06-16T17:17:27.154Z", stage:"app", amount:425 },
+  { id:"506203345126", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Leanne Noonan",                               createdate:"2026-06-16T18:57:10.164Z", stage:"app", amount:440 },
+  { id:"506231288040", dealname:"Anatomy and Physiology - Online Anytime 1:1 (5N0749 OA DHC) -  for Mc loughlin Mc loughlin",                      createdate:"2026-06-16T20:36:09.747Z", stage:"app", amount:295 },
+  { id:"506268626117", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Edel Ryan",                                   createdate:"2026-06-17T06:44:06.341Z", stage:"app", amount:440 },
+  { id:"506253296845", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Kate Galvin",                        createdate:"2026-06-17T10:27:20.225Z", stage:"app", amount:440 },
+  { id:"506298626274", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Janice Uí Thuama",                            createdate:"2026-06-17T13:03:27.801Z", stage:"won", amount:440 },
+  { id:"506587284673", dealname:"Psychology - Online Anytime 1:1 (5N0754 OA DHC) -  for Vilija Dockute",                                           createdate:"2026-06-17T15:37:17.865Z", stage:"won", amount:295 },
+  { id:"506517127362", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Laurem Hickey",                               createdate:"2026-06-17T17:05:16.908Z", stage:"app", amount:440 },
+  { id:"506565664988", dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Rathbone Rathbone",               createdate:"2026-06-17T19:06:56.119Z", stage:"app", amount:295 },
+  { id:"506625732814", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                  createdate:"2026-06-18T10:41:16.662Z", stage:"app", amount:455 },
+  { id:"506690291950", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Paul Garry",                                  createdate:"2026-06-18T10:44:57.760Z", stage:"won", amount:455 },
+  { id:"506956136670", dealname:"Accounting Manual and Computerised - Online Anytime 1:1 (5N1348 OA DBU) -  for Oran Molloy",                      createdate:"2026-06-18T15:39:40.947Z", stage:"app", amount:295 },
+  { id:"506928341208", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Emma Galvin",                         createdate:"2026-06-18T15:44:43.000Z", stage:"app", amount:295 },
+  { id:"506965245175", dealname:"Care Support - Online Anytime 1:1 (Existing Learners) (5N0758 OA EX DHC) -  for Emma Galvin",                     createdate:"2026-06-18T15:55:36.000Z", stage:"app", amount:295 },
+  { id:"507064310994", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for lorraine mcdermott",                                      createdate:"2026-06-19T10:09:13.828Z", stage:"app", amount:295 },
+  { id:"507146335419", dealname:"Work Experience (Business Studies) - Online Anytime 1:1 (5N1356 OA DBU) -  for Irene Geoghegan",                  createdate:"2026-06-19T13:38:43.927Z", stage:"won", amount:295 },
+  { id:"507419788478", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Ethna Killern",                               createdate:"2026-06-19T14:53:08.248Z", stage:"won", amount:295 },
+  { id:"507511290071", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Irene Geoghegan",                        createdate:"2026-06-20T11:59:29.794Z", stage:"app", amount:295 },
+  { id:"507502432457", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Jimin George",                                            createdate:"2026-06-20T21:26:15.876Z", stage:"app", amount:295 },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -68,14 +54,11 @@ const DEPT_COLOR = {
 };
 
 function parseDeal(d) {
-  // Use LAST parenthetical as the code block — handles "(Existing Learners) (5N... OA DHC)" patterns
-  const allParens = [...d.dealname.matchAll(/\(([^)]+)\)/g)];
-  const m = allParens.length > 0 ? allParens[allParens.length - 1] : null;
+  const m = d.dealname.match(/\(([^)]+)\)/);
   const codeBlock = m ? m[1] : "";
   const tokens = codeBlock.split(/\s+/);
   const courseCode = tokens[0] || "";
 
-  // Level: first digit of course code (e.g. "6N1957" → 6, "5N1786" → 5)
   const levelDigit = courseCode.match(/^(\d)/)?.[1] || "";
   const level = levelDigit ? `L${levelDigit}` : "";
 
@@ -85,13 +68,9 @@ function parseDeal(d) {
     if (DEPT_MAP[t])  deptCode  = t;
   }
 
-  const dept     = DEPT_MAP[deptCode]  || "Other";
+  const dept     = DEPT_MAP[deptCode]  || "Healthcare";
   const delivery = DELIV_MAP[delivCode] || "Online Anytime";
 
-  // Base course name = everything before the opening bracket, stripped of delivery type suffix
-  // e.g. "Special Needs Assisting - Online Anytime 1:1" → "Special Needs Assisting"
-  // e.g. "Special Needs Assisting - Live and Online"     → "Special Needs Assisting"
-  // e.g. "Special Needs Assisting - Classroom Near You"  → "Special Needs Assisting"
   const DELIV_SUFFIXES = [
     " - Online Anytime 1:1", " - Online Anytime",
     " - Live and Online", " - Classroom Near You",
@@ -99,17 +78,13 @@ function parseDeal(d) {
   let rawName = m
     ? d.dealname.slice(0, m.index).replace(/\s*[-–]\s*$/, "").trim()
     : d.dealname;
-  // Strip "(Existing Learners)" parenthetical if present before code block
   rawName = rawName.replace(/\s*\([^)]*\)\s*$/, "").trim();
   for (const suffix of DELIV_SUFFIXES) {
     if (rawName.endsWith(suffix)) { rawName = rawName.slice(0, -suffix.length).trim(); break; }
   }
-  const courseName = rawName; // clean base name, e.g. "Special Needs Assisting"
-
-  // courseLabel shown in pills: "{baseName} {Level}", e.g. "Special Needs Assisting L6"
+  const courseName  = rawName;
   const courseLabel = level ? `${courseName} ${level}` : courseName;
 
-  // Location for CNY
   let location = "";
   if (delivCode === "CNY" && m) {
     const after = d.dealname.slice(m.index + m[0].length);
@@ -117,21 +92,21 @@ function parseDeal(d) {
     if (lm) location = lm[1].trim();
   }
 
-  const dt = new Date(d.createdate);
+  const dt     = new Date(d.createdate);
+  // Normalise amount: HubSpot returns a string or null; store as number (0 if missing)
+  const amount = parseFloat(d.amount) || 0;
 
-  return { ...d, courseName, courseLabel, courseCode, level, delivCode, delivery, dept, deptCode, location, dt };
+  return { ...d, courseName, courseLabel, courseCode, level, delivCode, delivery, dept, deptCode, location, dt, amount };
 }
 
-const DEALS = RAW_DEALS.filter(d => !EXCLUDED_IDS.has(d.id)).map(parseDeal);
+const DEALS = RAW_DEALS.map(parseDeal);
 
-// ─── WEEK BUCKETS (Mon 1 Jun = W1, Europe/Dublin / IST UTC+1) ────────────────
-// W1: 1–7 Jun | W2: 8–14 Jun | W3: 15–21 Jun (closed) | W4: 22–28 Jun ⚡ (partial)
-// UTC offsets: IST = UTC+1 → Mon 00:00 IST = Sun 23:00 UTC prior day
+// ─── WEEK BUCKETS ─────────────────────────────────────────────────────────────
 const WEEKS = [
-  { wk:"W1", label:"1–7 Jun",       start:new Date("2026-05-31T23:00:00Z"), end:new Date("2026-06-07T22:59:59Z"), full:true  },
-  { wk:"W2", label:"8–14 Jun",      start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
-  { wk:"W3", label:"15–21 Jun",     start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
-  { wk:"W4", label:"22–28 Jun ⚡",  start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-22T22:59:59Z"), full:false },
+  { wk:"W1", label:"1 Jun–7 Jun",      start:new Date("2026-06-01T00:00:00Z"), end:new Date("2026-06-07T23:59:59Z"), full:true  },
+  { wk:"W2", label:"8 Jun–14 Jun",     start:new Date("2026-06-08T00:00:00Z"), end:new Date("2026-06-14T23:59:59Z"), full:true  },
+  { wk:"W3", label:"15 Jun–21 Jun",    start:new Date("2026-06-15T00:00:00Z"), end:new Date("2026-06-21T23:59:59Z"), full:true  },
+  { wk:"W4", label:"22 Jun–22 Jun ⚡", start:new Date("2026-06-22T00:00:00Z"), end:new Date("2026-06-22T13:11:50Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -140,12 +115,13 @@ function countWeek(deals, wk) {
 
 function buildWeeklyData(deals) {
   return WEEKS.map(wk => {
-    const inWk  = countWeek(deals, wk);
-    const apps  = inWk.filter(d => d.stage === "app").length;
-    const won   = inWk.filter(d => d.stage === "won").length;
-    const total = apps + won;
+    const inWk    = countWeek(deals, wk);
+    const apps    = inWk.filter(d => d.stage === "app").length;
+    const won     = inWk.filter(d => d.stage === "won").length;
+    const total   = apps + won;
+    const revenue = inWk.filter(d => d.stage === "won").reduce((s, d) => s + d.amount, 0);
     const convRate = total > 0 ? Math.round(won / total * 100) : 0;
-    return { week: wk.label, wk: wk.wk, apps, won, total, convRate, full: wk.full };
+    return { week: wk.label, wk: wk.wk, apps, won, total, revenue, convRate, full: wk.full };
   });
 }
 
@@ -158,7 +134,7 @@ function getDeliveryTypes(deals) {
 function getCourses(deals) {
   const map = {};
   for (const d of deals) {
-    const key = d.courseLabel; // e.g. "Special Needs Assisting L6"
+    const key = d.courseLabel;
     if (!map[key]) map[key] = { courseLabel: d.courseLabel, courseName: d.courseName, courseCode: d.courseCode, dept: d.dept };
   }
   return Object.values(map).sort((a,b) => a.courseLabel.localeCompare(b.courseLabel));
@@ -169,17 +145,27 @@ function getLocations(deals) {
   return [...s].sort();
 }
 
+// ─── FORMATTING ──────────────────────────────────────────────────────────────
+function fmtEur(n) {
+  if (!n) return "€0";
+  return "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
 // ─── COLORS & STYLES ─────────────────────────────────────────────────────────
-const C = { app:"#38bdf8", won:"#34d399", rate:"#a78bfa", bg:"#0f172a", card:"#1e293b", border:"#334155", muted:"#64748b", text:"#f1f5f9", sub:"#94a3b8" };
+const C = {
+  app:"#38bdf8", won:"#34d399", rate:"#a78bfa", rev:"#fbbf24",
+  bg:"#0f172a", card:"#1e293b", border:"#334155", muted:"#64748b", text:"#f1f5f9", sub:"#94a3b8"
+};
 
 // ─── TOOLTIP ─────────────────────────────────────────────────────────────────
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
-  const d   = payload[0]?.payload;
-  const apps = payload.find(p => p.dataKey === "apps")?.value ?? 0;
-  const won  = payload.find(p => p.dataKey === "won")?.value ?? 0;
+  const d       = payload[0]?.payload;
+  const apps    = payload.find(p => p.dataKey === "apps")?.value ?? 0;
+  const won     = payload.find(p => p.dataKey === "won")?.value ?? 0;
+  const revenue = d?.revenue ?? 0;
   return (
-    <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:8, padding:"10px 14px", fontSize:13, color:C.text, minWidth:200 }}>
+    <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:8, padding:"10px 14px", fontSize:13, color:C.text, minWidth:220 }}>
       <p style={{ fontWeight:700, marginBottom:8, color:C.sub }}>{label}</p>
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
@@ -187,6 +173,9 @@ const CustomTooltip = ({ active, payload, label }) => {
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
           <span style={{ color:C.won }}>● Invoiced Won</span><strong>{won}</strong>
+        </div>
+        <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
+          <span style={{ color:C.rev }}>● Revenue</span><strong>{fmtEur(revenue)}</strong>
         </div>
         <div style={{ borderTop:`1px solid ${C.border}`, marginTop:4, paddingTop:4, display:"flex", justifyContent:"space-between" }}>
           <span style={{ color:C.rate }}>Conv. rate</span>
@@ -241,13 +230,11 @@ export default function App() {
     );
   }
 
-  // Navigation state: dept → deliveryType → courseLabel (base name + level) → location
   const [selDept,      setSelDept]      = useState("All");
   const [selDelivery,  setSelDelivery]  = useState("All");
   const [selCourse,    setSelCourse]    = useState("All");
   const [selLocation,  setSelLocation]  = useState("All");
 
-  // Reset child selections when parent changes
   function chooseDept(d) {
     setSelDept(d); setSelDelivery("All"); setSelCourse("All"); setSelLocation("All");
   }
@@ -258,7 +245,6 @@ export default function App() {
     setSelCourse(c); setSelLocation("All");
   }
 
-  // Filtered deals
   const filtered = useMemo(() => {
     let deals = DEALS;
     if (selDept     !== "All") deals = deals.filter(d => d.dept       === selDept);
@@ -272,6 +258,7 @@ export default function App() {
   const totalApps     = filtered.filter(d => d.stage === "app").length;
   const totalWon      = filtered.filter(d => d.stage === "won").length;
   const totalDeals    = totalApps + totalWon;
+  const totalRevenue  = filtered.filter(d => d.stage === "won").reduce((s, d) => s + d.amount, 0);
   const convRate      = totalDeals > 0 ? Math.round(totalWon / totalDeals * 100) : 0;
   const avgConv       = (() => {
     const full = weeklyData.filter(w => w.full);
@@ -279,7 +266,6 @@ export default function App() {
     return Math.round(full.reduce((s,w) => s + w.convRate, 0) / full.length);
   })();
 
-  // Available filter options
   const availDepts     = ["All", ...DEPT_ORDER.filter(dep => DEALS.some(d => d.dept === dep))];
   const availDelivs    = useMemo(() => {
     const base = selDept === "All" ? DEALS : DEALS.filter(d => d.dept === selDept);
@@ -301,7 +287,6 @@ export default function App() {
 
   const showLocationRow = selDelivery === "Classroom Near You" || availLocations.length > 0;
 
-  // Scope label for header
   const scopeLabel = [
     selDept     !== "All" ? selDept     : "All Departments",
     selDelivery !== "All" ? selDelivery : null,
@@ -310,6 +295,9 @@ export default function App() {
   ].filter(Boolean).join(" · ");
 
   const accentColor = selDept !== "All" ? DEPT_COLOR[selDept] : C.app;
+
+  // Last week index for KPI card
+  const lastWkIdx = weeklyData.length - 1;
 
   return (
     <div style={{ background:C.bg, minHeight:"100vh", padding:"28px 24px", fontFamily:"'Inter','Segoe UI',sans-serif", color:C.text, textAlign:"left" }}>
@@ -323,7 +311,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 22 Jun 2026 · deal create date · W4 opens today
+          1 Jun – 22 Jun 2026 · deal create date · ⚡ W4 partial week
         </p>
       </div>
 
@@ -350,7 +338,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* ── Filter Layer 3: Course (only when dept or delivery is narrowed) ── */}
+      {/* ── Filter Layer 3: Course ── */}
       {(selDept !== "All" || selDelivery !== "All") ? (
         <div style={{ marginBottom: showLocationRow ? 12 : 20 }}>
           <p style={{ margin:"0 0 6px", fontSize:10, color:C.muted, textTransform:"uppercase", letterSpacing:"0.07em" }}>Course</p>
@@ -390,18 +378,22 @@ export default function App() {
 
       {/* ── KPIs ── */}
       <div style={{ display:"flex", gap:10, marginBottom:22, flexWrap:"wrap" }}>
-        <Stat label="Applications Received" value={totalApps} sub="stages: self + 3rd party" color={C.app} />
-        <Stat label="Invoiced Won" value={totalWon} sub="successful payment" color={C.won} />
-        <Stat label="Total Deals" value={totalDeals} sub="all pipeline stages" color={C.text} />
-        <Stat label="Conversion Rate" value={convRate+"%"} sub="won ÷ total" color="#f472b6" />
-        <Stat label="This Week (W3 ⚡)" value={`${weeklyData[2]?.apps||0}a / ${weeklyData[2]?.won||0}w`} sub="partial week" color="#fbbf24" />
+        <Stat label="Applications Received" value={totalApps}        sub="stages: self + 3rd party"   color={C.app} />
+        <Stat label="Invoiced Won"           value={totalWon}         sub="successful payment"          color={C.won} />
+        <Stat label="Revenue (Won)"          value={fmtEur(totalRevenue)} sub="sum of won deal amounts" color={C.rev} />
+        <Stat label="Conversion Rate"        value={convRate+"%"}     sub="won ÷ total"                 color="#f472b6" />
+        <Stat label={`This Week (W${lastWkIdx+1}${!weeklyData[lastWkIdx]?.full?" ⚡":""})`}
+              value={`${weeklyData[lastWkIdx]?.apps||0}a / ${weeklyData[lastWkIdx]?.won||0}w`}
+              sub={weeklyData[lastWkIdx]?.full ? "full week" : "partial week"}
+              color="#fbbf24" />
       </div>
 
       {/* ── Chart toggle ── */}
       <div style={{ display:"flex", gap:8, marginBottom:14 }}>
-        <Tab id="grouped" active={chartView==="grouped"} onClick={setChartView}>Side by side</Tab>
-        <Tab id="stacked" active={chartView==="stacked"} onClick={setChartView}>Stacked</Tab>
-        <Tab id="rate"    active={chartView==="rate"}    onClick={setChartView}>Conv. rate %</Tab>
+        <Tab id="grouped"  active={chartView==="grouped"}  onClick={setChartView}>Side by side</Tab>
+        <Tab id="stacked"  active={chartView==="stacked"}  onClick={setChartView}>Stacked</Tab>
+        <Tab id="rate"     active={chartView==="rate"}     onClick={setChartView}>Conv. rate %</Tab>
+        <Tab id="revenue"  active={chartView==="revenue"}  onClick={setChartView}>Revenue €</Tab>
       </div>
 
       {/* ── Chart ── */}
@@ -424,6 +416,15 @@ export default function App() {
                 <Line dataKey="convRate" name="Conv. rate" type="monotone"
                   stroke={C.rate} strokeWidth={2.5}
                   dot={{ r:6, fill:C.rate, strokeWidth:0 }} connectNulls/>
+              </ComposedChart>
+            ) : chartView === "revenue" ? (
+              <ComposedChart data={weeklyData} margin={{ top:8, right:20, left:8, bottom:8 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false}/>
+                <XAxis dataKey="week" tick={{ fill:C.sub, fontSize:11 }} axisLine={{ stroke:C.border }} tickLine={false}/>
+                <YAxis tick={{ fill:C.sub, fontSize:11 }} axisLine={false} tickLine={false}
+                  tickFormatter={v => "€"+v.toLocaleString("en-IE")}/>
+                <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
+                <Bar dataKey="revenue" name="Revenue" fill={C.rev} radius={[5,5,0,0]}/>
               </ComposedChart>
             ) : (
               <ComposedChart data={weeklyData} margin={{ top:8, right:20, left:-8, bottom:8 }}
@@ -451,7 +452,7 @@ export default function App() {
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
             <tr style={{ background:C.bg }}>
-              {["Wk","Dates","Apps Received","Won","Total","Conv. Rate"].map((h,i) => (
+              {["Wk","Dates","Apps Received","Won","Revenue","Total","Conv. Rate"].map((h,i) => (
                 <th key={h} style={{ padding:"10px 14px", textAlign:i<=1?"left":"center",
                   color:C.muted, fontWeight:600, fontSize:11, textTransform:"uppercase",
                   letterSpacing:"0.06em", borderBottom:`1px solid ${C.border}` }}>{h}</th>
@@ -468,6 +469,7 @@ export default function App() {
                 </td>
                 <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, color:C.app, fontSize:15 }}>{row.apps}</td>
                 <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, color:C.won, fontSize:15 }}>{row.won}</td>
+                <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, color:C.rev, fontSize:13 }}>{fmtEur(row.revenue)}</td>
                 <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, color:C.text, fontSize:15 }}>{row.total}</td>
                 <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, fontSize:12,
                   color: row.convRate >= 50 ? "#34d399" : C.rate }}>
@@ -479,6 +481,7 @@ export default function App() {
               <td colSpan={2} style={{ padding:"10px 14px", color:C.sub, fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Total</td>
               <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:800, color:C.app, fontSize:15 }}>{totalApps}</td>
               <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:800, color:C.won, fontSize:15 }}>{totalWon}</td>
+              <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:800, color:C.rev, fontSize:13 }}>{fmtEur(totalRevenue)}</td>
               <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:800, color:C.text, fontSize:15 }}>{totalDeals}</td>
               <td style={{ padding:"10px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{convRate}%</td>
             </tr>
@@ -506,13 +509,14 @@ export default function App() {
           <thead>
             <tr style={{ background:C.bg }}>
               {[
-                { label:"Department", col:null,    align:"left"   },
-                { label:"Course",     col:null,    align:"left"   },
-                { label:"Delivery",   col:null,    align:"left"   },
-                { label:"Location",   col:null,    align:"left"   },
-                { label:"Apps",       col:"apps",  align:"center" },
-                { label:"Won",        col:"won",   align:"center" },
-                { label:"Conv %",     col:"rate",  align:"center" },
+                { label:"Department", col:null,      align:"left"   },
+                { label:"Course",     col:null,      align:"left"   },
+                { label:"Delivery",   col:null,      align:"left"   },
+                { label:"Location",   col:null,      align:"left"   },
+                { label:"Apps",       col:"apps",    align:"center" },
+                { label:"Won",        col:"won",     align:"center" },
+                { label:"Revenue",    col:"revenue", align:"center" },
+                { label:"Conv %",     col:"rate",    align:"center" },
               ].map(({ label, col, align }) => (
                 <th key={label}
                   onClick={() => col && handleTableSort(col)}
@@ -538,13 +542,12 @@ export default function App() {
           </thead>
           <tbody>
             {(() => {
-              // Group by dept + courseLabel + delivery + location
               const groups = {};
               for (const d of filtered) {
                 const key = `${d.dept}||${d.courseLabel}||${d.delivery}||${d.location}`;
-                if (!groups[key]) groups[key] = { dept:d.dept, courseLabel:d.courseLabel, delivery:d.delivery, location:d.location, apps:0, won:0 };
+                if (!groups[key]) groups[key] = { dept:d.dept, courseLabel:d.courseLabel, delivery:d.delivery, location:d.location, apps:0, won:0, revenue:0 };
                 if (d.stage === "app") groups[key].apps++;
-                if (d.stage === "won") groups[key].won++;
+                if (d.stage === "won") { groups[key].won++; groups[key].revenue += d.amount; }
               }
               const rows = Object.values(groups).map(g => ({
                 ...g,
@@ -573,6 +576,8 @@ export default function App() {
                       color: tableSort.col === "apps" ? C.text : C.app }}>{g.apps}</td>
                     <td style={{ padding:"9px 12px", textAlign:"center", fontWeight:700,
                       color: tableSort.col === "won" ? C.text : C.won }}>{g.won}</td>
+                    <td style={{ padding:"9px 12px", textAlign:"center", fontWeight:700,
+                      color: tableSort.col === "revenue" ? C.text : C.rev }}>{fmtEur(g.revenue)}</td>
                     <td style={{ padding:"9px 12px", textAlign:"center", fontWeight:700,
                       color: g.rate >= 50 ? "#34d399" : C.rate }}>
                       {g.total > 0 ? g.rate+"%" : "—"}
