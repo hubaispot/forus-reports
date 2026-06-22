@@ -6,19 +6,22 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Reporting cycle: Mon 13 Apr – Sun 14 Jun 2026 (W1–W9, all full weeks)
+// Rolling 8-week window: Mon 27 Apr – Sun 21 Jun 2026 (W1–W8, all full)
+// + W9 ⚡ partial: Mon 22 Jun 2026 (run at 10:07 IST)
 // Methodology: last form only per contact · IST/BST week boundaries
+// Full re-run from CSVs 22 Jun 2026 · 133 unique enquiries · 92 unique apps
+// Phone-based dupes merged: Natalie Mitchell, Antonia Kennedy, Rebecca Gilmore (HubSpot merge needed)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Apr",    enq: 9,  app: 9,  full: true },
-  { week: "20–26 Apr",    enq: 13, app: 2,  full: true },
-  { week: "27 Apr–3 May", enq: 14, app: 5,  full: true },
-  { week: "4–10 May",     enq: 5,  app: 1,  full: true },
-  { week: "11–17 May",    enq: 3,  app: 2,  full: true },
-  { week: "18–24 May",    enq: 13, app: 5,  full: true },
-  { week: "25–31 May",    enq: 13, app: 11, full: true },
-  { week: "1–7 Jun",      enq: 18, app: 15, full: true },
-  { week: "8–14 Jun",     enq: 15, app: 7,  full: true },
+  { week: "27 Apr–3 May",   enq: 16, app: 5,  full: true  },
+  { week: "4–10 May",       enq: 7,  app: 5,  full: true  },
+  { week: "11–17 May",      enq: 5,  app: 6,  full: true  },
+  { week: "18–24 May",      enq: 19, app: 7,  full: true  },
+  { week: "25–31 May",      enq: 19, app: 17, full: true  },
+  { week: "1–7 Jun",        enq: 28, app: 20, full: true  },
+  { week: "8–14 Jun",       enq: 15, app: 10, full: true  },
+  { week: "15–21 Jun",      enq: 4,  app: 15, full: true  },
+  { week: "22 Jun ⚡",      enq: 0,  app: 0,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -62,10 +65,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.rate }}>App rate</span>
-            <strong style={{ color: COLORS.rate }}>{d?.appRate}%</strong>
+            <strong style={{ color: COLORS.rate }}>{d?.appRate > 0 ? d.appRate + "%" : "—"}</strong>
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon only — run at 10:07 IST)</p>}
     </div>
   );
 };
@@ -101,7 +105,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · 9 full weeks · Unique contacts · last form only per contact
+          27 Apr – 21 Jun 2026 · 8 full weeks + W9 ⚡ · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -111,20 +115,21 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong late-cycle surge</strong> —
-        W7, W8 and W9 account for 40 of 57 total applications (70%). W8 (1–7 Jun) was the peak week with
-        33 total submissions and 15 applications. Enquiry volume has also been consistently high since W6,
-        suggesting sustained marketing effectiveness into the final weeks of the cycle.
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong late-cycle conversion surge</strong> —
+        W6 (1–7 Jun) was the peak week with 48 total submissions and 20 applications.
+        W8 (15–21 Jun) shows a sharp reversal: only 4 enquiries but <strong style={{ color: "#f1f5f9" }}>15 applications at 79% app rate 🔥</strong>,
+        indicating deadline-driven conversion from earlier enquirers.
+        W9 ⚡ has just opened (run at 10:07am Monday).
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`, color: COLORS.enq  },
-          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`, color: COLORS.app  },
-          { label: "Total Submissions",  value: total,          sub: "9 full weeks",     color: "#f1f5f9"   },
-          { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",     color: "#34d399"   },
-          { label: "W9 (full week)",     value: data[8].total,  sub: `${data[8].enq}e / ${data[8].app}a`, color: "#cbd5e1" },
+          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,  color: COLORS.enq  },
+          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,  color: COLORS.app  },
+          { label: "Total Submissions",  value: total,          sub: "8 full wks + W9 ⚡", color: "#f1f5f9"   },
+          { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",       color: "#34d399"   },
+          { label: "W8 (15–21 Jun)",     value: "4e / 15a",     sub: "79% app rate 🔥",    color: "#fbbf24"   },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -168,7 +173,7 @@ export default function App() {
               barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 22]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 34]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
@@ -208,7 +213,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
                     {wowEnq !== null && (
@@ -242,6 +249,11 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer note */}
+      <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
+        ⚠️ Phone-based duplicate HubSpot records merged (counted once): Natalie Mitchell · Antonia Kennedy · Rebecca Gilmore — merge recommended in HubSpot
+      </p>
 
     </div>
   );
