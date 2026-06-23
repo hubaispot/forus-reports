@@ -5,20 +5,22 @@ import {
 } from "recharts";
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
-// All weeks Mon–Sun Irish Standard Time (BST/UTC+1). All 9 weeks complete (full: true).
+// Rolling 8-week window (Mon–Sun Irish Standard Time / UTC+1).
+// W1–W8 processed from CSV exported 22 Jun 2026.
+// W9⚡ updated from CSV exported 23 Jun 2026 (covers 22–23 Jun, 2 days).
 // Zero enquiry form submissions detected across all weeks — enquiry form may not be
 // live, correctly tagged, or linked for CTID770.
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Apr",    enq: 0, app: 0,  full: true },
-  { week: "20–26 Apr",    enq: 0, app: 3,  full: true },
-  { week: "27 Apr–3 May", enq: 0, app: 4,  full: true },
-  { week: "4–10 May",     enq: 0, app: 3,  full: true },
-  { week: "11–17 May",    enq: 0, app: 5,  full: true },
-  { week: "18–24 May",    enq: 0, app: 3,  full: true },
-  { week: "25–31 May",    enq: 0, app: 4,  full: true },
-  { week: "1–7 Jun",      enq: 0, app: 12, full: true },
-  { week: "8–14 Jun",     enq: 0, app: 8,  full: true },
+  { week: "27 Apr–3 May",     enq: 0, app: 8,  full: true  },
+  { week: "4–10 May",         enq: 0, app: 3,  full: true  },
+  { week: "11–17 May",        enq: 0, app: 5,  full: true  },
+  { week: "18–24 May",        enq: 0, app: 3,  full: true  },
+  { week: "25–31 May",        enq: 0, app: 5,  full: true  },
+  { week: "1–7 Jun",          enq: 0, app: 11, full: true  },
+  { week: "8–14 Jun",         enq: 0, app: 9,  full: true  },
+  { week: "15–21 Jun",        enq: 0, app: 10, full: true  },
+  { week: "22–23 Jun ⚡",     enq: 0, app: 2,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -62,10 +64,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.rate }}>App rate</span>
-            <strong style={{ color: COLORS.rate }}>{d?.appRate}%</strong>
+            <strong style={{ color: COLORS.rate }}>{d?.appRate > 0 ? d.appRate + "%" : "—"}</strong>
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Tue — updated throughout the week)</p>}
     </div>
   );
 };
@@ -95,13 +98,13 @@ export default function App() {
           color: "#64748b", fontSize: 12, textTransform: "uppercase",
           letterSpacing: "0.08em", margin: "0 0 6px"
         }}>
-          HubSpot · Healthcare Support L5 OA (CTID770)
+          HubSpot · Healthcare Support MA Level 5 OA (CTID770)
         </p>
         <h1 style={{ margin: "0 0 4px", fontSize: 22, fontWeight: 700, color: "#f8fafc" }}>
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · 9 completed weeks · Unique contacts · last form only per contact
+          27 Apr – 21 Jun 2026 · 8 completed weeks + W9⚡ partial · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -112,19 +115,21 @@ export default function App() {
       }}>
         <strong style={{ color: "#fbbf24" }}>⚠️ Key finding: </strong>
         CTID770 shows <strong style={{ color: "#f1f5f9" }}>zero enquiry form submissions</strong> across
-        all 9 weeks. All 42 contacts submitted the <strong style={{ color: "#38bdf8" }}>application form only</strong> —
+        all weeks. All contacts submitted the <strong style={{ color: "#38bdf8" }}>application form only</strong> —
         suggesting the enquiry form may not be live, correctly tagged, or linked in course communications.
-        W8 (1–7 Jun) was the peak week with <strong style={{ color: "#38bdf8" }}>12 applications</strong>.
+        W8 (15–21 Jun) is the strongest recent week at <strong style={{ color: "#38bdf8" }}>10 applications</strong>,
+        and W6 (1–7 Jun) peaked at <strong style={{ color: "#38bdf8" }}>11</strong>.
+        The course is averaging <strong style={{ color: "#38bdf8" }}>6.9 apps/week</strong> across 8 full weeks.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq  },
-          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app  },
-          { label: "Total Submissions",  value: total,          sub: "9 full weeks",        color: "#f1f5f9"   },
-          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",      color: "#34d399"   },
-          { label: "W9 (full week)",     value: data[8].total,  sub: `${data[8].enq}e / ${data[8].app}a`, color: "#cbd5e1" },
+          { label: "Total Enquiries",     value: totalEnq,         sub: `avg ${avgEnq}/wk`,   color: COLORS.enq  },
+          { label: "Total Applications",  value: totalApp,         sub: `avg ${avgApp}/wk`,   color: COLORS.app  },
+          { label: "Total Submissions",   value: total,            sub: "8 full + W9⚡",       color: "#f1f5f9"   },
+          { label: "Overall App Rate",    value: overallApp + "%", sub: "apps ÷ total",       color: "#34d399"   },
+          { label: "This week (Mon–Tue)",  value: `${data[8].enq}e / ${data[8].app}a`, sub: "⚡ partial", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -208,7 +213,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
                     {wowEnq !== null && (
@@ -227,7 +234,7 @@ export default function App() {
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: "#f1f5f9", fontSize: 15 }}>{row.total}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, fontSize: 12, color: rateHigh ? "#34d399" : COLORS.rate }}>
-                    {row.total > 0 ? row.appRate + "%" : "—"}{rateHigh ? " 🔥" : ""}
+                    {row.total > 0 ? row.appRate + "% 🔥" : "—"}
                   </td>
                 </tr>
               );
@@ -242,6 +249,12 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer note */}
+      <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
+        ⚠️ No enquiry form submissions detected for CTID770 — all contacts applied directly.
+        Enquiry form may not be live or linked for this course.
+      </p>
 
     </div>
   );
