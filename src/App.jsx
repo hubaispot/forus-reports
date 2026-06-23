@@ -120,16 +120,16 @@ const NAV = {
     label: "Healthcare", color: "#f87171",
     enqApp: {
       courses: [
-        { id: "771", label: "CTID771 · Healthcare Support MA Level 5 LO", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
-        { id: "786", label: "CTID786 · CS & COOP Level 5 LO",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
-        { id: "770", label: "CTID770 · Healthcare Support MA Level 5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
+        { id: "771", label: "Healthcare Support MA Level 5 LO", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
+        { id: "786", label: "CS & COOP Level 5 LO",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
+        { id: "770", label: "Healthcare Support MA Level 5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
       ],
       get combined() { return mergeEnqApp([hc771Data, hc786Data, hc770Data]); },
     },
     revenue: {
       courses: [
-        { id: "786rev", label: "CTID786 · CS & COOP Level 5 LO",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
-        { id: "770rev", label: "CTID770 · Healthcare Support MA Level 5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
+        { id: "786rev", label: "CS & COOP Level 5 LO",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
+        { id: "770rev", label: "Healthcare Support MA Level 5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
       ],
       get combined() { return mergeRevenue([hc786RevData, hc770RevData]); },
     },
