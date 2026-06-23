@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Apr",  label: "W1", enq: 8,  app: 6,  full: true },
-  { week: "20–26 Apr",  label: "W2", enq: 6,  app: 5,  full: true },
-  { week: "27 Apr–3 May", label: "W3", enq: 6, app: 1, full: true },
-  { week: "4–10 May",   label: "W4", enq: 4,  app: 6,  full: true },
-  { week: "11–17 May",  label: "W5", enq: 1,  app: 3,  full: true },
-  { week: "18–24 May",  label: "W6", enq: 9,  app: 6,  full: true },
-  { week: "25–31 May",  label: "W7", enq: 4,  app: 6,  full: true },
-  { week: "1–7 Jun",    label: "W8", enq: 3,  app: 4,  full: true },
-  { week: "8–14 Jun",   label: "W9", enq: 1,  app: 5,  full: true },
+  { week: "27 Apr–3 May",  label: "W1", enq: 13, app: 4,  full: true  },
+  { week: "4–10 May",      label: "W2", enq: 5,  app: 11, full: true  },
+  { week: "11–17 May",     label: "W3", enq: 3,  app: 7,  full: true  },
+  { week: "18–24 May",     label: "W4", enq: 12, app: 8,  full: true  },
+  { week: "25–31 May",     label: "W5", enq: 5,  app: 8,  full: true  },
+  { week: "1–7 Jun",       label: "W6", enq: 4,  app: 6,  full: true  },
+  { week: "8–14 Jun",      label: "W7", enq: 1,  app: 5,  full: true  },
+  { week: "15–21 Jun",     label: "W8", enq: 3,  app: 8,  full: true  },
+  { week: "22–23 Jun ⚡",   label: "W9", enq: 1,  app: 3,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -90,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
+          27 Apr – 23 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -99,19 +99,21 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Strong close to the reporting cycle — W9 delivered the highest app rate of all 9 weeks at 83% 🔥,
-        with 5 applications against just 1 enquiry. W4–W9 have all hit 57%+ conversion,
-        a consistent improvement from the 43–45% seen in W1–W2. W3 remains the only outlier at 14%.
+        Applications dominate throughout — 6 of 8 completed weeks hit 60%+ conversion 🔥.
+        W2 and W3 kicked off strongly (69–70%) before a W4 dip to 40% on a surge of enquiries.
+        The course has recovered sharply: W7 and W8 both exceed 70%, with W8 (15–21 Jun)
+        recording the highest volume at 11 total submissions. W1 is the only week where enquiries
+        led (13 vs 4), suggesting early-cycle interest that converts consistently in later weeks.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,      color: COLORS.enq },
-          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,      color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "9 full weeks",           color: "#f1f5f9"  },
-          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",           color: "#34d399"  },
-          { label: "Best Week",          value: "W9",             sub: "83% · 8–14 Jun",         color: "#fbbf24"  },
+          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,        color: COLORS.enq },
+          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,        color: COLORS.app },
+          { label: "Total Submissions",  value: total,            sub: "8 full + 1 partial wk",   color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",             color: "#34d399"  },
+          { label: "Best Week",          value: "W7",             sub: "83% · 8–14 Jun",           color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -157,7 +159,7 @@ export default function App() {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 10 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false}
-                tickLine={false} domain={[0, 14]}/>
+                tickLine={false} domain={[0, 16]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
@@ -222,7 +224,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (9 full weeks)
+                Total (W1–W8 full + W9 partial)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.enq, fontSize: 15 }}>{totalEnq}</td>
@@ -236,6 +238,12 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer note */}
+      <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
+        ⚡ W9 is a partial week (22–23 Jun) — excluded from weekly averages.
+        Test submissions (jean@forustraining.ie) excluded from all counts.
+      </p>
     </div>
   );
 }

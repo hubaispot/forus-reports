@@ -6,28 +6,29 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID786 — Care Skills & Care of the Older Person – Live and Online
-// W1–W9: all full weeks (Mon–Sun IST), ending 14 Jun 2026
+// W1–W8 full weeks (Mon–Sun IST), W9 partial (22–23 Jun 2026)
 // Forms = enq + app from HubSpot JSX (unique contacts, last form only per contact)
 // Registrations + Revenue from Paythen (Status = Registered, IST boundaries)
+// Pre-W1 registrations (before 27 Apr) excluded by standing instruction.
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Apr",    forms: 14, regs: 6,  revenue: 2945.00, full: true },
-  { week: "20–26 Apr",    forms: 11, regs: 5,  revenue: 2446.25, full: true },
-  { week: "27 Apr–3 May", forms:  7, regs: 4,  revenue: 1971.25, full: true },
-  { week: "4–10 May",     forms: 10, regs: 7,  revenue: 3467.50, full: true },
-  { week: "11–17 May",    forms:  4, regs: 2,  revenue:  973.75, full: true },
-  { week: "18–24 May",    forms: 15, regs: 5,  revenue: 2493.75, full: true },
-  { week: "25–31 May",    forms: 10, regs: 3,  revenue: 1155.00, full: true },
-  { week: "1–7 Jun",      forms:  7, regs: 5,  revenue: 2470.00, full: true },
-  { week: "8–14 Jun",     forms:  6, regs: 3,  revenue: 1472.50, full: true },
+  { week: "27 Apr–3 May",  label: "W1", forms: 17, regs: 4,  revenue: 1971.25, full: true  },
+  { week: "4–10 May",      label: "W2", forms: 16, regs: 7,  revenue: 3467.50, full: true  },
+  { week: "11–17 May",     label: "W3", forms: 10, regs: 2,  revenue:  973.75, full: true  },
+  { week: "18–24 May",     label: "W4", forms: 20, regs: 5,  revenue: 2493.75, full: true  },
+  { week: "25–31 May",     label: "W5", forms: 13, regs: 3,  revenue: 1155.00, full: true  },
+  { week: "1–7 Jun",       label: "W6", forms: 10, regs: 5,  revenue: 2470.00, full: true  },
+  { week: "8–14 Jun",      label: "W7", forms:  6, regs: 3,  revenue: 1472.50, full: true  },
+  { week: "15–21 Jun",     label: "W8", forms: 11, regs: 3,  revenue: 1496.25, full: true  },
+  { week: "22–23 Jun ⚡",  label: "W9", forms:  4, regs: 0,  revenue:    0.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
 }));
 
 const fullWeeks  = data.filter(d => d.full);
-const totalForms = data.reduce((s, d) => s + d.forms, 0);
-const totalRegs  = data.reduce((s, d) => s + d.regs,  0);
+const totalForms = data.reduce((s, d) => s + d.forms,   0);
+const totalRegs  = data.reduce((s, d) => s + d.regs,    0);
 const totalRev   = data.reduce((s, d) => s + d.revenue, 0);
 const avgForms   = (fullWeeks.reduce((s, d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
 const avgRegs    = (fullWeeks.reduce((s, d) => s + d.regs,  0) / fullWeeks.length).toFixed(1);
@@ -35,9 +36,9 @@ const overallCR  = totalForms > 0 ? +(totalRegs / totalForms * 100).toFixed(1) :
 
 const COLORS = { forms: "#fb923c", regs: "#38bdf8", cr: "#a78bfa", rev: "#34d399" };
 
-const fmt = (n) => "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = n => "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload }) => {
   if (!active || !payload?.length) return null;
   const d     = payload[0]?.payload;
   const forms = d?.forms   ?? 0;
@@ -46,7 +47,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   return (
     <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
       padding: "10px 14px", fontSize: 13, color: "#f1f5f9", minWidth: 230 }}>
-      <p style={{ fontWeight: 700, marginBottom: 8, color: "#cbd5e1" }}>{label}</p>
+      <p style={{ fontWeight: 700, marginBottom: 8, color: "#cbd5e1" }}>
+        {d?.label} · {d?.week}
+      </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
           <span style={{ color: COLORS.forms }}>● Forms</span><strong>{forms}</strong>
@@ -58,7 +61,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.cr }}>Conv. rate</span>
-            <strong style={{ color: COLORS.cr }}>{d?.cr}%</strong>
+            <strong style={{ color: COLORS.cr }}>{d?.forms > 0 ? d.cr + "%" : "—"}</strong>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.rev }}>Exp. revenue</span>
@@ -66,6 +69,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -84,8 +88,8 @@ export default function App() {
   const [view, setView] = useState("grouped");
 
   return (
-    <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
-      fontFamily: "'Inter','Segoe UI',sans-serif", color: "#f1f5f9" }}>
+    <div style={{ textAlign: "left", background: "#0f172a", minHeight: "100vh",
+      padding: "32px 24px", fontFamily: "'Inter','Segoe UI',sans-serif", color: "#f1f5f9" }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
@@ -97,7 +101,7 @@ export default function App() {
           Weekly Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Apr – 14 Jun 2026 · IST boundaries · 9 full weeks
+          27 Apr – 23 Jun 2026 · IST boundaries · 8 full weeks + W9 partial ⚡
         </p>
       </div>
 
@@ -106,13 +110,15 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Key insight: </strong>
-        CTID786 shows <strong style={{ color: "#f1f5f9" }}>strong steady demand</strong> — W4 (4–10 May)
-        is the peak week with <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
+        W2 (4–10 May) is the standout week with{" "}
+        <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
         <strong style={{ color: "#34d399" }}>€3,467.50</strong> revenue.
-        Conversion held above 50% in 4 of 9 weeks, with the overall rate at{" "}
+        Conversion is highest in W6 and W7 (50% each), with a strong pipeline of forms in W4
+        (20 total). Overall conversion rate sits at{" "}
         <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong> across{" "}
-        <strong style={{ color: "#f1f5f9" }}>40 registrations</strong> and total expected revenue of{" "}
-        <strong style={{ color: "#34d399" }}>{fmt(totalRev)}</strong>.
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> and total
+        expected revenue of{" "}
+        <strong style={{ color: "#34d399" }}>{fmt(totalRev)}</strong> (W1–W8 full weeks).
       </div>
 
       {/* KPI Cards */}
@@ -121,13 +127,14 @@ export default function App() {
           { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk (full weeks)`, color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk (full weeks)`,  color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",                    color: COLORS.cr    },
-          { label: "Total Exp. Revenue",  value: fmt(totalRev),   sub: "W1–W9 · 9 full weeks",            color: COLORS.rev   },
+          { label: "Total Exp. Revenue",  value: fmt(totalRev),   sub: "W1–W8 full + W9 partial",         color: COLORS.rev   },
         ].map(k => (
-          <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
-            flex: "1 1 130px", border: "1px solid #334155" }}>
+          <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
+            padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
             <p style={{ margin: "0 0 3px", fontSize: 10, color: "#64748b",
               textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
-            <p style={{ margin: "0 0 2px", fontSize: k.label === "Total Exp. Revenue" ? 18 : 22,
+            <p style={{ margin: "0 0 2px",
+              fontSize: k.label === "Total Exp. Revenue" ? 18 : 22,
               fontWeight: 800, color: k.color, lineHeight: 1 }}>{k.value}</p>
             <p style={{ margin: 0, fontSize: 10, color: "#64748b" }}>{k.sub}</p>
           </div>
@@ -148,10 +155,10 @@ export default function App() {
           {view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
+              <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 100]}/>
+                tickFormatter={v => v + "%"} domain={[0, 80]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={overallCR} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11,
@@ -163,7 +170,7 @@ export default function App() {
           ) : view === "revenue" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
+              <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
                 tickFormatter={v => "€" + (v / 1000).toFixed(1) + "k"} domain={[0, 4500]}/>
@@ -174,10 +181,10 @@ export default function App() {
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
               barCategoryGap="22%" barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
+              <XAxis dataKey="label" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                domain={[0, 18]}/>
+                domain={[0, 24]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "forms" ? "Forms (enq + app)" : "Registrations"}/>
@@ -216,7 +223,7 @@ export default function App() {
                   borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
-                  <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
+                  <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>{row.label}</td>
                   <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
@@ -242,7 +249,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W9 · 9 full weeks)
+                Total (W1–W8 full + W9 partial)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -256,6 +263,13 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer */}
+      <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
+        ⚡ W9 is a partial week (22–23 Jun) — excluded from weekly averages.
+        11 pre-W1 registrations (13–26 Apr, €5,369.25) excluded per standing instruction.
+        Test submissions (jean@forustraining.ie) excluded from all counts.
+      </p>
     </div>
   );
 }
