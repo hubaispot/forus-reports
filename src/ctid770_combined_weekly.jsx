@@ -117,7 +117,7 @@ export default function App() {
           Weekly Revenue Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 21 Jun 2026 · 8 completed weeks + W9⚡ partial · HubSpot forms + Paythen registrations
+          27 Apr – 23 Jun 2026 · 8 completed weeks + W9⚡ partial · HubSpot forms + Paythen registrations
         </p>
       </div>
 

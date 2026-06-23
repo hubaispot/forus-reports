@@ -104,7 +104,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 21 Jun 2026 · 8 completed weeks + W9⚡ partial · Unique contacts · last form only per contact
+          27 Apr – 23 Jun 2026 · 8 completed weeks + W9⚡ partial · Unique contacts · last form only per contact
         </p>
       </div>
 
