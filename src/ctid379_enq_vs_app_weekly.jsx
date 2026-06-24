@@ -13,7 +13,7 @@ export const data = [
   { week: "1 Jun–7 Jun",     enq: 6, app: 8,  full: true  },
   { week: "8 Jun–14 Jun",    enq: 7, app: 8,  full: true  },
   { week: "15 Jun–21 Jun",   enq: 4, app: 5,  full: true  },
-  { week: "22 Jun–22 Jun ⚡", enq: 0, app: 0,  full: false },
+  { week: "22 Jun–25 Jun ⚡", enq: 2, app: 1,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -84,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          27 Apr – 22 Jun 2026 · Unique contacts · last form only per contact
+          27 Apr – 25 Jun 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 

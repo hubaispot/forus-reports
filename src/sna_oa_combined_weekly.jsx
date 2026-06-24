@@ -6,24 +6,23 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID490 + CTID423 — SNA Online Anytime (merged) — Combined Weekly Revenue Report
-// Forms: from HubSpot JSX (enq + app per week), W1–W8 full, W9 partial (Mon only)
-// Registrations & Revenue: from Paythen "Courses Expected Revenue CTID__2_" (Filtered sheet)
+// Forms: from HubSpot JSX (enq + app per week), W1–W8 full, W9 partial ⚡
+// Registrations & Revenue: from Paythen "Courses Expected Revenue CTID" (Filtered sheet)
 // Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 27 Apr 2026.
-// Pre-W1 rows excluded: Sarah Martin, Kay Sheehan (20 Apr), Samantha (16 Apr),
-//   Caroline Hopkins (15 Apr), Rachel Ryan (19 Apr) — all before 27 Apr.
-// W2 CR ⚡: 1 reg from 0 forms — direct Paythen registration.
-// W8 CR ⚡: 2 regs from 0 forms — direct Paythen registrations.
+// 5 pre-W1 rows excluded (before 27 Apr): Caroline Hopkins 15 Apr, Samantha 16 Apr,
+//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr.
+// Revenue tiers: CTID490 €295.00/€320.00/€324.80 · CTID423 €440.00/€462.00
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Apr–3 May", forms: 1,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "4–10 May",     forms: 0,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "11–17 May",    forms: 3,  regs: 3,  revenue: 1248.80, full: true  },
-  { week: "18–24 May",    forms: 2,  regs: 0,  revenue:    0.00, full: true  },
+  { week: "27 Apr–3 May", forms: 2,  regs: 1,  revenue:  462.00, full: true  },
+  { week: "4–10 May",     forms: 6,  regs: 1,  revenue:  462.00, full: true  },
+  { week: "11–17 May",    forms: 9,  regs: 3,  revenue: 1248.80, full: true  },
+  { week: "18–24 May",    forms: 3,  regs: 0,  revenue:    0.00, full: true  },
   { week: "25–31 May",    forms: 2,  regs: 1,  revenue:  320.00, full: true  },
-  { week: "1–7 Jun",      forms: 5,  regs: 0,  revenue:    0.00, full: true  },
-  { week: "8–14 Jun",     forms: 2,  regs: 2,  revenue:  590.00, full: true  },
-  { week: "15–21 Jun",    forms: 0,  regs: 2,  revenue:  764.80, full: true  },
-  { week: "22 Jun ⚡",    forms: 0,  regs: 0,  revenue:    0.00, full: false },
+  { week: "1–7 Jun",      forms: 7,  regs: 0,  revenue:    0.00, full: true  },
+  { week: "8–14 Jun",     forms: 3,  regs: 2,  revenue:  590.00, full: true  },
+  { week: "15–21 Jun",    forms: 2,  regs: 2,  revenue:  764.80, full: true  },
+  { week: "22–25 Jun ⚡", forms: 1,  regs: 0,  revenue:    0.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -31,10 +30,10 @@ export const data = [
 
 const fullWeeks  = data.filter(d => d.full);
 const totalForms = data.reduce((s, d) => s + d.forms, 0);
-const totalRegs  = data.reduce((s, d) => s + d.regs, 0);
+const totalRegs  = data.reduce((s, d) => s + d.regs,  0);
 const totalRev   = data.reduce((s, d) => s + d.revenue, 0);
 const avgForms   = (fullWeeks.reduce((s, d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
-const avgRegs    = (fullWeeks.reduce((s, d) => s + d.regs, 0) / fullWeeks.length).toFixed(1);
+const avgRegs    = (fullWeeks.reduce((s, d) => s + d.regs,  0) / fullWeeks.length).toFixed(1);
 const overallCR  = totalForms > 0 ? +(totalRegs / totalForms * 100).toFixed(1) : 0;
 
 const fmt = n => "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -48,8 +47,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   const regs  = d?.regs  ?? 0;
   const rev   = d?.revenue ?? 0;
   const cr    = d?.cr;
-  const crOver   = cr !== null && cr > 100;
-  const crDirect = cr === null && regs > 0;
+  const crOver = cr !== null && cr > 100;
   return (
     <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
       padding: "10px 14px", fontSize: 13, color: "#f1f5f9", minWidth: 230 }}>
@@ -66,7 +64,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.cr }}>Conv. rate</span>
             <strong style={{ color: COLORS.cr }}>
-              {crDirect ? "— ⚡" : cr !== null ? cr + "%" + (crOver ? " ⚡" : "") : "—"}
+              {cr !== null ? cr + "%" + (crOver ? " ⚡" : "") : "—"}
             </strong>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -75,8 +73,8 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon only)</p>}
-      {(crOver || crDirect) && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR ⚡: registrations exceed HubSpot forms — learner(s) registered directly via Paythen</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
+      {crOver && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR &gt;100%: registrations exceed HubSpot forms — learner registered directly via Paythen</p>}
     </div>
   );
 };
@@ -108,7 +106,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 22 Jun 2026 · W1–W8 full weeks · W9 partial (Mon 22 Jun) ⚡ · CTID490 &amp; CTID423 merged
+          27 Apr – 25 Jun 2026 · W1–W8 full weeks · W9 partial (Mon–Thu) ⚡ · CTID490 &amp; CTID423 merged
         </p>
       </div>
 
@@ -118,20 +116,20 @@ export default function App() {
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#a78bfa" }}>📌 Key insight: </strong>
         SNA Online Anytime has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 full weeks.
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 9 weeks.
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W3 (11–17 May) was the peak week — 3 forms and 3 registrations, generating €1,248.80.
-        W6 (1–7 Jun) had the highest form volume (5) with no registrations yet — potential lag cohort.
-        W8 (15–21 Jun) closed strongly with 2 direct Paythen registrations and no prior HubSpot forms.
+        W3 (11–17 May) was the peak week for both forms (9) and registrations (3).
+        W8 (15–21 Jun) achieved 100% conversion — both contacts who submitted a form also registered.
+        W6 (1–7 Jun) had the highest form volume (7) with no registrations, suggesting a conversion lag for that cohort.
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Form Submissions", value: totalForms,       sub: `avg ${avgForms}/wk (full weeks)`,  color: COLORS.forms },
-          { label: "Total Registrations",    value: totalRegs,        sub: `avg ${avgRegs}/wk (full weeks)`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",     value: overallCR + "%",  sub: "regs ÷ forms (all weeks)",         color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),    sub: "W1–W8 + W9 partial",               color: COLORS.rev   },
+          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (full weeks)`,  color: COLORS.forms },
+          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (full weeks)`,   color: COLORS.regs  },
+          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",         color: COLORS.cr    },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "27 Apr – 25 Jun 2026",             color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -156,12 +154,12 @@ export default function App() {
         border: "1px solid #334155", marginBottom: 20 }}>
         <ResponsiveContainer width="100%" height={300}>
           {view === "cr" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false} />
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 150]} />
+                tickFormatter={v => v + "%"} domain={[0, 120]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <ReferenceLine y={100} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: "100%", fill: "#64748b", fontSize: 10, position: "insideTopRight" }} />
@@ -171,8 +169,11 @@ export default function App() {
                 stroke={COLORS.cr} strokeWidth={2.5}
                 dot={({ cx, cy, index }) => {
                   if (data[index]?.cr === null) return null;
-                  return <circle key={index} cx={cx} cy={cy} r={6}
-                    fill={data[index]?.full ? COLORS.cr : "#fbbf24"} stroke="none" />;
+                  return (
+                    <circle key={index} cx={cx} cy={cy} r={6}
+                      fill={data[index]?.full ? COLORS.cr : "#fbbf24"}
+                      stroke="none" />
+                  );
                 }} connectNulls={false} />
             </ComposedChart>
           ) : view === "rev" ? (
@@ -192,7 +193,7 @@ export default function App() {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false} />
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                domain={[0, 8]} />
+                domain={[0, 12]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "forms" ? "Form submissions" : "Registrations"} />
@@ -218,8 +219,8 @@ export default function App() {
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const crOver   = row.cr !== null && row.cr > 100;
-              const crDirect = row.cr === null && row.regs > 0;
+              const crOver = row.cr !== null && row.cr > 100;
+              const crHigh = row.cr !== null && row.cr >= 80 && row.cr <= 100 && row.forms > 0;
               const delta = (val, prev) => {
                 if (prev === null) return null;
                 const diff = val - prev;
@@ -237,7 +238,8 @@ export default function App() {
                     {row.week}
                     {!row.full && (
                       <span style={{ marginLeft: 6, fontSize: 10, color: "#fbbf24",
-                        background: "rgba(251,191,36,0.12)", borderRadius: 4, padding: "1px 5px" }}>partial</span>
+                        background: "rgba(251,191,36,0.12)", borderRadius: 4,
+                        padding: "1px 5px" }}>partial</span>
                     )}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
@@ -250,8 +252,9 @@ export default function App() {
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, fontSize: 12,
-                    color: (crOver || crDirect) ? "#fbbf24" : COLORS.cr }}>
-                    {crDirect ? "— ⚡" : row.cr !== null ? row.cr + "%" + (crOver ? " ⚡" : "") : "—"}
+                    color: crOver ? "#fbbf24" : crHigh ? "#34d399" : !row.full ? "#fbbf24" : COLORS.cr }}>
+                    {row.cr !== null ? row.cr + "%" : (row.regs > 0 ? "—⚡" : "—")}
+                    {crOver ? " ⚡" : crHigh ? " 🔥" : ""}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: row.revenue > 0 ? COLORS.rev : "#475569", fontSize: 13 }}>
@@ -263,7 +266,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8 full + W9 partial)
+                Total (W1–W9 incl. partial)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -280,11 +283,10 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (CTID490 + CTID423 combined, unique contacts, last form only).
+        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (CTID490 + CTID423 combined, unique contacts, last form only, deduped on name/email/phone).
         Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 27 Apr 2026.
-        Pre-W1 rows excluded: Sarah Martin, Kay Sheehan, Caroline Hopkins, Samantha, Rachel Ryan (all before 27 Apr).
-        W2 &amp; W8 CR ⚡: registrations with no prior HubSpot form — learners registered directly via Paythen.
-        Revenue tiers: CTID490 €295.00–€462.00 · CTID423 €440.00–€462.00.
+        5 pre-W1 registrations excluded (15–20 Apr): Caroline Hopkins, Samantha, Rachel Ryan, Sarah Martin, Kay Sheehan.
+        Revenue tiers: CTID490 €295.00–€324.80 · CTID423 €440.00–€462.00.
       </p>
     </div>
   );

@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "27 Apr–3 May",   enq: 0, app: 1,  full: true  },
-  { week: "4–10 May",       enq: 2, app: 1,  full: true  },
-  { week: "11–17 May",      enq: 3, app: 2,  full: true  },
-  { week: "18–24 May",      enq: 1, app: 2,  full: true  },
-  { week: "25–31 May",      enq: 0, app: 1,  full: true  },
-  { week: "1–7 Jun",        enq: 5, app: 2,  full: true  },
-  { week: "8–14 Jun",       enq: 2, app: 0,  full: true  },
-  { week: "15–21 Jun",      enq: 1, app: 1,  full: true  },
-  { week: "22 Jun ⚡",      enq: 0, app: 1,  full: false },
+  { week: "27 Apr–3 May", enq: 0, app: 2,  full: true  },
+  { week: "4–10 May",     enq: 3, app: 3,  full: true  },
+  { week: "11–17 May",    enq: 3, app: 6,  full: true  },
+  { week: "18–24 May",    enq: 1, app: 2,  full: true  },
+  { week: "25–31 May",    enq: 0, app: 2,  full: true  },
+  { week: "1–7 Jun",      enq: 5, app: 2,  full: true  },
+  { week: "8–14 Jun",     enq: 2, app: 1,  full: true  },
+  { week: "15–21 Jun",    enq: 1, app: 1,  full: true  },
+  { week: "22–25 Jun ⚡", enq: 0, app: 1,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -53,7 +53,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon only)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -84,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          27 Apr – 22 Jun 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
+          27 Apr – 25 Jun 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
         </p>
       </div>
 
@@ -92,9 +92,10 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        SNA Online Anytime has a <strong style={{ color:"#f1f5f9" }}>high application rate ({overallApp}%)</strong> overall —
-        W6 (1–7 Jun) was the peak week with 7 total submissions (5 enq + 2 app), driven largely by CTID423 enquiries.
-        W7–W8 show a post-surge slowdown in applications, with enquiry momentum continuing into mid-June.
+        SNA Online Anytime has a <strong style={{ color:"#f1f5f9" }}>high application rate ({overallApp}%)</strong> —
+        applications outnumber or match enquiries in most weeks. W3 (11–17 May) was the peak week with 9 total
+        submissions (3 enq + 6 app). Enquiry volume peaked in W6 (5 in one week), suggesting a mid-June
+        awareness surge that has yet to convert to equal application numbers.
       </div>
 
       {/* KPIs */}
@@ -147,7 +148,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,8]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,10]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -216,11 +217,6 @@ export default function App() {
           </tbody>
         </table>
       </div>
-
-      {/* Footer note */}
-      <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID490 + CTID423 combined · cross-CTID deduplication applied · W9 partial (Mon 22 Jun only)
-      </p>
     </div>
   );
 }

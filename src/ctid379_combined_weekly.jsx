@@ -10,8 +10,8 @@ import {
 // Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
 //   Status = "Registered" only; deduplicated by email; 9 pre-W1 rows (13–23 Apr) excluded
 // Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59
-// W9 = partial week Mon 22 Jun 2026 (day 1 only)
-// Run: 22 Jun 2026
+// W9 = partial week Mon 22 Jun – Thu 25 Jun 2026
+// Run: 25 Jun 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
   { week: "27 Apr–3 May",  forms: 6,  regs: 1, revenue: 440.00,   full: true  },
@@ -22,7 +22,7 @@ export const data = [
   { week: "1–7 Jun",       forms: 14, regs: 6, revenue: 2706.00,  full: true  },
   { week: "8–14 Jun",      forms: 15, regs: 4, revenue: 1804.00,  full: true  },
   { week: "15–21 Jun",     forms: 9,  regs: 2, revenue: 923.83,   full: true  },
-  { week: "22 Jun ⚡",     forms: 0,  regs: 0, revenue: 0,        full: false },
+  { week: "22–25 Jun ⚡",  forms: 3,  regs: 1, revenue: 440.00,   full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -70,7 +70,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon only)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
       {cr > 100 && d?.full && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR &gt;100%: some learners registered directly via Paythen</p>}
     </div>
   );
@@ -103,7 +103,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 21 Jun 2026 · W1–W8 full weeks · W9 ⚡ partial (Mon 22 Jun) · run 22 Jun 2026
+          27 Apr – 25 Jun 2026 · W1–W8 full weeks · W9 ⚡ partial (22–25 Jun) · run 25 Jun 2026
         </p>
       </div>
 
@@ -272,7 +272,7 @@ export default function App() {
         <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only).
         Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
         9 pre-window registrations (13–23 Apr) excluded. Revenue tiers: €440.00, €461.83, €462.00, €733.95.
-        W9 is a partial week (Mon 22 Jun 2026 — day 1 only).
+        W9 is a partial week (Mon 22 Jun – Thu 25 Jun 2026). 1 Paythen row (gearoidclesham@gmail.com, €461.83, 24 Jun) excluded — Status not yet assigned.
       </p>
 
     </div>
