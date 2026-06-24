@@ -5,16 +5,16 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Apr",    enq: 2, app: 0,  full: true  },
-  { week: "20–26 Apr",    enq: 1, app: 1,  full: true  },
-  { week: "27 Apr–3 May", enq: 3, app: 0,  full: true  },
-  { week: "4–10 May",     enq: 4, app: 1,  full: true  },
-  { week: "11–17 May",    enq: 0, app: 0,  full: true  },
-  { week: "18–24 May",    enq: 1, app: 0,  full: true  },
-  { week: "25–31 May",    enq: 1, app: 0,  full: true  },
-  { week: "1–7 Jun",      enq: 2, app: 0,  full: true  },
-  { week: "8–14 Jun",     enq: 4, app: 0,  full: true  },
-].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : null }));
+  { week: "27 Apr–3 May",    enq: 4, app: 9,  full: true  },
+  { week: "4 May–10 May",    enq: 4, app: 4,  full: true  },
+  { week: "11 May–17 May",   enq: 1, app: 5,  full: true  },
+  { week: "18 May–24 May",   enq: 0, app: 3,  full: true  },
+  { week: "25 May–31 May",   enq: 1, app: 6,  full: true  },
+  { week: "1 Jun–7 Jun",     enq: 3, app: 13, full: true  },
+  { week: "8 Jun–14 Jun",    enq: 4, app: 10, full: true  },
+  { week: "15 Jun–21 Jun",   enq: 2, app: 10, full: true  },
+  { week: "22 Jun–24 Jun ⚡", enq: 1, app: 4,  full: false },
+].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
 const totalEnq   = data.reduce((s,d) => s + d.enq, 0);
@@ -22,7 +22,7 @@ const totalApp   = data.reduce((s,d) => s + d.app, 0);
 const total      = totalEnq + totalApp;
 const avgEnq     = (fullWeeks.reduce((s,d) => s + d.enq, 0) / fullWeeks.length).toFixed(1);
 const avgApp     = (fullWeeks.reduce((s,d) => s + d.app, 0) / fullWeeks.length).toFixed(1);
-const overallApp = total > 0 ? Math.round(totalApp / total * 100) : 0;
+const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
@@ -37,10 +37,10 @@ const CustomTooltip = ({ active, payload, label }) => {
       <p style={{ fontWeight:700, marginBottom:8, color:"#cbd5e1" }}>{label}</p>
       <div style={{ display:"flex", flexDirection:"column", gap:4 }}>
         <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
-          <span style={{ color:COLORS.enq }}>● Enquiry form</span><strong>{enq}</strong>
+          <span style={{ color:COLORS.enq }}>● Enquiry (LO/CTID771)</span><strong>{enq}</strong>
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
-          <span style={{ color:COLORS.app }}>● Application form</span><strong>{app}</strong>
+          <span style={{ color:COLORS.app }}>● Applications (OA+LO)</span><strong>{app}</strong>
         </div>
         <div style={{ borderTop:"1px solid #334155", marginTop:4, paddingTop:4,
           display:"flex", flexDirection:"column", gap:3 }}>
@@ -49,10 +49,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
           <div style={{ display:"flex", justifyContent:"space-between" }}>
             <span style={{ color:COLORS.rate }}>App rate</span>
-            <strong style={{ color:COLORS.rate }}>{d?.appRate !== null ? d.appRate+"%" : "—"}</strong>
+            <strong style={{ color:COLORS.rate }}>{d?.appRate}%</strong>
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -72,37 +73,52 @@ export default function App() {
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
-      fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9" }}>
+      fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9", textAlign:"left" }}>
 
       {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
-          HubSpot · Healthcare Support Major Award L5 – Live and Online (CTID771)
+          HubSpot · Healthcare Support MA L5 — LO (CTID771) + OA (CTID770)
         </p>
         <h1 style={{ margin:"0 0 4px", fontSize:22, fontWeight:700, color:"#f8fafc" }}>
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
+          27 Apr – 24 Jun 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts · last form only per contact
         </p>
       </div>
 
+      {/* Asymmetry notice banner */}
+      <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
+        padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
+        <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
+        Enquiries are <strong style={{ color:"#f1f5f9" }}>LO (CTID771) only</strong>.
+        Applications include <strong style={{ color:"#f1f5f9" }}>both LO (CTID771) and OA (CTID770)</strong>.
+        App rate % reflects this asymmetry and is not directly comparable to courses where enquiry
+        and application forms are matched 1:1.
+      </div>
+
       {/* Notable insight banner */}
-      <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
+      <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#fb923c" }}>📌 Key characteristic: </strong>
-        CTID771 remains <strong style={{ color:"#f1f5f9" }}>heavily enquiry-led</strong> — only 2 of 20 submissions over 9 weeks were applications ({overallApp}% app rate).
-        {" "}W9 (8–14 Jun) posted the <strong style={{ color:"#f1f5f9" }}>joint-highest enquiry week (4)</strong>, matching W3, with zero applications — the conversion gap continues to widen.
+        <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
+        This combined course has a <strong style={{ color:"#f1f5f9" }}>high application rate ({overallApp}%)</strong> —
+        driven largely by OA (CTID770) direct applications with no enquiry step.
+        W6 (1–7 Jun) was the peak week with 16 total submissions. Applications are consistently
+        outpacing enquiries across all 8 completed weeks.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"9 weeks",           color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"W9 (8–14 Jun)",      value:`${data[8].enq}e / ${data[8].app}a`, sub:"complete", color:"#94a3b8" },
+          { label:"Total Enquiries (LO only)",    value:totalEnq,       sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications (OA+LO)",   value:totalApp,       sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
+          { label:"Total Submissions",             value:total,          sub:"8 completed weeks", color:"#f1f5f9"   },
+          { label:"Overall App Rate",              value:overallApp+"%", sub:"apps ÷ total",      color:"#34d399"   },
+          ...(data[data.length-1].full
+            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
+            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
+          ),
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -135,22 +151,17 @@ export default function App() {
                 label={{ value:`Avg ${overallApp}%`, fill:"#64748b", fontSize:11, position:"insideTopRight" }}/>
               <Line dataKey="appRate" name="Application rate" type="monotone"
                 stroke="#34d399" strokeWidth={2.5}
-                dot={(props) => {
-                  const { cx, cy, payload } = props;
-                  if (payload.appRate === null) return null;
-                  return <circle key={payload.week} cx={cx} cy={cy} r={6} fill="#34d399" stroke="none"/>;
-                }}
-                connectNulls={false}/>
+                dot={{ r:6, fill:"#34d399", strokeWidth:0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,6]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,16]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
-                formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
+                formatter={v => v==="enq" ? "Enquiry (LO/CTID771)" : "Applications (OA+LO)"}/>
               <Bar dataKey="enq" name="enq" fill={COLORS.enq}
                 radius={view==="stacked"?[0,0,0,0]:[5,5,0,0]}
                 stackId={view==="stacked"?"a":undefined}/>
@@ -167,7 +178,7 @@ export default function App() {
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
             <tr style={{ background:"#0f172a" }}>
-              {["Wk","Dates","Enquiry","Application","Total","App Rate"].map((h,i) => (
+              {["Wk","Dates","Enquiry (LO)","Applications (OA+LO)","Total","App Rate"].map((h,i) => (
                 <th key={h} style={{ padding:"11px 14px", textAlign:i<=1?"left":"center",
                   color:"#64748b", fontWeight:600, fontSize:11, textTransform:"uppercase",
                   letterSpacing:"0.06em", borderBottom:"1px solid #334155" }}>{h}</th>
@@ -178,12 +189,14 @@ export default function App() {
             {data.map((row, i) => {
               const wowEnq = i>0 ? row.enq - data[i-1].enq : null;
               const wowApp = i>0 ? row.app - data[i-1].app : null;
-              const rateHigh = row.appRate !== null && row.appRate >= 60 && row.total > 0;
+              const rateHigh = row.appRate >= 60 && row.total > 0;
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
-                  background:i%2===0?"1e293b":"#162032" }}>
+                  background:i%2===0?"#1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
+                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
@@ -199,7 +212,7 @@ export default function App() {
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#f1f5f9", fontSize:15 }}>{row.total}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, fontSize:12,
                     color: rateHigh ? "#34d399" : COLORS.rate }}>
-                    {row.total>0 && row.appRate !== null ? row.appRate+"%" : "—"}{rateHigh?" 🔥":""}
+                    {row.total>0 ? row.appRate+"%" : "—"}{rateHigh?" 🔥":""}
                   </td>
                 </tr>
               );
@@ -211,9 +224,21 @@ export default function App() {
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:"#f1f5f9", fontSize:15 }}>{total}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{overallApp}%</td>
             </tr>
+            <tr style={{ background:"#0f172a" }}>
+              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg/wk (W1–W8)</td>
+              <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.enq, fontSize:13 }}>{avgEnq}</td>
+              <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.app, fontSize:13 }}>{avgApp}</td>
+              <td style={{ padding:"8px 14px", textAlign:"center", color:"#94a3b8", fontSize:13 }}>{(parseFloat(avgEnq)+parseFloat(avgApp)).toFixed(1)}</td>
+              <td></td>
+            </tr>
           </tbody>
         </table>
       </div>
+
+      <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
+        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) + CTID771 (LO) application forms combined.
+        App rate % is not a standard funnel conversion rate. Source: HubSpot CSV exports, 24 Jun 2026.
+      </p>
     </div>
   );
 }

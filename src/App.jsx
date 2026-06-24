@@ -14,11 +14,10 @@ import CTID742rev,  { data as sna742RevRaw  } from "./ctid742_combined_weekly";
 import CTID379rev,  { data as sna379RevRaw  } from "./ctid379_combined_weekly";
 import SNAOArev,    { data as snaOARevRaw   } from "./sna_oa_combined_weekly";
 // Healthcare — Enquiry & Application
-import CTID771enq,  { data as hc771Raw    } from "./ctid771_enq_vs_app_weekly";
-import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly";
-import CTID770enq,  { data as hc770Raw    } from "./ctid770_enq_vs_app_weekly";
-import CTID770rev,  { data as hc770RevRaw } from "./ctid770_combined_weekly";
-import CTID786rev,  { data as hc786RevRaw } from "./ctid786_combined_weekly";
+import HC770771enq, { data as hc770771Raw    } from "./ctid770_771_enq_vs_app_weekly";
+import CTID786enq,  { data as hc786Raw       } from "./ctid786_enq_vs_app_weekly";
+import HC770771rev, { data as hc770771RevRaw } from "./ctid770_771_combined_weekly";
+import CTID786rev,  { data as hc786RevRaw    } from "./ctid786_combined_weekly";
 // B2C Single Modules
 import B2CSingleModules from "./b2c_single_modules_report";
 // ELC — Enquiry & Application
@@ -42,11 +41,10 @@ const normaliseRev = rows => rows.map(d => ({
 const sna742Data    = normaliseEnq(sna742Raw);
 const sna379Data    = normaliseEnq(sna379Raw);
 const snaOAData     = normaliseEnq(snaOARaw);
-const hc771Data     = normaliseEnq(hc771Raw);
-const hc786Data     = normaliseEnq(hc786Raw);
-const hc770Data     = normaliseEnq(hc770Raw);
-const hc770RevData  = normaliseRev(hc770RevRaw);
-const hc786RevData  = normaliseRev(hc786RevRaw);
+const hc770771Data    = normaliseEnq(hc770771Raw);
+const hc786Data       = normaliseEnq(hc786Raw);
+const hc770771RevData = normaliseRev(hc770771RevRaw);
+const hc786RevData    = normaliseRev(hc786RevRaw);
 const elc785Data    = normaliseEnq(elc785Raw);
 const elc5mData     = normaliseEnq(elc5mRaw);
 const sna742RevData = normaliseRev(sna742RevRaw);
@@ -88,10 +86,9 @@ const INSIGHTS = {
   "742-revenue":   { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  text: "CTID742 generated €27,296.81 in expected revenue from 38 registrations across 9 weeks. W8 was the peak revenue week at €7,983.55 in a single week." },
   "379-revenue":   { color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "CTID379 generated €14,850.00 in expected revenue from 33 registrations. W7 (25–31 May) was the standout week with 7 registrations from only 3 forms." },
   "snaOA-revenue": { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  text: "SNA Online Anytime generated €4,577.60 in expected revenue from 11 registrations across 9 weeks. Overall conversion rate is 61%. W2 and W4 show direct Paythen registrations with no prior HubSpot form — some learners find and register without enquiring first." },
-  "771-enqApp":    { color: "#fb923c", bg: "rgba(251,146,60,0.08)",  text: "CTID771 is heavily enquiry-led — only 2 of 20 submissions over 9 weeks were applications (10% app rate). Applications are isolated to W2 and W4." },
+  "770771-enqApp": { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",  text: "Merged report — enquiries are CTID771 (LO) only; applications include both CTID770 (OA) and CTID771 (LO). High overall app rate is driven by OA direct applications with no enquiry step. W6 (1–7 Jun) was the peak week with 16 total submissions." },
   "786-enqApp":    { color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "CTID786 shows strong application intent — W4–W9 all delivered 57%+ app rates with 4 of those 6 weeks hitting 60%+. Overall app rate is 47%." },
-  "770-enqApp":    { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",  text: "CTID770 shows zero enquiry form submissions across all 9 weeks — all 42 contacts submitted the application form only. The enquiry form may not be live, correctly tagged, or linked in course communications. W8 (1–7 Jun) was the peak week with 12 applications." },
-  "770-rev":       { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  text: "CTID770 generated registrations across 8 of 9 weeks, with a standout W8 (1–7 Jun) delivering 12 registrations. W1 and W3 show above-100% conversion rates due to direct Paythen registrations with no prior HubSpot form submission." },
+  "770771-rev":    { color: "#38bdf8", bg: "rgba(56,189,248,0.08)",  text: "Merged CTID770 + CTID771 generated registrations across 8 of 9 weeks. W1 (27 Apr–3 May) was the peak revenue week at €6,237.00 with 6 registrations. CTID771 (LO) has 0 Paythen registrations in this window — all revenue is CTID770 (OA)." },
   "786-rev":       { color: "#f87171", bg: "rgba(248,113,113,0.08)",  text: "CTID786 generated consistent registrations across all 9 weeks. W4 was the peak conversion week with 7 registrations from 10 forms (70% CR). W1 delivered the highest revenue week at €2,945.00." },
   "785-enqApp":    { color: "#fbbf24", bg: "rgba(251,191,36,0.08)",  text: "CTID785 shows 0 application form submissions across all 8 weeks — all contacts are enquiry-only. Action recommended: verify application form is published and linked." },
   "5m22413-enqApp":{ color: "#34d399", bg: "rgba(52,211,153,0.08)",  text: "5M22413 has an exceptionally high application rate (67%) — applications dominate enquiries in 5 of 7 completed weeks. Many contacts go directly to the application form." },
@@ -122,18 +119,17 @@ const NAV = {
     label: "Healthcare", color: "#f87171",
     enqApp: {
       courses: [
-        { id: "771", label: "Healthcare Support MA Level 5 LO", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
-        { id: "786", label: "CS & COOP Level 5 LO",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
-        { id: "770", label: "Healthcare Support MA Level 5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
+        { id: "770771", label: "Healthcare Support MA Level 5 (LO+OA)", Component: HC770771enq, data: hc770771Data, insightKey: "770771-enqApp" },
+        { id: "786",    label: "CS & COOP Level 5 LO",                  Component: CTID786enq,  data: hc786Data,   insightKey: "786-enqApp"     },
       ],
-      get combined() { return mergeEnqApp([hc771Data, hc786Data, hc770Data]); },
+      get combined() { return mergeEnqApp([hc770771Data, hc786Data]); },
     },
     revenue: {
       courses: [
-        { id: "786rev", label: "CS & COOP Level 5 LO",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
-        { id: "770rev", label: "Healthcare Support MA Level 5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
+        { id: "770771rev", label: "Healthcare Support MA Level 5 (LO+OA)", Component: HC770771rev, data: hc770771RevData, insightKey: "770771-rev" },
+        { id: "786rev",    label: "CS & COOP Level 5 LO",                  Component: CTID786rev,  data: hc786RevData,   insightKey: "786-rev"     },
       ],
-      get combined() { return mergeRevenue([hc786RevData, hc770RevData]); },
+      get combined() { return mergeRevenue([hc770771RevData, hc786RevData]); },
     },
   },
   ELC: {
