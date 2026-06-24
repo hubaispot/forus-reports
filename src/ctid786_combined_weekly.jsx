@@ -20,7 +20,7 @@ export const data = [
   { week: "1–7 Jun",       label: "W6", forms: 10, regs: 5,  revenue: 2470.00, full: true  },
   { week: "8–14 Jun",      label: "W7", forms:  6, regs: 3,  revenue: 1472.50, full: true  },
   { week: "15–21 Jun",     label: "W8", forms: 11, regs: 3,  revenue: 1496.25, full: true  },
-  { week: "22–23 Jun ⚡",  label: "W9", forms:  4, regs: 0,  revenue:    0.00, full: false },
+  { week: "22–24 Jun ⚡",  label: "W9", forms:  9, regs: 5,  revenue: 2470.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -101,7 +101,7 @@ export default function App() {
           Weekly Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 23 Jun 2026 · IST boundaries · 8 full weeks + W9 partial ⚡
+          27 Apr – 24 Jun 2026 · IST boundaries · 8 full weeks + W9 partial ⚡
         </p>
       </div>
 
@@ -114,11 +114,12 @@ export default function App() {
         <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
         <strong style={{ color: "#34d399" }}>€3,467.50</strong> revenue.
         Conversion is highest in W6 and W7 (50% each), with a strong pipeline of forms in W4
-        (20 total). Overall conversion rate sits at{" "}
+        (20 total). W9 is off to a strong partial-week start with 5 registrations and €2,470.00
+        already in. Overall conversion rate sits at{" "}
         <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong> across{" "}
         <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> and total
         expected revenue of{" "}
-        <strong style={{ color: "#34d399" }}>{fmt(totalRev)}</strong> (W1–W8 full weeks).
+        <strong style={{ color: "#34d399" }}>{fmt(totalRev)}</strong> (W1–W9 inc. partial).
       </div>
 
       {/* KPI Cards */}

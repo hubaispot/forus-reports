@@ -13,7 +13,7 @@ export const data = [
   { week: "1–7 Jun",       label: "W6", enq: 4,  app: 6,  full: true  },
   { week: "8–14 Jun",      label: "W7", enq: 1,  app: 5,  full: true  },
   { week: "15–21 Jun",     label: "W8", enq: 3,  app: 8,  full: true  },
-  { week: "22–23 Jun ⚡",   label: "W9", enq: 1,  app: 3,  full: false },
+  { week: "22–24 Jun ⚡",   label: "W9", enq: 1,  app: 8,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -90,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 23 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
+          27 Apr – 24 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -101,9 +101,10 @@ export default function App() {
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         Applications dominate throughout — 6 of 8 completed weeks hit 60%+ conversion 🔥.
         W2 and W3 kicked off strongly (69–70%) before a W4 dip to 40% on a surge of enquiries.
-        The course has recovered sharply: W7 and W8 both exceed 70%, with W8 (15–21 Jun)
-        recording the highest volume at 11 total submissions. W1 is the only week where enquiries
-        led (13 vs 4), suggesting early-cycle interest that converts consistently in later weeks.
+        W7 and W8 both exceed 70%, with W8 (15–21 Jun) recording 11 total submissions.
+        W9 is showing a strong partial-week surge: 8 applications in just 3 days (22–24 Jun).
+        W1 is the only full week where enquiries led (13 vs 4), suggesting early-cycle interest
+        that converts consistently in later weeks.
       </div>
 
       {/* KPIs */}
@@ -241,7 +242,7 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        ⚡ W9 is a partial week (22–23 Jun) — excluded from weekly averages.
+        ⚡ W9 is a partial week (22–24 Jun) — excluded from weekly averages.
         Test submissions (jean@forustraining.ie) excluded from all counts.
       </p>
     </div>
