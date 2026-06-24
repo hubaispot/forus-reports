@@ -19,6 +19,8 @@ import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly";
 import CTID770enq,  { data as hc770Raw    } from "./ctid770_enq_vs_app_weekly";
 import CTID770rev,  { data as hc770RevRaw } from "./ctid770_combined_weekly";
 import CTID786rev,  { data as hc786RevRaw } from "./ctid786_combined_weekly";
+// B2C Single Modules
+import B2CSingleModules from "./b2c_single_modules_report";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
@@ -148,6 +150,10 @@ const NAV = {
   Business: {
     label: "Business", color: "#a78bfa",
     placeholder: true,
+  },
+  B2C: {
+    label: "B2C", color: "#f472b6",
+    standalone: B2CSingleModules,
   },
 };
 
