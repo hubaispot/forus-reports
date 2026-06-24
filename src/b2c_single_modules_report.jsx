@@ -4,11 +4,12 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 22 Jun 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 24 Jun 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 // Excluded: 506633816254 (Paul Garry dup app), 506889283801 (Oran Molloy dup app),
 //           505699441903 + 505708538048 (Kinga/Kania Kania dup won x2), 506376313071 (test)
+// Manual:   507703439553 (Katie Smith — overridden to won, €295, paid 22 Jun, not yet in HubSpot stage)
 const RAW_DEALS = [
   { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon",                                    createdate:"2026-06-02T22:05:18.651Z", stage:"app", amount:455 },
   { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                             createdate:"2026-06-09T09:43:02.446Z", stage:"won", amount:295 },
@@ -38,6 +39,9 @@ const RAW_DEALS = [
   { id:"507419788478", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Ethna Killern",                               createdate:"2026-06-19T14:53:08.248Z", stage:"won", amount:295 },
   { id:"507511290071", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Irene Geoghegan",                        createdate:"2026-06-20T11:59:29.794Z", stage:"app", amount:295 },
   { id:"507502432457", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Jimin George",                                            createdate:"2026-06-20T21:26:15.876Z", stage:"app", amount:295 },
+  { id:"507703439553", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Katie Smith",                                 createdate:"2026-06-22T17:57:33.639Z", stage:"app", amount:295 },
+  { id:"507703439553w", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Katie Smith",                                createdate:"2026-06-22T17:57:33.639Z", stage:"won", amount:295 }, // manual: won, €295, paid 22 Jun, not yet in HubSpot deal stage
+  { id:"507715458261", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Aoife Doran",                                 createdate:"2026-06-22T23:18:01.717Z", stage:"app", amount:295 },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -102,11 +106,12 @@ function parseDeal(d) {
 const DEALS = RAW_DEALS.map(parseDeal);
 
 // ─── WEEK BUCKETS ─────────────────────────────────────────────────────────────
+// W1: 1–7 Jun | W2: 8–14 Jun | W3: 15–21 Jun (closed) | W4: 22–24 Jun ⚡ (partial, through today)
 const WEEKS = [
-  { wk:"W1", label:"1 Jun–7 Jun",      start:new Date("2026-06-01T00:00:00Z"), end:new Date("2026-06-07T23:59:59Z"), full:true  },
-  { wk:"W2", label:"8 Jun–14 Jun",     start:new Date("2026-06-08T00:00:00Z"), end:new Date("2026-06-14T23:59:59Z"), full:true  },
-  { wk:"W3", label:"15 Jun–21 Jun",    start:new Date("2026-06-15T00:00:00Z"), end:new Date("2026-06-21T23:59:59Z"), full:true  },
-  { wk:"W4", label:"22 Jun–22 Jun ⚡", start:new Date("2026-06-22T00:00:00Z"), end:new Date("2026-06-22T13:11:50Z"), full:false },
+  { wk:"W1", label:"1–7 Jun",        start:new Date("2026-06-01T00:00:00Z"), end:new Date("2026-06-07T23:59:59Z"), full:true  },
+  { wk:"W2", label:"8–14 Jun",       start:new Date("2026-06-08T00:00:00Z"), end:new Date("2026-06-14T23:59:59Z"), full:true  },
+  { wk:"W3", label:"15–21 Jun",      start:new Date("2026-06-15T00:00:00Z"), end:new Date("2026-06-21T23:59:59Z"), full:true  },
+  { wk:"W4", label:"22–24 Jun ⚡",   start:new Date("2026-06-22T00:00:00Z"), end:new Date("2026-06-24T23:59:59Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -311,7 +316,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 22 Jun 2026 · deal create date · ⚡ W4 partial week
+          1 Jun – 24 Jun 2026 · deal create date · ⚡ W4 partial week
         </p>
       </div>
 
@@ -591,7 +596,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 22 Jun 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 24 Jun 2026 · deal create date as week anchor
       </p>
     </div>
   );
