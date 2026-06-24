@@ -471,7 +471,9 @@ export default function App() {
         ))}
       </div>
 
-      {deptData.placeholder ? (
+      {deptData.standalone ? (
+        (() => { const StandaloneComp = deptData.standalone; return <div style={{ background: "#0f172a" }}><StandaloneComp /></div>; })()
+      ) : deptData.placeholder ? (
         <Placeholder message={`${deptData.label} department — reports coming soon`} />
       ) : (
         <>
