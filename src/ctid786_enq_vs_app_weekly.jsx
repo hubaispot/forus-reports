@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "27 Apr–3 May",  label: "W1", enq: 13, app: 4,  full: true  },
+  { week: "27 Apr–3 May",  label: "W1", enq: 11, app: 4,  full: true  },
   { week: "4–10 May",      label: "W2", enq: 5,  app: 11, full: true  },
   { week: "11–17 May",     label: "W3", enq: 3,  app: 7,  full: true  },
-  { week: "18–24 May",     label: "W4", enq: 12, app: 8,  full: true  },
-  { week: "25–31 May",     label: "W5", enq: 5,  app: 8,  full: true  },
+  { week: "18–24 May",     label: "W4", enq: 11, app: 8,  full: true  },
+  { week: "25–31 May",     label: "W5", enq: 5,  app: 5,  full: true  },
   { week: "1–7 Jun",       label: "W6", enq: 4,  app: 6,  full: true  },
   { week: "8–14 Jun",      label: "W7", enq: 1,  app: 5,  full: true  },
-  { week: "15–21 Jun",     label: "W8", enq: 3,  app: 8,  full: true  },
-  { week: "22–24 Jun ⚡",   label: "W9", enq: 1,  app: 8,  full: false },
+  { week: "15–21 Jun",     label: "W8", enq: 3,  app: 7,  full: true  },
+  { week: "22–26 Jun ⚡",   label: "W9", enq: 2,  app: 11, full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -90,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 24 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
+          27 Apr – 26 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -100,11 +100,10 @@ export default function App() {
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         Applications dominate throughout — 6 of 8 completed weeks hit 60%+ conversion 🔥.
-        W2 and W3 kicked off strongly (69–70%) before a W4 dip to 40% on a surge of enquiries.
-        W7 and W8 both exceed 70%, with W8 (15–21 Jun) recording 11 total submissions.
-        W9 is showing a strong partial-week surge: 8 applications in just 3 days (22–24 Jun).
-        W1 is the only full week where enquiries led (13 vs 4), suggesting early-cycle interest
-        that converts consistently in later weeks.
+        W2 and W3 kicked off strongly (69–70%) before a W4 dip to 42% on a surge of enquiries.
+        W5 softened (50%) before recovering: W6–W8 all hit 60%+. W9 (partial, 22–26 Jun) is the
+        standout week with 11 applications and 85% conversion — the highest app volume in any single
+        week. W1 is the only full week where enquiries led (11 vs 4).
       </div>
 
       {/* KPIs */}
@@ -114,7 +113,7 @@ export default function App() {
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,        color: COLORS.app },
           { label: "Total Submissions",  value: total,            sub: "8 full + 1 partial wk",   color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",             color: "#34d399"  },
-          { label: "Best Week",          value: "W7",             sub: "83% · 8–14 Jun",           color: "#fbbf24"  },
+          { label: "Best Week",          value: "W9 ⚡",          sub: "85% · 22–26 Jun",          color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -242,7 +241,7 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        ⚡ W9 is a partial week (22–24 Jun) — excluded from weekly averages.
+        ⚡ W9 is a partial week (22–26 Jun) — excluded from weekly averages.
         Test submissions (jean@forustraining.ie) excluded from all counts.
       </p>
     </div>
