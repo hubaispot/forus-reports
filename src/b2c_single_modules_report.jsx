@@ -4,13 +4,15 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 26 Jun 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 29 Jun 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 // Dedup applied: Paul Garry app (kept 506625732814), Oran Molloy app (kept 506956136670),
 //   Kinga/Kania Kania won (kept 505719685355, removed 505699441903 + 505708538048)
-// Excluded: Jean Baeyens test (506376313071), Kabir Singh Mann test (508233096441)
+// Excluded: Jean Baeyens test (506376313071), Kabir Singh Mann test (508233096441),
+//   TEST TEST deal (508233396464)
 // Katie Smith dual-entry: 507703439553 = app, 507703439553w = won override
+// Aishling Archbold dual-entry: 508289062075 = app, 508295524561 = won (normal pipeline)
 const RAW_DEALS = [
   { id:"505205340373",  dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon",                                                createdate:"2026-06-02T22:05:18.651Z", stage:"app", amount:455  },
   { id:"505719685355",  dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania",                                         createdate:"2026-06-09T09:43:02.446Z", stage:"won", amount:295  },
@@ -49,7 +51,14 @@ const RAW_DEALS = [
   { id:"508132493520",  dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DSC) -  for Fidelma Gillespie",                                                   createdate:"2026-06-25T17:37:44.278Z", stage:"won", amount:295  },
   { id:"508174669000",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Errika Bates",                                             createdate:"2026-06-25T20:52:58.497Z", stage:"app", amount:440  },
   { id:"508196464882",  dealname:"Customer Service - Online Anytime 1:1 (5N0972 OA DBU) -  for Kristine Papava",                                                  createdate:"2026-06-26T04:59:13.742Z", stage:"app", amount:295  },
-  { id:"508134690035",  dealname:"Supported Employment - Online Anytime 1:1 (5N1704 OA DSC) -  for Tina Ryan",                                                    createdate:"2026-06-26T05:41:52.562Z", stage:"app", amount:295  },
+  { id:"508134690035",  dealname:"Supported Employment - Online Anytime 1:1 (5N1704 OA DSC) -  for Tina Ryan",                                                    createdate:"2026-06-26T05:41:52.562Z", stage:"won", amount:295  },
+  { id:"508239231184",  dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Barnes Barnes",                                 createdate:"2026-06-26T12:03:05.361Z", stage:"app", amount:295  },
+  { id:"508163372226",  dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Pamela Crummy",                                            createdate:"2026-06-26T13:25:43.808Z", stage:"won", amount:455  },
+  { id:"508323271889",  dealname:"Communications (Healthcare) - Online Anytime 1:1 (6N1950 OA DHC) -  for Tiia Pelly",                                           createdate:"2026-06-27T21:30:16.419Z", stage:"won", amount:380  },
+  { id:"508289062075",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Aishling Archbold",                                        createdate:"2026-06-28T12:50:37.205Z", stage:"app", amount:440  },
+  { id:"508295524561",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Aishling Archbold",                                        createdate:"2026-06-28T13:05:13.289Z", stage:"won", amount:440  },
+  { id:"508323620064",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Catherine Cunningham",                                     createdate:"2026-06-28T15:55:36.886Z", stage:"app", amount:440  },
+  { id:"508342737119",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Angela Burns",                                             createdate:"2026-06-28T19:57:39.802Z", stage:"app", amount:440  },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -116,10 +125,10 @@ const DEALS = RAW_DEALS.map(parseDeal);
 
 // ─── WEEK BUCKETS ─────────────────────────────────────────────────────────────
 const WEEKS = [
-  { wk:"W1", label:"1 Jun–7 Jun",      start:new Date("2026-05-31T23:00:00Z"), end:new Date("2026-06-07T22:59:59Z"), full:true  },
-  { wk:"W2", label:"8 Jun–14 Jun",     start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
-  { wk:"W3", label:"15 Jun–21 Jun",    start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
-  { wk:"W4", label:"22 Jun–26 Jun ⚡", start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-26T22:59:59Z"), full:false },
+  { wk:"W1", label:"1 Jun–7 Jun",     start:new Date("2026-05-31T23:00:00Z"), end:new Date("2026-06-07T22:59:59Z"), full:true  },
+  { wk:"W2", label:"8 Jun–14 Jun",    start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
+  { wk:"W3", label:"15 Jun–21 Jun",   start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
+  { wk:"W4", label:"22 Jun–28 Jun",   start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-28T22:59:59Z"), full:true  },
 ];
 
 function countWeek(deals, wk) {
@@ -324,7 +333,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 26 Jun 2026 · deal create date · ⚡ W4 partial week
+          1 Jun – 28 Jun 2026 · deal create date · W1–W4 complete
         </p>
       </div>
 
@@ -604,7 +613,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 26 Jun 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 29 Jun 2026 · deal create date as week anchor
       </p>
     </div>
   );
