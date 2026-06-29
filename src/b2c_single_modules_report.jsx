@@ -4,13 +4,14 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 29 Jun 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 30 Jun 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 // Dedup applied: Paul Garry app (kept 506625732814), Oran Molloy app (kept 506956136670),
 //   Kinga/Kania Kania won (kept 505719685355, removed 505699441903 + 505708538048)
 // Excluded: Jean Baeyens test (506376313071), Kabir Singh Mann test (508233096441),
 //   TEST TEST deal (508233396464)
+// Removed: 506203345126 Leanne Noonan — no longer in app/won stages as of 30 Jun (moved to Lost)
 // Katie Smith dual-entry: 507703439553 = app, 507703439553w = won override
 // Aishling Archbold dual-entry: 508289062075 = app, 508295524561 = won (normal pipeline)
 const RAW_DEALS = [
@@ -24,7 +25,6 @@ const RAW_DEALS = [
   { id:"505989396699",  dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Janine Doherty",                                          createdate:"2026-06-14T07:28:13.054Z", stage:"won", amount:295  },
   { id:"506186736882",  dealname:"Biology - Online Anytime 1:1 (5N2746 OA DHC) -  for Nurul Islam",                                                              createdate:"2026-06-16T11:34:11.786Z", stage:"won", amount:295  },
   { id:"506199597246",  dealname:"Applied Behavioural Analysis - Online Anytime 1:1 (5N1729 OA DSC) -  for Samantha Adamson",                                    createdate:"2026-06-16T17:17:27.154Z", stage:"app", amount:425  },
-  { id:"506203345126",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Leanne Noonan",                                           createdate:"2026-06-16T18:57:10.164Z", stage:"app", amount:440  },
   { id:"506231288040",  dealname:"Anatomy and Physiology - Online Anytime 1:1 (5N0749 OA DHC) -  for Mc loughlin Mc loughlin",                                   createdate:"2026-06-16T20:36:09.747Z", stage:"app", amount:295  },
   { id:"506268626117",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Edel Ryan",                                               createdate:"2026-06-17T06:44:06.341Z", stage:"app", amount:440  },
   { id:"506253296845",  dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Kate Galvin",                                     createdate:"2026-06-17T10:27:20.225Z", stage:"app", amount:440  },
@@ -59,6 +59,11 @@ const RAW_DEALS = [
   { id:"508295524561",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Aishling Archbold",                                        createdate:"2026-06-28T13:05:13.289Z", stage:"won", amount:440  },
   { id:"508323620064",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Catherine Cunningham",                                     createdate:"2026-06-28T15:55:36.886Z", stage:"app", amount:440  },
   { id:"508342737119",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Angela Burns",                                             createdate:"2026-06-28T19:57:39.802Z", stage:"app", amount:440  },
+  { id:"508501238006",  dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Caoimhe Ryan",                                              createdate:"2026-06-29T13:07:52.155Z", stage:"won", amount:295  },
+  { id:"508503700729",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for sarah oneill",                                             createdate:"2026-06-29T15:31:53.169Z", stage:"app", amount:440  },
+  { id:"508614021323",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Marie Keane",                                              createdate:"2026-06-29T18:55:05.741Z", stage:"won", amount:440  },
+  { id:"508656610541",  dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Boyle Boyle",                                              createdate:"2026-06-29T20:48:22.271Z", stage:"app", amount:295  },
+  { id:"508705209587",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Katie Gleeson",                                            createdate:"2026-06-29T21:58:27.765Z", stage:"app", amount:440  },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -129,6 +134,7 @@ const WEEKS = [
   { wk:"W2", label:"8 Jun–14 Jun",    start:new Date("2026-06-07T23:00:00Z"), end:new Date("2026-06-14T22:59:59Z"), full:true  },
   { wk:"W3", label:"15 Jun–21 Jun",   start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
   { wk:"W4", label:"22 Jun–28 Jun",   start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-28T22:59:59Z"), full:true  },
+  { wk:"W5", label:"29–30 Jun ⚡",    start:new Date("2026-06-28T23:00:00Z"), end:new Date("2026-06-30T22:59:59Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -333,7 +339,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 28 Jun 2026 · deal create date · W1–W4 complete
+          1 Jun – 30 Jun 2026 · deal create date · ⚡ W5 partial week
         </p>
       </div>
 
@@ -613,7 +619,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 29 Jun 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 30 Jun 2026 · deal create date as week anchor
       </p>
     </div>
   );
