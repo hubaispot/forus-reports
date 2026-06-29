@@ -4,16 +4,19 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
+// CTID379 — SNA L6 LO — Weekly Enquiry vs Application
+// W1 = 4 May 2026 (anchor reset), W8 = 22–28 Jun 2026
+// Dedup: columns A–D (First name, Last name, Email/Phone, Phone/Email)
+// Run: 29 Jun 2026
 export const data = [
-  { week: "27 Apr–3 May",    enq: 1, app: 5,  full: true  },
-  { week: "4 May–10 May",    enq: 4, app: 5,  full: true  },
-  { week: "11 May–17 May",   enq: 3, app: 5,  full: true  },
-  { week: "18 May–24 May",   enq: 7, app: 7,  full: true  },
-  { week: "25 May–31 May",   enq: 1, app: 8,  full: true  },
-  { week: "1 Jun–7 Jun",     enq: 6, app: 8,  full: true  },
-  { week: "8 Jun–14 Jun",    enq: 7, app: 8,  full: true  },
-  { week: "15 Jun–21 Jun",   enq: 4, app: 5,  full: true  },
-  { week: "22 Jun–25 Jun ⚡", enq: 2, app: 1,  full: false },
+  { week: "4–10 May",     enq: 3, app: 5,  full: true  },
+  { week: "11–17 May",    enq: 4, app: 5,  full: true  },
+  { week: "18–24 May",    enq: 7, app: 7,  full: true  },
+  { week: "25–31 May",    enq: 1, app: 8,  full: true  },
+  { week: "1–7 Jun",      enq: 6, app: 9,  full: true  },
+  { week: "8–14 Jun",     enq: 7, app: 8,  full: true  },
+  { week: "15–21 Jun",    enq: 4, app: 5,  full: true  },
+  { week: "22–28 Jun",    enq: 8, app: 2,  full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -53,7 +56,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -84,30 +86,29 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          27 Apr – 25 Jun 2026 · Unique contacts · last form only per contact
+          4 May – 28 Jun 2026 · Unique contacts · dedup by name + email + phone (cols A–D)
         </p>
       </div>
 
-      {/* Notable insight banner */}
+      {/* Insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        CTID379 has a <strong style={{ color:"#f1f5f9" }}>consistently high application rate ({overallApp}%) 🔥</strong> —
-        applications outnumber enquiries in every full week. Many contacts go directly to the application
-        form, suggesting strong intent from this audience. W5 (25–31 May) peaked at 89% 🔥.
+        <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
+        CTID379 generated <strong style={{ color:"#f1f5f9" }}>{total} form submissions</strong> across 8 weeks
+        with an overall application rate of <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
+        W4 (25–31 May) and W5 (1–7 Jun) were the strongest weeks — 8 and 9 applications respectively.
+        W8 (22–28 Jun) saw a surge in enquiries (8) but only 2 applications, suggesting a pipeline
+        of contacts still to convert.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W9",             color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          ...(data[data.length-1].full
-            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:`This week (Mon–Sun)`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
-          ),
+          { label:"Total Enquiries",    value:totalEnq,       sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,       sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,          sub:"8 weeks",           color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%", sub:"apps ÷ total",      color:"#34d399"   },
+          { label:"W8 (22–28 Jun)",     value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -147,7 +148,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,18]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,12]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -163,7 +164,7 @@ export default function App() {
       </div>
 
       {/* Table */}
-      <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden", marginBottom:16 }}>
+      <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
             <tr style={{ background:"#0f172a" }}>
@@ -183,9 +184,7 @@ export default function App() {
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
-                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
@@ -211,30 +210,18 @@ export default function App() {
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.enq, fontSize:15 }}>{totalEnq}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.app, fontSize:15 }}>{totalApp}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:"#f1f5f9", fontSize:15 }}>{total}</td>
-              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{overallApp}% 🔥</td>
-            </tr>
-            <tr style={{ background:"#0f172a" }}>
-              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg / wk (W1–W8)</td>
-              <td style={{ padding:"8px 14px", textAlign:"center", fontWeight:600, color:COLORS.enq, fontSize:13 }}>{avgEnq}</td>
-              <td style={{ padding:"8px 14px", textAlign:"center", fontWeight:600, color:COLORS.app, fontSize:13 }}>{avgApp}</td>
-              <td style={{ padding:"8px 14px", textAlign:"center", fontWeight:600, color:"#f1f5f9", fontSize:13 }}>{(parseFloat(avgEnq)+parseFloat(avgApp)).toFixed(1)}</td>
-              <td style={{ padding:"8px 14px" }}></td>
+              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{overallApp}%</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Duplicate warning */}
-      <div style={{ background:"rgba(251,191,36,0.07)", border:"1px solid #fbbf24", borderRadius:8,
-        padding:"10px 14px", fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#fbbf24" }}>⚠️ Duplicate contact merged (Application CSV — same phone, different HubSpot records):</strong>
-        <ul style={{ margin:"6px 0 0", paddingLeft:18 }}>
-          <li><strong style={{ color:"#f1f5f9" }}>Joshua Lijo</strong> — emails: joshualijo1@gmail.com / lijoalexander@gmail.com — counted once (most recent submission kept)<br/>
-            <span style={{ color:"#64748b" }}>→ These are duplicate HubSpot records and should be merged in CRM.</span>
-          </li>
-        </ul>
-      </div>
-
+      {/* Footer note */}
+      <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
+        Dedup method: columns A–D (First name · Last name · Email · Phone). Keep last submission per unique key.
+        Excluded: aarush@forustraining.ie. App duplicates merged: Aisling McCauley ×6, Síle Hammond ×3,
+        Linda Taurina / Emma Breslin / Emma Hanratty / Laura Clarke ×2 each. Enquiry: Vicky Connick ×2.
+      </p>
     </div>
   );
 }

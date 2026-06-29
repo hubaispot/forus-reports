@@ -6,23 +6,23 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID379 — SNA Level 6 – Live and Online — Combined Weekly Revenue Report
-// Forms: HubSpot JSX (enq + app per week)
-// Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-//   Status = "Registered" only; deduplicated by email; 9 pre-W1 rows (13–23 Apr) excluded
-// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59
-// W9 = partial week Mon 22 Jun – Thu 25 Jun 2026
-// Run: 25 Jun 2026
+// Forms: HubSpot XLSX (enq + app, dedup by cols A–D, run 29 Jun 2026)
+// Registrations & Revenue: Paythen "Filtered" sheet, Status="Registered", dedup by email
+//   10 pre-W1 rows (13 Apr–27 Apr) excluded
+//   Excluded: quirkeannamarie12@gmail.com (Refunded Not Registered)
+//   Excluded: aishlingarch@gmail.com (Status=None, 28 Jun, €461.83 — pending)
+// Window: W1=4 May 2026, W8=22–28 Jun 2026 (all full weeks, no partial)
+// Run: 29 Jun 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Apr–3 May",  forms: 6,  regs: 1, revenue: 440.00,   full: true  },
-  { week: "4–10 May",      forms: 9,  regs: 1, revenue: 440.00,   full: true  },
-  { week: "11–17 May",     forms: 8,  regs: 3, revenue: 1364.00,  full: true  },
-  { week: "18–24 May",     forms: 14, regs: 4, revenue: 1804.00,  full: true  },
-  { week: "25–31 May",     forms: 9,  regs: 7, revenue: 3146.00,  full: true  },
-  { week: "1–7 Jun",       forms: 14, regs: 6, revenue: 2706.00,  full: true  },
-  { week: "8–14 Jun",      forms: 15, regs: 4, revenue: 1804.00,  full: true  },
-  { week: "15–21 Jun",     forms: 9,  regs: 2, revenue: 923.83,   full: true  },
-  { week: "22–25 Jun ⚡",  forms: 3,  regs: 1, revenue: 440.00,   full: false },
+  { week: "4–10 May",    forms: 8,  regs: 1, revenue: 440.00,   full: true },
+  { week: "11–17 May",   forms: 9,  regs: 3, revenue: 1364.00,  full: true },
+  { week: "18–24 May",   forms: 14, regs: 4, revenue: 1804.00,  full: true },
+  { week: "25–31 May",   forms: 9,  regs: 7, revenue: 3146.00,  full: true },
+  { week: "1–7 Jun",     forms: 15, regs: 5, revenue: 2244.00,  full: true },
+  { week: "8–14 Jun",    forms: 15, regs: 4, revenue: 1804.00,  full: true },
+  { week: "15–21 Jun",   forms: 9,  regs: 3, revenue: 1363.83,  full: true },
+  { week: "22–28 Jun",   forms: 10, regs: 2, revenue: 901.83,   full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -62,7 +62,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.cr }}>Conv. rate</span>
-            <strong style={{ color: COLORS.cr }}>{cr > 0 ? cr + "%" : "—"}{cr > 100 ? " ⚡" : ""}</strong>
+            <strong style={{ color: COLORS.cr }}>{cr > 0 ? cr + "%" : "—"}</strong>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ color: COLORS.rev }}>Expected revenue</span>
@@ -70,8 +70,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
-      {cr > 100 && d?.full && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR &gt;100%: some learners registered directly via Paythen</p>}
     </div>
   );
 };
@@ -103,7 +101,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 25 Jun 2026 · W1–W8 full weeks · W9 ⚡ partial (22–25 Jun) · run 25 Jun 2026
+          4 May – 28 Jun 2026 · W1–W8 full weeks · HubSpot dedup: cols A–D · run 29 Jun 2026
         </p>
       </div>
 
@@ -112,21 +110,21 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key insight: </strong>
-        CTID379 has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks.
-        Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W5 (25–31 May)
-        was the standout week with <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
-        <strong style={{ color: "#f1f5f9" }}>{fmt(3146)}</strong> revenue — the highest of any week.
-        W7 (8–14 Jun) led on form volume with 15 submissions.
+        CTID379 generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} expected revenue</strong> from{" "}
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks
+        with an overall conversion rate of <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
+        W4 (25–31 May) was the standout week — <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
+        <strong style={{ color: "#f1f5f9" }}>{fmt(3146)}</strong> revenue. W8 (22–28 Jun) saw strong enquiry
+        volume (10 forms) but only 2 registrations — a potential pipeline still converting.
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
-          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",     color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 completed weeks",        color: COLORS.rev   },
+          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk`,         color: COLORS.forms },
+          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk`,           color: COLORS.regs  },
+          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",   color: COLORS.cr    },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 completed weeks",      color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -139,7 +137,7 @@ export default function App() {
         ))}
       </div>
 
-      {/* Toggle */}
+      {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         <Tab id="grouped" active={view === "grouped"} onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"      active={view === "cr"}      onClick={setView}>Conversion Rate %</Tab>
@@ -162,11 +160,7 @@ export default function App() {
                 label={{ value: `Avg ${overallCR}%`, fill: "#a78bfa", fontSize: 11, position: "insideBottomRight" }} />
               <Line dataKey="cr" name="Conversion rate" type="monotone"
                 stroke={COLORS.cr} strokeWidth={2.5}
-                dot={({ cx, cy, index }) => (
-                  <circle key={index} cx={cx} cy={cy} r={6}
-                    fill={data[index]?.full ? COLORS.cr : "#fbbf24"}
-                    stroke="none" />
-                )} connectNulls />
+                dot={{ r: 6, fill: COLORS.cr, strokeWidth: 0 }} connectNulls />
             </ComposedChart>
           ) : view === "rev" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
@@ -214,7 +208,6 @@ export default function App() {
               const wowForms = i > 0 ? row.forms - data[i - 1].forms : null;
               const wowRegs  = i > 0 ? row.regs  - data[i - 1].regs  : null;
               const crHigh   = row.cr >= 60 && row.forms > 0;
-              const crOver   = row.cr > 100;
               const delta = val => {
                 if (val === null) return null;
                 if (val > 0) return <span style={{ fontSize: 10, marginLeft: 4, color: "#34d399" }}>▲{val}</span>;
@@ -225,10 +218,7 @@ export default function App() {
                 <tr key={i} style={{ borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
                   background: i % 2 === 0 ? "#1e293b" : "#162032" }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}
-                    {!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700,
                     color: COLORS.forms, fontSize: 15 }}>
                     {row.forms > 0 ? row.forms : "—"}{delta(wowForms)}
@@ -238,9 +228,8 @@ export default function App() {
                     {row.regs > 0 ? row.regs : "—"}{delta(wowRegs)}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, fontSize: 12,
-                    color: crOver ? "#fbbf24" : crHigh ? "#34d399" : COLORS.cr }}>
-                    {row.forms > 0 ? row.cr + "%" : "—"}
-                    {crOver ? " ⚡" : crHigh ? " 🔥" : ""}
+                    color: crHigh ? "#34d399" : COLORS.cr }}>
+                    {row.forms > 0 ? row.cr + "%" : "—"}{crHigh ? " 🔥" : ""}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700,
                     color: COLORS.rev, fontSize: 13 }}>
@@ -251,9 +240,7 @@ export default function App() {
             })}
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
-                fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8 + W9 ⚡ partial)
-              </td>
+                fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>Total (W1–W8)</td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
               <td style={{ padding: "11px 14px", textAlign: "center",
@@ -269,10 +256,11 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only).
-        Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
-        9 pre-window registrations (13–23 Apr) excluded. Revenue tiers: €440.00, €461.83, €462.00, €733.95.
-        W9 is a partial week (Mon 22 Jun – Thu 25 Jun 2026). 1 Paythen row (gearoidclesham@gmail.com, €461.83, 24 Jun) excluded — Status not yet assigned.
+        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions
+        (dedup by cols A–D; keep last per unique key). Registrations = Paythen "Registered" rows (Filtered sheet,
+        dedup by email). 10 pre-window registrations (13–27 Apr) excluded. Revenue tiers: €440.00, €461.83, €462.00.
+        Excluded from Paythen: quirkeannamarie12@gmail.com (Refunded Not Registered).
+        Pending: aishlingarch@gmail.com (€461.83, 28 Jun) — Status not yet assigned, will appear next run.
       </p>
 
     </div>
