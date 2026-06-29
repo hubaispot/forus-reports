@@ -6,23 +6,22 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID490 + CTID423 — SNA Online Anytime (merged) — Combined Weekly Revenue Report
-// Forms: from HubSpot JSX (enq + app per week), W1–W8 full, W9 partial ⚡
+// Forms: from HubSpot JSX (enq + app per week), W1–W8 full weeks only.
 // Registrations & Revenue: from Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 27 Apr 2026.
-// 5 pre-W1 rows excluded (before 27 Apr): Caroline Hopkins 15 Apr, Samantha 16 Apr,
-//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr.
+// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 4 May 2026.
+// 6 pre-W1 rows excluded (before 4 May): Caroline Hopkins 15 Apr, Samantha 16 Apr,
+//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr, Krishna Blake 3 May.
 // Revenue tiers: CTID490 €295.00/€320.00/€324.80 · CTID423 €440.00/€462.00
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Apr–3 May", forms: 2,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "4–10 May",     forms: 6,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "11–17 May",    forms: 9,  regs: 3,  revenue: 1248.80, full: true  },
-  { week: "18–24 May",    forms: 3,  regs: 0,  revenue:    0.00, full: true  },
-  { week: "25–31 May",    forms: 2,  regs: 1,  revenue:  320.00, full: true  },
-  { week: "1–7 Jun",      forms: 7,  regs: 0,  revenue:    0.00, full: true  },
-  { week: "8–14 Jun",     forms: 3,  regs: 2,  revenue:  590.00, full: true  },
-  { week: "15–21 Jun",    forms: 2,  regs: 2,  revenue:  764.80, full: true  },
-  { week: "22–25 Jun ⚡", forms: 1,  regs: 0,  revenue:    0.00, full: false },
+  { week: "4–10 May",   forms: 5,  regs: 1,  revenue:  462.00, full: true },
+  { week: "11–17 May",  forms: 9,  regs: 3,  revenue: 1248.80, full: true },
+  { week: "18–24 May",  forms: 3,  regs: 0,  revenue:    0.00, full: true },
+  { week: "25–31 May",  forms: 2,  regs: 1,  revenue:  320.00, full: true },
+  { week: "1–7 Jun",    forms: 7,  regs: 1,  revenue:  462.00, full: true },
+  { week: "8–14 Jun",   forms: 3,  regs: 2,  revenue:  590.00, full: true },
+  { week: "15–21 Jun",  forms: 2,  regs: 1,  revenue:  324.80, full: true },
+  { week: "22–28 Jun",  forms: 2,  regs: 1,  revenue:  440.00, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -73,7 +72,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Thu)</p>}
       {crOver && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR &gt;100%: registrations exceed HubSpot forms — learner registered directly via Paythen</p>}
     </div>
   );
@@ -106,7 +104,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Apr – 25 Jun 2026 · W1–W8 full weeks · W9 partial (Mon–Thu) ⚡ · CTID490 &amp; CTID423 merged
+          4 May – 28 Jun 2026 · W1–W8 full weeks · CTID490 &amp; CTID423 merged
         </p>
       </div>
 
@@ -115,21 +113,22 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#a78bfa" }}>📌 Key insight: </strong>
-        SNA Online Anytime has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 9 weeks.
+        SNA Online Anytime has generated{" "}
+        <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 weeks.
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W3 (11–17 May) was the peak week for both forms (9) and registrations (3).
-        W8 (15–21 Jun) achieved 100% conversion — both contacts who submitted a form also registered.
-        W6 (1–7 Jun) had the highest form volume (7) with no registrations, suggesting a conversion lag for that cohort.
+        W2 (11–17 May) was the peak week for both forms (9) and registrations (3).
+        W5 (1–7 Jun) had the highest enquiry volume yet only converted 1 registration —
+        a conversion lag to watch. W3 (18–24 May) had zero registrations despite 3 form submissions.
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (full weeks)`,  color: COLORS.forms },
-          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (full weeks)`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",         color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "27 Apr – 25 Jun 2026",             color: COLORS.rev   },
+          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
+          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
+          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms",         color: COLORS.cr    },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "4 May – 28 Jun 2026", color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -171,7 +170,7 @@ export default function App() {
                   if (data[index]?.cr === null) return null;
                   return (
                     <circle key={index} cx={cx} cy={cy} r={6}
-                      fill={data[index]?.full ? COLORS.cr : "#fbbf24"}
+                      fill={COLORS.cr}
                       stroke="none" />
                   );
                 }} connectNulls={false} />
@@ -231,17 +230,10 @@ export default function App() {
               return (
                 <tr key={i} style={{
                   borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
-                  background: !row.full ? "rgba(251,191,36,0.04)" : i % 2 === 0 ? "#1e293b" : "#162032"
+                  background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}
-                    {!row.full && (
-                      <span style={{ marginLeft: 6, fontSize: 10, color: "#fbbf24",
-                        background: "rgba(251,191,36,0.12)", borderRadius: 4,
-                        padding: "1px 5px" }}>partial</span>
-                    )}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
                     {row.forms}{delta(row.forms, i > 0 ? data[i - 1].forms : null)}
@@ -252,8 +244,8 @@ export default function App() {
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, fontSize: 12,
-                    color: crOver ? "#fbbf24" : crHigh ? "#34d399" : !row.full ? "#fbbf24" : COLORS.cr }}>
-                    {row.cr !== null ? row.cr + "%" : (row.regs > 0 ? "—⚡" : "—")}
+                    color: crOver ? "#fbbf24" : crHigh ? "#34d399" : COLORS.cr }}>
+                    {row.cr !== null ? row.cr + "%" : "—"}
                     {crOver ? " ⚡" : crHigh ? " 🔥" : ""}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
@@ -266,7 +258,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W9 incl. partial)
+                Total (W1–W8)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -283,9 +275,11 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (CTID490 + CTID423 combined, unique contacts, last form only, deduped on name/email/phone).
-        Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 27 Apr 2026.
-        5 pre-W1 registrations excluded (15–20 Apr): Caroline Hopkins, Samantha, Rachel Ryan, Sarah Martin, Kay Sheehan.
+        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions
+        (CTID490 + CTID423 combined, unique contacts, last form only, deduped on email/phone).
+        Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 4 May 2026.
+        6 pre-W1 registrations excluded (15 Apr – 3 May): Caroline Hopkins, Samantha, Rachel Ryan,
+        Sarah Martin, Kay Sheehan, Krishna Blake.
         Revenue tiers: CTID490 €295.00–€324.80 · CTID423 €440.00–€462.00.
       </p>
     </div>

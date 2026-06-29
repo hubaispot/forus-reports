@@ -5,15 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "27 Apr–3 May", enq: 0, app: 2,  full: true  },
-  { week: "4–10 May",     enq: 3, app: 3,  full: true  },
-  { week: "11–17 May",    enq: 3, app: 6,  full: true  },
-  { week: "18–24 May",    enq: 1, app: 2,  full: true  },
-  { week: "25–31 May",    enq: 0, app: 2,  full: true  },
-  { week: "1–7 Jun",      enq: 5, app: 2,  full: true  },
-  { week: "8–14 Jun",     enq: 2, app: 1,  full: true  },
-  { week: "15–21 Jun",    enq: 1, app: 1,  full: true  },
-  { week: "22–25 Jun ⚡", enq: 0, app: 1,  full: false },
+  { week: "4–10 May",   enq: 2, app: 3, full: true },
+  { week: "11–17 May",  enq: 3, app: 6, full: true },
+  { week: "18–24 May",  enq: 1, app: 2, full: true },
+  { week: "25–31 May",  enq: 0, app: 2, full: true },
+  { week: "1–7 Jun",    enq: 5, app: 2, full: true },
+  { week: "8–14 Jun",   enq: 2, app: 1, full: true },
+  { week: "15–21 Jun",  enq: 1, app: 1, full: true },
+  { week: "22–28 Jun",  enq: 0, app: 2, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -53,7 +52,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -84,7 +82,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          27 Apr – 25 Jun 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
+          4 May – 28 Jun 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
         </p>
       </div>
 
@@ -93,9 +91,9 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         SNA Online Anytime has a <strong style={{ color:"#f1f5f9" }}>high application rate ({overallApp}%)</strong> —
-        applications outnumber or match enquiries in most weeks. W3 (11–17 May) was the peak week with 9 total
-        submissions (3 enq + 6 app). Enquiry volume peaked in W6 (5 in one week), suggesting a mid-June
-        awareness surge that has yet to convert to equal application numbers.
+        applications outnumber enquiries in 6 of 8 weeks. W2 (11–17 May) was the peak with 9 total submissions
+        (3 enq + 6 app). W5 (1–7 Jun) saw the strongest enquiry week (5 enq), but application volume
+        has eased since — W7 and W8 each returned just 1–2 total submissions.
       </div>
 
       {/* KPIs */}
@@ -103,12 +101,9 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W9",             color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"W1–W8",             color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          ...(data[data.length-1].full
-            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
-          ),
+          { label:"W8 (full week)", value:data[7].total, sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -184,9 +179,7 @@ export default function App() {
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
-                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
