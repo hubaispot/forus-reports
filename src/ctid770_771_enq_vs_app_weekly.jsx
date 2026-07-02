@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "4 May–10 May",   enq: 4, app: 4,  full: true },
-  { week: "11 May–17 May",  enq: 1, app: 5,  full: true },
-  { week: "18 May–24 May",  enq: 0, app: 3,  full: true },
-  { week: "25 May–31 May",  enq: 1, app: 6,  full: true },
-  { week: "1 Jun–7 Jun",    enq: 3, app: 13, full: true },
-  { week: "8 Jun–14 Jun",   enq: 4, app: 9,  full: true },
-  { week: "15 Jun–21 Jun",  enq: 2, app: 10, full: true },
-  { week: "22 Jun–28 Jun",  enq: 2, app: 7,  full: true },
+  { week: "4 May–10 May",   enq: 4, app: 4,  full: true  },
+  { week: "11 May–17 May",  enq: 1, app: 5,  full: true  },
+  { week: "18 May–24 May",  enq: 0, app: 3,  full: true  },
+  { week: "25 May–31 May",  enq: 1, app: 6,  full: true  },
+  { week: "1 Jun–7 Jun",    enq: 3, app: 13, full: true  },
+  { week: "8 Jun–14 Jun",   enq: 4, app: 9,  full: true  },
+  { week: "15 Jun–21 Jun",  enq: 2, app: 10, full: true  },
+  { week: "22 Jun–28 Jun",  enq: 2, app: 7,  full: true  },
+  { week: "29 Jun–5 Jul",   enq: 3, app: 5,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -83,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          4 May – 28 Jun 2026 · Unique contacts · last form only per contact
+          4 May – 2 Jul 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
@@ -103,10 +104,10 @@ export default function App() {
         {[
           { label:"Total Enquiries (LO)",       value:totalEnq,       sub:`avg ${avgEnq}/wk`,  color:COLORS.enq },
           { label:"Total Applications (LO+OA)", value:totalApp,       sub:`avg ${avgApp}/wk`,  color:COLORS.app },
-          { label:"Total Submissions",           value:total,          sub:"8 weeks",            color:"#f1f5f9"  },
-          { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"  },
-          { label:"W8 (full week)",              value:data[data.length-1].total,
-            sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`,                    color:"#cbd5e1"  },
+          { label:"Total Submissions",           value:total,          sub:"W1–W9 (W9 partial)",  color:"#f1f5f9"  },
+          { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",         color:"#34d399"  },
+          { label:"W8 (latest full week)",       value:data[7].total,
+            sub:`${data[7].enq}e / ${data[7].app}a`,                                               color:"#cbd5e1"  },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -146,7 +147,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,16]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,18]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form (LO only)" : "Application form (LO+OA)"}/>

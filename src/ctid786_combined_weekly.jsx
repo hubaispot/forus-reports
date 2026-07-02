@@ -10,19 +10,20 @@ import {
 // Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
 //   Status = "Registered" only; deduplicated by email; 11 pre-W1 rows (13–26 Apr) excluded
 // Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59
-// W1 = 4 May 2026, W8 = 22–28 Jun 2026 (8 full completed weeks, no partial)
-// Run: 29 Jun 2026
-// Revenue tiers: €498.75 (41 regs), €475.00 (10 regs), €157.50 (1 reg — Samuel Ogun, instalment)
+// W1 = 4 May 2026, W8 = 22–28 Jun 2026 (8 full completed weeks) + W9 partial (29 Jun–2 Jul)
+// Run: 2 Jul 2026
+// Revenue tiers: €498.75 (main), €475.00, €157.50 (1 reg — Samuel Ogun, instalment)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",    forms: 16, regs: 7, revenue: 3467.50, full: true },
-  { week: "11–17 May",   forms: 10, regs: 2, revenue:  973.75, full: true },
-  { week: "18–24 May",   forms: 19, regs: 5, revenue: 2493.75, full: true },
-  { week: "25–31 May",   forms: 10, regs: 3, revenue: 1155.00, full: true },
-  { week: "1–7 Jun",     forms: 10, regs: 6, revenue: 2968.75, full: true },
-  { week: "8–14 Jun",    forms:  6, regs: 3, revenue: 1472.50, full: true },
-  { week: "15–21 Jun",   forms: 10, regs: 3, revenue: 1496.25, full: true },
-  { week: "22–28 Jun",   forms: 19, regs: 8, revenue: 3966.25, full: true },
+  { week: "4–10 May",       forms: 16, regs: 7, revenue: 3467.50, full: true  },
+  { week: "11–17 May",      forms: 10, regs: 2, revenue:  973.75, full: true  },
+  { week: "18–24 May",      forms: 17, regs: 5, revenue: 2493.75, full: true  },
+  { week: "25–31 May",      forms: 13, regs: 3, revenue: 1155.00, full: true  },
+  { week: "1–7 Jun",        forms: 10, regs: 6, revenue: 2968.75, full: true  },
+  { week: "8–14 Jun",       forms:  6, regs: 3, revenue: 1472.50, full: true  },
+  { week: "15–21 Jun",      forms: 10, regs: 3, revenue: 1496.25, full: true  },
+  { week: "22–28 Jun",      forms: 17, regs: 9, revenue: 4465.00, full: true  },
+  { week: "29 Jun–2 Jul ⚡", forms:  2, regs: 1, revenue:  498.75, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -106,7 +107,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 28 Jun 2026 · W1–W8 full completed weeks · run 29 Jun 2026
+          4 May – 2 Jul 2026 · W1–W8 full weeks · W9 ⚡ partial (29 Jun–2 Jul) · run 2 Jul 2026
         </p>
       </div>
 
@@ -117,21 +118,21 @@ export default function App() {
         <strong style={{ color: "#34d399" }}>📌 Key insight: </strong>
         CTID786 has generated{" "}
         <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks.
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks plus a partial W9.
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W1 (4–10 May)
-        and W8 (22–28 Jun) are the standout weeks — 7 and 8 registrations respectively,
+        and W8 (22–28 Jun) are the standout weeks — 7 and 9 registrations respectively,
         with W8 delivering{" "}
-        <strong style={{ color: "#f1f5f9" }}>{fmt(3966.25)}</strong> — the highest revenue of any week.
+        <strong style={{ color: "#f1f5f9" }}>{fmt(4465)}</strong> — the highest revenue of any week.
         W2 (11–17 May) had the lowest conversion at 20.0% despite 10 form submissions.
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
-          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",     color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 completed weeks",        color: COLORS.rev   },
+          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,       color: COLORS.forms },
+          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,        color: COLORS.regs  },
+          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",          color: COLORS.cr    },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 full + W9 partial",          color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -253,7 +254,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8 · 8 full weeks)
+                Total (W1–W8 full + W9 ⚡ partial)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -272,8 +273,8 @@ export default function App() {
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
         <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only, cols A–D dedup).
         Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
-        11 pre-window registrations (13–26 Apr) excluded. Revenue tiers: €498.75 (main), €475.00, €157.50 (instalment — 1 reg).
-        No partial week included in this run.
+        15 pre-window registrations (13–26 Apr) excluded. Revenue tiers: €498.75 (main), €475.00, €157.50 (instalment — 1 reg).
+        W9 is a partial week (29 Jun–2 Jul 2026) — excluded from weekly averages.
       </p>
 
     </div>

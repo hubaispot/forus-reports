@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "4–10 May",      label: "W1", enq: 5,  app: 11, full: true  },
-  { week: "11–17 May",     label: "W2", enq: 3,  app: 7,  full: true  },
-  { week: "18–24 May",     label: "W3", enq: 11, app: 8,  full: true  },
-  { week: "25–31 May",     label: "W4", enq: 5,  app: 5,  full: true  },
-  { week: "1–7 Jun",       label: "W5", enq: 4,  app: 6,  full: true  },
-  { week: "8–14 Jun",      label: "W6", enq: 1,  app: 5,  full: true  },
-  { week: "15–21 Jun",     label: "W7", enq: 3,  app: 7,  full: true  },
-  { week: "22–28 Jun",     label: "W8", enq: 4,  app: 15, full: true  },
+  { week: "4–10 May",        label: "W1", enq: 5,  app: 11, full: true  },
+  { week: "11–17 May",       label: "W2", enq: 3,  app: 7,  full: true  },
+  { week: "18–24 May",       label: "W3", enq: 9,  app: 8,  full: true  },
+  { week: "25–31 May",       label: "W4", enq: 5,  app: 8,  full: true  },
+  { week: "1–7 Jun",         label: "W5", enq: 4,  app: 6,  full: true  },
+  { week: "8–14 Jun",        label: "W6", enq: 1,  app: 5,  full: true  },
+  { week: "15–21 Jun",       label: "W7", enq: 3,  app: 7,  full: true  },
+  { week: "22–28 Jun",       label: "W8", enq: 4,  app: 13, full: true  },
+  { week: "29 Jun–2 Jul ⚡",  label: "W9", enq: 0,  app: 2,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -89,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 28 Jun 2026 · IST boundaries · Unique contacts · last form only per contact
+          4 May – 2 Jul 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -99,10 +100,10 @@ export default function App() {
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         Applications dominate throughout — 7 of 8 completed weeks hit 60%+ conversion 🔥.
-        W1 (4–10 May) opened strongly at 69%, dipped in W2 (70% but lower volume) before W3
-        saw a surge of enquiries pushing the rate down to 42%. W4 softened (50%) before recovering:
-        W5–W8 all hit 60%+. W8 (22–28 Jun) is the standout week — 15 applications and 79% conversion,
-        the highest app volume of the entire window.
+        W1 and W2 opened strongly (69–70%) before W3 dipped to 47% on a surge of enquiries.
+        W4 recovered sharply (62%), and W5–W8 all held 60%+. W6 (8–14 Jun) hit 83% — the highest
+        rate of any full week. W8 (22–28 Jun) delivered the highest application volume at 13,
+        with 76% conversion. W9 is a partial week (29 Jun–2 Jul).
       </div>
 
       {/* KPIs */}
@@ -110,9 +111,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,        color: COLORS.enq },
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,        color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "8 full weeks",            color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,            sub: "8 full + 1 partial wk",   color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",             color: "#34d399"  },
-          { label: "Best Week",          value: "W8",             sub: "79% · 22–28 Jun",          color: "#fbbf24"  },
+          { label: "Best Week",          value: "W6",             sub: "83% · 8–14 Jun",           color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -240,7 +241,8 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Test submissions (jean@forustraining.ie) excluded from all counts. 8 full weeks (W1–W8).
+        ⚡ W9 is a partial week (29 Jun–2 Jul) — excluded from weekly averages.
+        Test submissions (jean@forustraining.ie) excluded from all counts.
       </p>
     </div>
   );
