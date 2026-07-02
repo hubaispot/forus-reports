@@ -7,21 +7,22 @@ import {
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
 // Combined HubSpot + Paythen report
-// Window: Mon 4 May – Sun 28 Jun 2026 (W1–W8, all full)
-// Forms: HubSpot enq+app, global dedup per form (run 29 Jun 2026)
+// W1–W8 full (4 May – 28 Jun 2026) · W9 ⚡ partial (29 Jun – 2 Jul 2026)
+// Forms: HubSpot enq+app, global dedup per form (run 2 Jul 2026)
 // Registrations: Paythen Filtered sheet, Status=Registered, deduped by email
-// 10 pre-W1 registrations excluded (13–28 Apr)
-// 3 excluded: jacquline roche (App form o/st) · Linda Lane + Diane Cronin (no status)
+// 11 pre-W1 registrations excluded (13–28 Apr)
+// 2 excluded: jacquline roche (App form o/st) · Dylan Cantwell (no status)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",   forms: 12, regs: 1,  revenue: 733.95,   full: true },
-  { week: "11–17 May",  forms: 11, regs: 4,  revenue: 2911.34,  full: true },
-  { week: "18–24 May",  forms: 26, regs: 2,  revenue: 1443.44,  full: true },
-  { week: "25–31 May",  forms: 36, regs: 6,  revenue: 4313.80,  full: true },
-  { week: "1–7 Jun",    forms: 47, regs: 11, revenue: 7983.55,  full: true },
-  { week: "8–14 Jun",   forms: 24, regs: 4,  revenue: 2756.00,  full: true },
-  { week: "15–21 Jun",  forms: 18, regs: 7,  revenue: 5092.70,  full: true },
-  { week: "22–28 Jun",  forms: 35, regs: 4,  revenue: 2890.85,  full: true },
+  { week: "4–10 May",        forms: 12, regs: 1,  revenue: 733.95,   full: true  },
+  { week: "11–17 May",       forms: 11, regs: 4,  revenue: 2911.34,  full: true  },
+  { week: "18–24 May",       forms: 26, regs: 2,  revenue: 1443.44,  full: true  },
+  { week: "25–31 May",       forms: 36, regs: 6,  revenue: 4313.80,  full: true  },
+  { week: "1–7 Jun",         forms: 45, regs: 11, revenue: 7983.55,  full: true  },
+  { week: "8–14 Jun",        forms: 24, regs: 4,  revenue: 2756.00,  full: true  },
+  { week: "15–21 Jun",       forms: 18, regs: 7,  revenue: 5092.70,  full: true  },
+  { week: "22–28 Jun",       forms: 34, regs: 6,  revenue: 4313.80,  full: true  },
+  { week: "29 Jun–2 Jul ⚡", forms: 29, regs: 5,  revenue: 3669.75,  full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -73,6 +74,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (29 Jun – 2 Jul)</p>}
     </div>
   );
 };
@@ -109,7 +111,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 28 Jun 2026 · 8 full weeks · W1 anchor: 4 May 2026
+          4 May – 2 Jul 2026 · 8 full weeks + W9 ⚡ · W1 anchor: 4 May 2026
         </p>
       </div>
 
@@ -121,20 +123,22 @@ export default function App() {
         <strong style={{ color: "#34d399" }}>📌 Key insight: </strong>
         W5 (1–7 Jun) was the peak week with <strong style={{ color: "#f1f5f9" }}>11 registrations and €7,983.55 revenue</strong>.
         W7 (15–21 Jun) delivered the highest conversion rate at <strong style={{ color: "#f1f5f9" }}>38.9% 🔥</strong> — deadline-driven conversion from earlier enquirers.
-        Total pipeline: <strong style={{ color: "#f1f5f9" }}>39 registrations · €28,125.63</strong> expected revenue across 8 weeks.
+        W9 ⚡ is tracking strongly with <strong style={{ color: "#f1f5f9" }}>5 registrations and €3,669.75</strong> in just 3 days.
+        Total pipeline: <strong style={{ color: "#f1f5f9" }}>46 registrations · €33,218.33</strong> expected revenue.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
-          { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",         color: COLORS.cr    },
-          { label: "Expected Revenue",    value: fmt(totalRev),   sub: "8 weeks total",        color: COLORS.rev   },
+          { label: "Total Forms",           value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
+          { label: "Total Registrations",   value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
+          { label: "Overall Conv. Rate",    value: overallCR + "%", sub: "regs ÷ forms",                 color: COLORS.cr    },
+          { label: "Expected Revenue",      value: fmt(totalRev),   sub: "W1–W9 total",                  color: COLORS.rev   },
+          { label: "W9 so far (29 Jun–2 Jul)", value: "5 regs",     sub: `⚡ ${fmt(3669.75)}`,           color: "#fbbf24"    },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
-            flex: "1 1 130px", border: "1px solid #334155"
+            flex: "1 1 120px", border: "1px solid #334155"
           }}>
             <p style={{ margin: "0 0 3px", fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
             <p style={{ margin: "0 0 2px", fontSize: 20, fontWeight: 800, color: k.color, lineHeight: 1 }}>{k.value}</p>
@@ -218,7 +222,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
                     {row.forms}
                     {wowForms !== null && (
@@ -257,7 +263,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Paythen: Status = Registered only · 10 pre-W1 registrations excluded (13–28 Apr 2026) · 3 excluded (no status / App form o/st) · 29 Jun 2026
+        Paythen: Status = Registered only · 11 pre-W1 registrations excluded (13–28 Apr 2026) · 2 excluded (no status / App form o/st) · 2 Jul 2026
       </p>
 
     </div>
