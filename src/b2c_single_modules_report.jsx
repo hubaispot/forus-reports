@@ -4,7 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 6 Jul 2026) ──────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 7 Jul 2026) ──────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 // Dedup applied: Paul Garry app (kept 506625732814), Oran Molloy app (kept 506956136670),
@@ -96,6 +96,8 @@ const RAW_DEALS = [
   { id:"509651830991",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Molly Maher",                                              createdate:"2026-07-05T20:21:48.695Z", stage:"won", amount:440  },
   { id:"509639489741",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Rosemarie Lawlor",                                         createdate:"2026-07-05T22:07:45.923Z", stage:"won", amount:440  },
   { id:"509564792030",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Nobuhle Ncube",                                            createdate:"2026-07-05T22:43:31.064Z", stage:"app", amount:440  },
+  { id:"509690450142",  dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Killarney for Marie O Shea",                                    createdate:"2026-07-06T18:15:33.415Z", stage:"app", amount:440  },
+  { id:"509690558674",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Ritah Nkala",                                              createdate:"2026-07-06T19:12:46.565Z", stage:"app", amount:440  },
   { id:"509557342437",  dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Svitlana Pandei",                                  createdate:"2026-07-03T17:17:44.741Z", stage:"app", amount:440  },
   { id:"509563712757",  dealname:"FAR First Aid Responder (FAR CNY DHP) - Mullingar for Sihle Mnkandla",                                                          createdate:"2026-07-03T19:05:30.038Z", stage:"app", amount:0    },
 ];
@@ -169,6 +171,7 @@ const WEEKS = [
   { wk:"W3", label:"15 Jun–21 Jun",    start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
   { wk:"W4", label:"22 Jun–28 Jun",    start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-28T22:59:59Z"), full:true  },
   { wk:"W5", label:"29 Jun–5 Jul",    start:new Date("2026-06-28T23:00:00Z"), end:new Date("2026-07-05T22:59:59Z"), full:true  },
+  { wk:"W6", label:"6 Jul–12 Jul ⚡", start:new Date("2026-07-05T23:00:00Z"), end:new Date("2026-07-12T22:59:59Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -373,7 +376,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 5 Jul 2026 · deal create date · W1–W5 complete
+          1 Jun – 7 Jul 2026 · deal create date · ⚡ W6 partial week
         </p>
       </div>
 
@@ -653,7 +656,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 6 Jul 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 7 Jul 2026 · deal create date as week anchor
       </p>
     </div>
   );

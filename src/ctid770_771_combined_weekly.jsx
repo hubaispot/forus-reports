@@ -6,7 +6,6 @@ import {
 
 // Forms data from ctid770_771_enq_vs_app_weekly.jsx (enq = CTID771 LO only, app = OA+LO combined)
 const formsData = [
-  { week: "4 May–10 May",   enq: 4, app: 4,  full: true  },
   { week: "11 May–17 May",  enq: 1, app: 5,  full: true  },
   { week: "18 May–24 May",  enq: 0, app: 3,  full: true  },
   { week: "25 May–31 May",  enq: 1, app: 6,  full: true  },
@@ -14,12 +13,12 @@ const formsData = [
   { week: "8 Jun–14 Jun",   enq: 4, app: 9,  full: true  },
   { week: "15 Jun–21 Jun",  enq: 2, app: 10, full: true  },
   { week: "22 Jun–28 Jun",  enq: 2, app: 7,  full: true  },
-  { week: "29 Jun–5 Jul",   enq: 3, app: 5,  full: false },
+  { week: "29 Jun–5 Jul",   enq: 4, app: 10, full: true  },
+  { week: "6 Jul–12 Jul",   enq: 1, app: 2,  full: false },
 ];
 
 // Paythen registrations + revenue (CTID770 + CTID771, Status=Registered, from 4 May)
 const paythenData = [
-  { week: "4 May–10 May",   regs: 3, revenue: 2730.00   },
   { week: "11 May–17 May",  regs: 0, revenue: 0.00      },
   { week: "18 May–24 May",  regs: 2, revenue: 1905.00   },
   { week: "25 May–31 May",  regs: 4, revenue: 4095.25   },
@@ -27,7 +26,8 @@ const paythenData = [
   { week: "8 Jun–14 Jun",   regs: 6, revenue: 4541.13   },
   { week: "15 Jun–21 Jun",  regs: 4, revenue: 3228.75   },
   { week: "22 Jun–28 Jun",  regs: 3, revenue: 2654.00   },
-  { week: "29 Jun–5 Jul",   regs: 3, revenue: 3097.50   },
+  { week: "29 Jun–5 Jul",   regs: 5, revenue: 3937.50   },
+  { week: "6 Jul–12 Jul",   regs: 1, revenue: 945.00    },
 ];
 
 export const data = formsData.map((f, i) => {
@@ -113,7 +113,7 @@ export default function App() {
           Combined Revenue Report
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 2 Jul 2026 · W1–W8 complete · W9 partial ⚡ · CTID770 (OA) + CTID771 (LO)
+          11 May – 7 Jul 2026 · W1–W8 complete · W9 partial ⚡ · CTID770 (OA) + CTID771 (LO)
         </p>
       </div>
 
@@ -259,7 +259,7 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) &amp; CTID771 (LO) applications combined. Registrations = Paythen Status=Registered rows for CTID770 + CTID771, from 4 May 2026. Pre-window CTID770 rows (before 4 May, 11 registrations) excluded. CTID771 has 0 Paythen registrations in this period. W9 (29 Jun–5 Jul) is a partial week — 3 days recorded as of 2 Jul 2026. Source: HubSpot XLSX exports + Paythen XLSX, 2 Jul 2026.
+        ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) &amp; CTID771 (LO) applications combined. Registrations = Paythen Status=Registered rows for CTID770 + CTID771, from 11 May 2026. Pre-window CTID770 rows (before 11 May, 14 registrations) excluded. CTID771 has 0 Paythen registrations in this period. W9 (6 Jul–12 Jul) is a partial week — 2 days recorded as of 7 Jul 2026. Source: HubSpot XLSX exports + Paythen XLSX, 7 Jul 2026.
       </p>
     </div>
   );

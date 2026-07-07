@@ -10,20 +10,21 @@ import {
 // Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
 //   Status = "Registered" only; deduplicated by email; 11 pre-W1 rows (13–26 Apr) excluded
 // Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59
-// W1 = 4 May 2026, W8 = 22–28 Jun 2026 (8 full completed weeks) + W9 partial (29 Jun–2 Jul)
-// Run: 2 Jul 2026
+// W1 = 11 May 2026, W8 = 29 Jun–5 Jul 2026 (8 full completed weeks) + W9 partial (6–7 Jul)
+// Run: 7 Jul 2026
 // Revenue tiers: €498.75 (main), €475.00, €157.50 (1 reg — Samuel Ogun, instalment)
+// 22 pre-W1 registrations (before 11 May) excluded
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",       forms: 16, regs: 7, revenue: 3467.50, full: true  },
   { week: "11–17 May",      forms: 10, regs: 2, revenue:  973.75, full: true  },
   { week: "18–24 May",      forms: 17, regs: 5, revenue: 2493.75, full: true  },
-  { week: "25–31 May",      forms: 13, regs: 3, revenue: 1155.00, full: true  },
+  { week: "25–31 May",      forms: 10, regs: 3, revenue: 1155.00, full: true  },
   { week: "1–7 Jun",        forms: 10, regs: 6, revenue: 2968.75, full: true  },
   { week: "8–14 Jun",       forms:  6, regs: 3, revenue: 1472.50, full: true  },
   { week: "15–21 Jun",      forms: 10, regs: 3, revenue: 1496.25, full: true  },
   { week: "22–28 Jun",      forms: 17, regs: 9, revenue: 4465.00, full: true  },
-  { week: "29 Jun–2 Jul ⚡", forms:  2, regs: 1, revenue:  498.75, full: false },
+  { week: "29 Jun–5 Jul",   forms: 11, regs: 4, revenue: 1947.50, full: true  },
+  { week: "6–7 Jul ⚡",      forms:  3, regs: 0, revenue:    0.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -107,7 +108,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 2 Jul 2026 · W1–W8 full weeks · W9 ⚡ partial (29 Jun–2 Jul) · run 2 Jul 2026
+          11 May – 7 Jul 2026 · W1–W8 full weeks · W9 ⚡ partial (6–7 Jul) · run 7 Jul 2026
         </p>
       </div>
 
@@ -119,11 +120,11 @@ export default function App() {
         CTID786 has generated{" "}
         <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
         <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks plus a partial W9.
-        Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W1 (4–10 May)
-        and W8 (22–28 Jun) are the standout weeks — 7 and 9 registrations respectively,
-        with W8 delivering{" "}
+        Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W7 (22–28 Jun)
+        is the standout week — 9 registrations and{" "}
         <strong style={{ color: "#f1f5f9" }}>{fmt(4465)}</strong> — the highest revenue of any week.
-        W2 (11–17 May) had the lowest conversion at 20.0% despite 10 form submissions.
+        W4 (1–7 Jun) hit the highest conversion at 60.0%. W1 (11–17 May) had the lowest conversion
+        at 20.0% despite 10 form submissions.
       </div>
 
       {/* KPI Cards */}
@@ -273,8 +274,8 @@ export default function App() {
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
         <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only, cols A–D dedup).
         Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
-        15 pre-window registrations (13–26 Apr) excluded. Revenue tiers: €498.75 (main), €475.00, €157.50 (instalment — 1 reg).
-        W9 is a partial week (29 Jun–2 Jul 2026) — excluded from weekly averages.
+        22 pre-window registrations (before 11 May) excluded. Revenue tiers: €498.75 (main), €475.00, €157.50 (instalment — 1 reg).
+        W9 is a partial week (6–7 Jul 2026) — excluded from weekly averages.
       </p>
 
     </div>
