@@ -6,23 +6,23 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Window: Mon 4 May – Sun 28 Jun 2026 (W1–W8, all full)
-// + W9 ⚡ partial: Mon 29 Jun – Wed 2 Jul 2026 (run at 10:16 IST)
-// Methodology: global dedup per form · cols A–D (First name, Last name, Email/Phone)
+// Rolling window: Mon 11 May – Sun 5 Jul 2026 (W1–W8, all full)
+// + W9 ⚡ partial: Mon 6 Jul – Thu 9 Jul 2026 (run at 10:33 IST)
+// Methodology: global dedup per form · cols A–D (First name, Last name, Phone, Email)
 //              email primary · phone fallback · most recent submission kept
-// W1–W4 locked from 1 Jul 2026 run · W5–W9 re-run from xlsx 2 Jul 2026
-// 127 unique enquiries · 108 unique apps
+// Full re-run from XLSX 9 Jul 2026 · 132 unique enquiries · 122 unique apps (W1–W9)
+// Phone-based dupes merged: Shane Kennedy (HubSpot merge needed)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",        enq: 7,  app: 5,  full: true  },
-  { week: "11–17 May",       enq: 5,  app: 6,  full: true  },
-  { week: "18–24 May",       enq: 19, app: 7,  full: true  },
-  { week: "25–31 May",       enq: 18, app: 18, full: true  },
-  { week: "1–7 Jun",         enq: 27, app: 18, full: true  },
-  { week: "8–14 Jun",        enq: 14, app: 10, full: true  },
-  { week: "15–21 Jun",       enq: 3,  app: 15, full: true  },
-  { week: "22–28 Jun",       enq: 18, app: 16, full: true  },
-  { week: "29 Jun–2 Jul ⚡", enq: 16, app: 13, full: false },
+  { week: "11–17 May",      enq: 5,  app: 6,  full: true  },
+  { week: "18–24 May",      enq: 19, app: 7,  full: true  },
+  { week: "25–31 May",      enq: 18, app: 17, full: true  },
+  { week: "1–7 Jun",        enq: 27, app: 20, full: true  },
+  { week: "8–14 Jun",       enq: 14, app: 10, full: true  },
+  { week: "15–21 Jun",      enq: 3,  app: 15, full: true  },
+  { week: "22–28 Jun",      enq: 16, app: 14, full: true  },
+  { week: "29 Jun–5 Jul",   enq: 24, app: 23, full: true  },
+  { week: "6–9 Jul ⚡",     enq: 6,  app: 10, full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -70,7 +70,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Wed, run at 10:16 IST)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Wed — run at 08:47 IST)</p>}
     </div>
   );
 };
@@ -106,7 +106,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 2 Jul 2026 · 8 full weeks + W9 ⚡ · Unique contacts · global dedup per form
+          11 May – 9 Jul 2026 · 8 full weeks + W9 ⚡ · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -117,20 +117,20 @@ export default function App() {
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong late-cycle conversion surge</strong> —
-        W5 (1–7 Jun) was the peak enquiry week with 45 total submissions and 18 applications.
-        W7 (15–21 Jun) shows a sharp reversal: only 3 enquiries but <strong style={{ color: "#f1f5f9" }}>15 applications at 83% app rate 🔥</strong>,
+        W4 (1–7 Jun) and W8 (29 Jun–5 Jul) tie as peak weeks at 47 total submissions each.
+        W6 (15–21 Jun) shows a sharp reversal: only 3 enquiries but <strong style={{ color: "#f1f5f9" }}>15 applications at 83% app rate 🔥</strong>,
         indicating deadline-driven conversion from earlier enquirers.
-        W9 ⚡ (29 Jun–2 Jul) is tracking strongly with 16 enquiries and 13 applications at 45% app rate in just 4 days.
+        W9 ⚡ (6–9 Jul) has opened strongly with 6 enquiries and 10 applications in the first 4 days (62% app rate).
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",          value: totalEnq,       sub: `avg ${avgEnq}/wk (W1–W8)`,  color: COLORS.enq },
-          { label: "Total Applications",       value: totalApp,       sub: `avg ${avgApp}/wk (W1–W8)`,  color: COLORS.app },
-          { label: "Total Submissions",        value: total,          sub: "8 full wks + W9 ⚡",         color: "#f1f5f9"  },
-          { label: "Overall App Rate",         value: overallApp+"%", sub: "apps ÷ total",               color: "#34d399"  },
-          { label: "W9 so far (29 Jun–2 Jul)", value: "16e / 13a",    sub: "⚡ 45% app rate",            color: "#fbbf24"  },
+          { label: "Total Enquiries",       value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq  },
+          { label: "Total Applications",    value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app  },
+          { label: "Total Submissions",     value: total,          sub: "8 full wks + W9 ⚡",  color: "#f1f5f9"   },
+          { label: "Overall App Rate",      value: overallApp+"%", sub: "apps ÷ total",        color: "#34d399"   },
+          { label: "W9 so far (6–9 Jul)",  value: "6e / 10a",    sub: "⚡ 62% app rate",     color: "#fbbf24"   },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -253,7 +253,7 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Global dedup per form · most recent submission kept per contact · W1–W4 locked 1 Jul 2026 · W5–W9 run 2 Jul 2026
+        ⚠️ Phone-based duplicate HubSpot records merged (counted once): Natalie Mitchell · Rebecca Gilmore · Antonia Kennedy — merge recommended in HubSpot
       </p>
 
     </div>
