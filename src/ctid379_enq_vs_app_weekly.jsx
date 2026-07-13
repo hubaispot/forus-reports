@@ -4,21 +4,23 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// CTID379 — SNA L6 LO — Weekly Enquiry vs Application
-// W1–W4: locked from 29 Jun run (XLSX, cols A–D dedup)
-// W5–W8: refreshed from 2 Jul XLSX exports (cols A–D dedup)
-// W9: partial week 29 Jun – 2 Jul 2026
-// Run: 2 Jul 2026
+// ── SUBSTITUTION GUIDE ───────────────────────────────────────────────────────
+// Replace the data rows below with the actual fetched values.
+// All weeks are Mon–Sun Irish time (IST/BST).
+// • full: true  → completed week, counts are final
+// • full: false → current partial week (include_current_week = true only)
+//                 append " ⚡" to the week label e.g. "9–11 Jun ⚡"
+// If include_current_week = false, all 8 rows have full: true — no ⚡ row.
+// ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",      enq: 3, app: 5, full: true  },
-  { week: "11–17 May",     enq: 4, app: 5, full: true  },
-  { week: "18–24 May",     enq: 7, app: 7, full: true  },
-  { week: "25–31 May",     enq: 1, app: 8, full: true  },
-  { week: "1–7 Jun",       enq: 6, app: 8, full: true  },
-  { week: "8–14 Jun",      enq: 7, app: 8, full: true  },
-  { week: "15–21 Jun",     enq: 4, app: 5, full: true  },
-  { week: "22–28 Jun",     enq: 8, app: 2, full: true  },
-  { week: "29 Jun–2 Jul ⚡", enq: 9, app: 3, full: false },
+  { week: "18–24 May",     enq: 7,  app: 7, full: true },
+  { week: "25–31 May",     enq: 1,  app: 8, full: true },
+  { week: "1–7 Jun",       enq: 6,  app: 8, full: true },
+  { week: "8–14 Jun",      enq: 7,  app: 8, full: true },
+  { week: "15–21 Jun",     enq: 4,  app: 5, full: true },
+  { week: "22–28 Jun",     enq: 8,  app: 2, full: true },
+  { week: "29 Jun–5 Jul",  enq: 18, app: 3, full: true },
+  { week: "6–12 Jul",      enq: 8,  app: 1, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -58,7 +60,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Tue)</p>}
     </div>
   );
 };
@@ -89,29 +91,31 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          4 May – 2 Jul 2026 · Unique contacts · dedup by name + email + phone (cols A–D) · W9 ⚡ partial
+          18 May – 12 Jul 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
-      {/* Insight banner */}
+      {/* Notable insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        CTID379 has generated <strong style={{ color:"#f1f5f9" }}>{total} form submissions</strong> across
-        8 completed weeks with an overall application rate of{" "}
-        <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
-        W4 (25–31 May) and W5 (1–7 Jun) were the strongest application weeks with 8 each.
-        W9 ⚡ (29 Jun–2 Jul) is already tracking at 9 enquiries and 3 applications in just 4 days.
+        <strong style={{ color:"#34d399" }}>📌 Key shift: </strong>
+        Enquiries <strong style={{ color:"#f1f5f9" }}>surged in W7 (18 — highest week on record)</strong> while
+        applications fell sharply from W5 onward, dropping the app rate from ~55% to 11% in W8. Overall app rate is {overallApp}%.
+        The late-window enquiry wave has not yet converted — watch for a lagged applications uptick.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,       sub:`avg ${avgEnq}/wk (W1–W8)`, color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,       sub:`avg ${avgApp}/wk (W1–W8)`, color:COLORS.app  },
-          { label:"Total Submissions",  value:total,          sub:"W1–W8 + W9 partial",        color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%", sub:"apps ÷ total",              color:"#34d399"   },
-          { label:"W9 ⚡ (29 Jun–2 Jul)", value:data[8].total, sub:`${data[8].enq}e / ${data[8].app}a`, color:"#fbbf24" },
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"8 full weeks",      color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
+          // Last KPI card: partial week if full:false, otherwise show W8 total
+          ...(data[data.length-1].full
+            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
+            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
+          ),
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -136,7 +140,7 @@ export default function App() {
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:10 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
+              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
               <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
                 tickFormatter={v => v+"%"} domain={[0,110]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
@@ -144,17 +148,14 @@ export default function App() {
                 label={{ value:`Avg ${overallApp}%`, fill:"#64748b", fontSize:11, position:"insideTopRight" }}/>
               <Line dataKey="appRate" name="Application rate" type="monotone"
                 stroke="#34d399" strokeWidth={2.5}
-                dot={({ cx, cy, index }) => (
-                  <circle key={index} cx={cx} cy={cy} r={6}
-                    fill={data[index]?.full ? "#34d399" : "#fbbf24"} stroke="none" />
-                )} connectNulls/>
+                dot={{ r:6, fill:"#34d399", strokeWidth:0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:10 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,14]}/>
+              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0, view==="stacked" ? 22 : 20]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -190,8 +191,8 @@ export default function App() {
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
                   <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
-                  <td style={{ padding:"11px 14px", color: row.full ? "#cbd5e1" : "#fbbf24" }}>
-                    {row.week}
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
+                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
                   </td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
@@ -223,13 +224,6 @@ export default function App() {
           </tbody>
         </table>
       </div>
-
-      {/* Footer note */}
-      <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        Dedup method: columns A–D (First name · Last name · Email · Phone). Keep last submission per unique key.
-        W1–W4 locked from 29 Jun run. W5–W9 refreshed 2 Jul 2026.
-        W9 ⚡ is a partial week (Mon 29 Jun – Wed 2 Jul 2026).
-      </p>
     </div>
   );
 }

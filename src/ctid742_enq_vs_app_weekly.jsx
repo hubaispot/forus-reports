@@ -6,23 +6,21 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: Mon 11 May – Sun 5 Jul 2026 (W1–W8, all full)
-// + W9 ⚡ partial: Mon 6 Jul – Thu 9 Jul 2026 (run at 10:33 IST)
-// Methodology: global dedup per form · cols A–D (First name, Last name, Phone, Email)
-//              email primary · phone fallback · most recent submission kept
-// Full re-run from XLSX 9 Jul 2026 · 132 unique enquiries · 122 unique apps (W1–W9)
-// Phone-based dupes merged: Shane Kennedy (HubSpot merge needed)
+// Rolling window: Mon 18 May – Sun 12 Jul 2026 (W1–W8, all full, no partial)
+// Methodology: global dedup per form · email primary · phone fallback · most recent kept
+// Full re-run from XLSX 13 Jul 2026 · 137 unique enquiries · 123 unique apps (in-window)
+// 1 APP out-of-range (Megan Isaacson, 13 Jul — excluded)
+// Phone-based dupes: Antonia Kennedy / Shane Kennedy — same phone, kept Shane (HubSpot review)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "11–17 May",      enq: 5,  app: 6,  full: true  },
   { week: "18–24 May",      enq: 19, app: 7,  full: true  },
-  { week: "25–31 May",      enq: 18, app: 17, full: true  },
+  { week: "25–31 May",      enq: 18, app: 18, full: true  },
   { week: "1–7 Jun",        enq: 27, app: 20, full: true  },
   { week: "8–14 Jun",       enq: 14, app: 10, full: true  },
   { week: "15–21 Jun",      enq: 3,  app: 15, full: true  },
   { week: "22–28 Jun",      enq: 16, app: 14, full: true  },
-  { week: "29 Jun–5 Jul",   enq: 24, app: 23, full: true  },
-  { week: "6–9 Jul ⚡",     enq: 6,  app: 10, full: false },
+  { week: "29 Jun–5 Jul",   enq: 24, app: 22, full: true  },
+  { week: "6–12 Jul",       enq: 16, app: 17, full: true  },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -106,7 +104,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          11 May – 9 Jul 2026 · 8 full weeks + W9 ⚡ · Unique contacts · global dedup per form
+          18 May – 12 Jul 2026 · 8 full weeks · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -116,11 +114,11 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong late-cycle conversion surge</strong> —
-        W4 (1–7 Jun) and W8 (29 Jun–5 Jul) tie as peak weeks at 47 total submissions each.
-        W6 (15–21 Jun) shows a sharp reversal: only 3 enquiries but <strong style={{ color: "#f1f5f9" }}>15 applications at 83% app rate 🔥</strong>,
-        indicating deadline-driven conversion from earlier enquirers.
-        W9 ⚡ (6–9 Jul) has opened strongly with 6 enquiries and 10 applications in the first 4 days (62% app rate).
+        CTID742 shows <strong style={{ color: "#f1f5f9" }}>sustained high volume</strong> across the 8-week window —
+        W3 (1–7 Jun) is the peak at 47 total submissions. W5 (15–21 Jun) stands out with only 3 enquiries but
+        <strong style={{ color: "#f1f5f9" }}> 15 applications at 83% app rate 🔥</strong>, indicating deadline-driven
+        conversion from earlier enquirers. W7 (29 Jun–5 Jul) follows with 46 total submissions, the second-highest week.
+        Overall app rate is 47% across 260 submissions.
       </div>
 
       {/* KPIs */}
@@ -128,9 +126,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",       value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq  },
           { label: "Total Applications",    value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app  },
-          { label: "Total Submissions",     value: total,          sub: "8 full wks + W9 ⚡",  color: "#f1f5f9"   },
+          { label: "Total Submissions",     value: total,          sub: "8 full weeks",        color: "#f1f5f9"   },
           { label: "Overall App Rate",      value: overallApp+"%", sub: "apps ÷ total",        color: "#34d399"   },
-          { label: "W9 so far (6–9 Jul)",  value: "6e / 10a",    sub: "⚡ 62% app rate",     color: "#fbbf24"   },
+          { label: "Peak Week (W3)",        value: "47",           sub: "1–7 Jun · 27e / 20a", color: "#cbd5e1"   },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -253,7 +251,7 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        ⚠️ Phone-based duplicate HubSpot records merged (counted once): Natalie Mitchell · Rebecca Gilmore · Antonia Kennedy — merge recommended in HubSpot
+        ⚠️ Phone-based duplicate HubSpot records detected (counted once): Antonia Kennedy / Shane Kennedy — same phone +353 83 858 9658, different names — HubSpot review recommended
       </p>
 
     </div>

@@ -4,7 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 9 Jul 2026) ──────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 13 Jul 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 // Dedup applied: Paul Garry app (kept 506625732814), Oran Molloy app (kept 506956136670),
@@ -108,6 +108,14 @@ const RAW_DEALS = [
   { id:"509824175294",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Brendan Lane",                                              createdate:"2026-07-08T20:09:59.991Z", stage:"app", amount:440  },
   { id:"509853437130",  dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Waterford City for Sarah Freeman",                               createdate:"2026-07-09T11:05:46.756Z", stage:"app", amount:440  },
   { id:"509857061059",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Olha Melezhyk",                                             createdate:"2026-07-09T12:00:38.416Z", stage:"app", amount:440  },
+  { id:"509866016975",  dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Catriona Mathews",                                   createdate:"2026-07-09T15:31:01.181Z", stage:"won", amount:295  },
+  { id:"509917924553",  dealname:"Health Promotion - Online Anytime 1:1 (6N2214 OA DHC) -  for  ",                                                                 createdate:"2026-07-10T15:39:20.817Z", stage:"app", amount:360  },
+  { id:"509883560184",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Kellyanne delaney",                                          createdate:"2026-07-10T17:52:15.701Z", stage:"won", amount:440  },
+  { id:"509954171113",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Chloe Woods",                                                createdate:"2026-07-10T22:11:48.882Z", stage:"app", amount:440  },
+  { id:"509933818053",  dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Orla Enright",                                              createdate:"2026-07-12T15:12:05.055Z", stage:"won", amount:440  },
+  { id:"510019348695",  dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Madelyn Walker",                                                         createdate:"2026-07-12T20:04:04.969Z", stage:"won", amount:295  },
+  { id:"510019711177",  dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Joelma Cristiane Garabine",                                              createdate:"2026-07-12T20:28:40.274Z", stage:"won", amount:295  },
+  { id:"510043411655",  dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Genalin Soldevilla",                                    createdate:"2026-07-13T08:57:36.620Z", stage:"won", amount:295  },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -179,7 +187,8 @@ const WEEKS = [
   { wk:"W3", label:"15 Jun–21 Jun",     start:new Date("2026-06-14T23:00:00Z"), end:new Date("2026-06-21T22:59:59Z"), full:true  },
   { wk:"W4", label:"22 Jun–28 Jun",     start:new Date("2026-06-21T23:00:00Z"), end:new Date("2026-06-28T22:59:59Z"), full:true  },
   { wk:"W5", label:"29 Jun–5 Jul",      start:new Date("2026-06-28T23:00:00Z"), end:new Date("2026-07-05T22:59:59Z"), full:true  },
-  { wk:"W6", label:"6 Jul–9 Jul ⚡",    start:new Date("2026-07-05T23:00:00Z"), end:new Date("2026-07-09T12:58:55Z"), full:false },
+  { wk:"W6", label:"6 Jul–12 Jul",      start:new Date("2026-07-05T23:00:00Z"), end:new Date("2026-07-12T22:59:59Z"), full:true  },
+  { wk:"W7", label:"13 Jul ⚡",         start:new Date("2026-07-12T23:00:00Z"), end:new Date("2026-07-13T09:35:00Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -384,7 +393,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          1 Jun – 9 Jul 2026 · deal create date · ⚡ W6 partial week
+          1 Jun – 13 Jul 2026 · deal create date · ⚡ W7 partial week
         </p>
       </div>
 
@@ -664,7 +673,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 9 Jul 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 13 Jul 2026 · deal create date as week anchor
       </p>
     </div>
   );

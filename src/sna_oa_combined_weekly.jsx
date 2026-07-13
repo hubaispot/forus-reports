@@ -6,23 +6,25 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID490 + CTID423 — SNA Online Anytime (merged) — Combined Weekly Revenue Report
-// Forms: from HubSpot JSX (enq + app per week), W1–W8 full, W9 partial ⚡
+// Forms: from HubSpot JSX (enq + app per week), W1–W8 full weeks only
 // Registrations & Revenue: from Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 4 May 2026.
-// 6 pre-W1 rows excluded (before 4 May): Caroline Hopkins 15 Apr, Samantha 16 Apr,
-//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr, Krishna Blake 3 May.
-// Revenue tiers: CTID490 €295.00/€320.00/€324.80 · CTID423 €440.00/€462.00
+// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 18 May 2026.
+// 10 pre-W1 rows excluded (before 18 May): Samantha Murphy 16 Apr, Caroline Hopkins 15 Apr,
+//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr, Krishna Blake 3 May,
+//   Nicolette Spelic 10 May, Jennifer McLoughlin 11 May, Eilish Walsh 12 May,
+//   Collette Stephenson 14 May.
+// Revenue tiers: CTID490 €295.00/€320.00/€324.80/€462.00 · CTID423 €295.00/€440.00
+// CTID breakdown (in-window): CTID490 5 regs €1,696.80 · CTID423 3 regs €1,175.00
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "4–10 May",        forms: 5,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "11–17 May",       forms: 9,  regs: 3,  revenue: 1248.80, full: true  },
-  { week: "18–24 May",       forms: 3,  regs: 0,  revenue:    0.00, full: true  },
-  { week: "25–31 May",       forms: 2,  regs: 1,  revenue:  320.00, full: true  },
-  { week: "1–7 Jun",         forms: 7,  regs: 1,  revenue:  462.00, full: true  },
-  { week: "8–14 Jun",        forms: 3,  regs: 2,  revenue:  590.00, full: true  },
-  { week: "15–21 Jun",       forms: 2,  regs: 1,  revenue:  324.80, full: true  },
-  { week: "22–28 Jun",       forms: 2,  regs: 1,  revenue:  440.00, full: true  },
-  { week: "29 Jun–2 Jul ⚡", forms: 2,  regs: 1,  revenue:  295.00, full: false },
+  { week: "18–24 May",     forms: 3,  regs: 0,  revenue:    0.00, full: true  },
+  { week: "25–31 May",     forms: 2,  regs: 1,  revenue:  320.00, full: true  },
+  { week: "1–7 Jun",       forms: 7,  regs: 1,  revenue:  462.00, full: true  },
+  { week: "8–14 Jun",      forms: 3,  regs: 2,  revenue:  590.00, full: true  },
+  { week: "15–21 Jun",     forms: 2,  regs: 1,  revenue:  324.80, full: true  },
+  { week: "22–28 Jun",     forms: 2,  regs: 1,  revenue:  440.00, full: true  },
+  { week: "29 Jun–5 Jul",  forms: 5,  regs: 1,  revenue:  295.00, full: true  },
+  { week: "6–12 Jul",      forms: 4,  regs: 1,  revenue:  440.00, full: true  },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -106,7 +108,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          4 May – 2 Jul 2026 · W1–W8 full weeks · W9 partial ⚡ · CTID490 &amp; CTID423 merged
+          18 May – 12 Jul 2026 · W1–W8 full weeks · CTID490 &amp; CTID423 merged
         </p>
       </div>
 
@@ -115,13 +117,11 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#a78bfa" }}>📌 Key insight: </strong>
-        SNA Online Anytime has generated{" "}
-        <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 9 weeks (W8 full + W9 partial).
+        SNA Online Anytime has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 weeks (18 May – 12 Jul).
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W2 (11–17 May) was the peak week for both forms (9) and registrations (3).
-        W5 (1–7 Jun) had the highest enquiry volume (7) but only converted 1 registration.
-        W9 has already returned 1 registration (€295) with the week still open.
+        W3 (1–7 Jun) had the highest form volume (7) with 1 registration. W4 (8–14 Jun) was the peak registration
+        week with 2 regs and 66.7% CR. W7 (29 Jun–5 Jul) saw 5 enquiries but no applications convert to registrations yet.
       </div>
 
       {/* KPI Cards */}
@@ -130,7 +130,7 @@ export default function App() {
           { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (full weeks)`,  color: COLORS.forms },
           { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (full weeks)`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",         color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "4 May – 2 Jul 2026",               color: COLORS.rev   },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "18 May – 12 Jul 2026",             color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -185,14 +185,7 @@ export default function App() {
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
                 tickFormatter={v => "€" + (v / 1000).toFixed(1) + "k"} domain={[0, 1600]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
-              <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}
-                fillOpacity={1}
-                shape={(props) => {
-                  const { x, y, width, height, index } = props;
-                  const opacity = data[index]?.full ? 1 : 0.5;
-                  return <rect x={x} y={y} width={width} height={height}
-                    fill={COLORS.rev} opacity={opacity} rx={5} ry={5} />;
-                }} />
+              <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]} />
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
@@ -228,7 +221,7 @@ export default function App() {
           <tbody>
             {data.map((row, i) => {
               const crOver = row.cr !== null && row.cr > 100;
-              const crHigh = row.cr !== null && row.cr >= 80 && row.cr <= 100 && row.forms > 0 && row.full;
+              const crHigh = row.cr !== null && row.cr >= 80 && row.cr <= 100 && row.forms > 0;
               const delta = (val, prev) => {
                 if (prev === null) return null;
                 const diff = val - prev;
@@ -246,7 +239,8 @@ export default function App() {
                     {row.week}
                     {!row.full && (
                       <span style={{ marginLeft: 6, fontSize: 10, color: "#fbbf24",
-                        background: "rgba(251,191,36,0.12)", borderRadius: 4, padding: "1px 5px" }}>partial</span>
+                        background: "rgba(251,191,36,0.12)", borderRadius: 4,
+                        padding: "1px 5px" }}>partial</span>
                     )}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
@@ -260,12 +254,11 @@ export default function App() {
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, fontSize: 12,
                     color: crOver ? "#fbbf24" : crHigh ? "#34d399" : !row.full ? "#fbbf24" : COLORS.cr }}>
-                    {row.cr !== null ? row.cr + "%" : "—"}
+                    {row.cr !== null ? row.cr + "%" : (row.regs > 0 ? "—⚡" : "—")}
                     {crOver ? " ⚡" : crHigh ? " 🔥" : ""}
                   </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
-                    fontWeight: 700, color: row.revenue > 0 ? (!row.full ? "#fbbf24" : COLORS.rev) : "#475569",
-                    fontSize: 13 }}>
+                    fontWeight: 700, color: row.revenue > 0 ? COLORS.rev : "#475569", fontSize: 13 }}>
                     {row.revenue > 0 ? fmt(row.revenue) : "—"}
                   </td>
                 </tr>
@@ -274,7 +267,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W9 incl. partial)
+                Total (W1–W8)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -291,13 +284,10 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions
-        (CTID490 + CTID423 combined, unique contacts, last form only, deduped on email/phone).
-        Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 4 May 2026.
-        6 pre-W1 registrations excluded (15 Apr – 3 May): Caroline Hopkins, Samantha, Rachel Ryan,
-        Sarah Martin, Kay Sheehan, Krishna Blake.
-        Revenue tiers: CTID490 €295.00–€324.80 · CTID423 €440.00–€462.00.
-        W9 (29 Jun–2 Jul) is a partial week — figures will update when the week closes.
+        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (CTID490 + CTID423 combined, unique contacts, last form only, deduped on name/email/phone).
+        Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 18 May 2026.
+        10 pre-W1 registrations excluded (15 Apr – 14 May): Samantha Murphy, Caroline Hopkins, Rachel Ryan, Sarah Martin, Kay Sheehan, Krishna Blake, Nicolette Spelic, Jennifer McLoughlin, Eilish Walsh, Collette Stephenson.
+        Revenue tiers: CTID490 €295.00–€462.00 · CTID423 €295.00/€440.00. CTID490: 5 regs €1,696.80 · CTID423: 3 regs €1,175.00.
       </p>
     </div>
   );
