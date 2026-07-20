@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "18 May–24 May", enq: 0, app: 3,  full: true },
-  { week: "25 May–31 May", enq: 1, app: 6,  full: true },
-  { week: "1 Jun–7 Jun",   enq: 3, app: 13, full: true },
-  { week: "8 Jun–14 Jun",  enq: 4, app: 9,  full: true },
-  { week: "15 Jun–21 Jun", enq: 2, app: 10, full: true },
-  { week: "22 Jun–28 Jun", enq: 2, app: 7,  full: true },
+  { week: "25–31 May",     enq: 1, app: 6,  full: true },
+  { week: "1–7 Jun",       enq: 3, app: 13, full: true },
+  { week: "8–14 Jun",      enq: 4, app: 9,  full: true },
+  { week: "15–21 Jun",     enq: 2, app: 10, full: true },
+  { week: "22–28 Jun",     enq: 2, app: 7,  full: true },
   { week: "29 Jun–5 Jul",  enq: 4, app: 10, full: true },
-  { week: "6 Jul–12 Jul",  enq: 5, app: 8,  full: true },
+  { week: "6–12 Jul",      enq: 5, app: 8,  full: true },
+  { week: "13–19 Jul",     enq: 4, app: 12, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -82,7 +82,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          18 May – 12 Jul 2026 · 8 completed weeks · Unique contacts · last form only per contact
+          25 May – 19 Jul 2026 · 8 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -102,8 +102,8 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven largely by OA (CTID770) direct applications with no enquiry step.
-        Every week has exceeded 60% app rate. W3 (1–7 Jun) was the peak with 16 total submissions.
-        Enquiries have grown steadily from 0 in W1 to 5 in W8, suggesting increasing LO awareness.
+        Every week has exceeded 60% app rate. W2 (1–7 Jun) and W8 (13–19 Jul) are joint peak weeks with 16 total submissions each.
+        Enquiries have remained steady at 3–5/week since Jun, with 12 OA applications in W8 — the highest app count in 5 weeks.
       </div>
 
       {/* KPIs */}
@@ -113,7 +113,7 @@ export default function App() {
           { label:"Total Applications (OA+LO)",   value:totalApp,       sub:`avg ${avgApp}/wk`,        color:COLORS.app  },
           { label:"Total Submissions",             value:total,          sub:"8 completed weeks",       color:"#f1f5f9"   },
           { label:"Overall App Rate",              value:overallApp+"%", sub:"apps ÷ total",            color:"#34d399"   },
-          { label:"W8 (6–12 Jul)",                 value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
+          { label:"W8 (13–19 Jul)",                value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -230,7 +230,7 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) + CTID771 (LO) application forms combined.
-        App rate % is not a standard funnel conversion rate. Source: HubSpot XLSX exports, 14 Jul 2026.
+        App rate % is not a standard funnel conversion rate. Source: HubSpot XLSX exports, 20 Jul 2026.
       </p>
     </div>
   );

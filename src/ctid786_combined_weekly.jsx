@@ -7,22 +7,22 @@ import {
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID786 — CS & COOP LO Level 5 – Live and Online
 // W1–W8 all full weeks (Mon–Sun IST), no partial week
-// Window: 18 May – 12 Jul 2026
-// Forms = enq + app from HubSpot JSX (unique contacts, last form only per contact)
-//         Two application forms combined (APP_1 + APP_2); phone dupe merged
+// Window: 25 May – 19 Jul 2026
+// Forms = enq + app from HubSpot JSX (W1 cached from previous run, W2–W8 fresh)
+//         Phone dupe merged (Chido Chibayamasango)
 // Registrations + Revenue from Paythen "Filtered" sheet
 //   CTID label: "CSCOOP LO - CTID786" · Status = Registered · deduped by email
-//   24 pre-W1 registrations (Apr, €11,859.75) excluded per standing instruction
+//   29 pre-W1 registrations (Apr–24 May, €14,297.50) excluded per standing instruction
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "18–24 May",     label: "W1", forms: 17, regs: 5,  revenue: 2493.75, full: true },
-  { week: "25–31 May",     label: "W2", forms: 13, regs: 3,  revenue: 1155.00, full: true },
-  { week: "1–7 Jun",       label: "W3", forms: 10, regs: 6,  revenue: 2968.75, full: true },
-  { week: "8–14 Jun",      label: "W4", forms:  6, regs: 3,  revenue: 1472.50, full: true },
-  { week: "15–21 Jun",     label: "W5", forms: 10, regs: 4,  revenue: 1971.25, full: true },
-  { week: "22–28 Jun",     label: "W6", forms: 17, regs: 9,  revenue: 4465.00, full: true },
-  { week: "29 Jun–5 Jul",  label: "W7", forms: 10, regs: 4,  revenue: 1947.50, full: true },
-  { week: "6–12 Jul",      label: "W8", forms: 14, regs: 1,  revenue:  498.75, full: true },
+  { week: "25–31 May",     label: "W1", forms: 13, regs:  3, revenue: 1155.00, full: true },
+  { week: "1–7 Jun",       label: "W2", forms:  9, regs:  6, revenue: 2968.75, full: true },
+  { week: "8–14 Jun",      label: "W3", forms:  6, regs:  3, revenue: 1472.50, full: true },
+  { week: "15–21 Jun",     label: "W4", forms: 10, regs:  4, revenue: 1971.25, full: true },
+  { week: "22–28 Jun",     label: "W5", forms: 16, regs: 10, revenue: 4963.75, full: true },
+  { week: "29 Jun–5 Jul",  label: "W6", forms: 10, regs:  4, revenue: 1947.50, full: true },
+  { week: "6–12 Jul",      label: "W7", forms: 13, regs:  1, revenue:  498.75, full: true },
+  { week: "13–19 Jul",     label: "W8", forms: 11, regs:  4, revenue: 1971.25, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -102,7 +102,7 @@ export default function App() {
           Weekly Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          18 May – 12 Jul 2026 · IST boundaries · 8 full weeks
+          25 May – 19 Jul 2026 · IST boundaries · 8 full weeks
         </p>
       </div>
 
@@ -111,12 +111,12 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Key insight: </strong>
-        W6 (22–28 Jun) is the standout week with{" "}
-        <strong style={{ color: "#f1f5f9" }}>9 registrations</strong> and{" "}
-        <strong style={{ color: "#34d399" }}>€4,465.00</strong> revenue — the busiest week on both
-        measures. W3 (1–7 Jun) delivers the highest conversion rate at{" "}
-        <strong style={{ color: "#f1f5f9" }}>60%</strong> (6 regs from 10 forms 🔥).
-        W8 (6–12 Jul) shows a sharp drop to 1 registration despite 14 forms — the largest gap
+        W5 (22–28 Jun) is the standout week with{" "}
+        <strong style={{ color: "#f1f5f9" }}>10 registrations</strong> and{" "}
+        <strong style={{ color: "#34d399" }}>€4,963.75</strong> revenue — the busiest week on both
+        measures. W2 (1–7 Jun) delivers the highest conversion rate at{" "}
+        <strong style={{ color: "#f1f5f9" }}>66.7%</strong> (6 regs from 9 forms 🔥).
+        W7 (6–12 Jul) shows a sharp drop to 1 registration despite 13 forms — the largest gap
         between form volume and registrations in the window, suggesting a lag in conversions
         that may still come through. Overall conversion rate is{" "}
         <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong> across{" "}
@@ -269,8 +269,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        All 8 weeks are complete (Mon–Sun IST). Two application forms combined (APP_1 + APP_2).
-        24 pre-W1 Paythen registrations (Apr 2026) excluded per standing instruction.
+        All 8 weeks are complete (Mon–Sun IST). W1 forms carried from previous run cache.
+        29 pre-W1 Paythen registrations (Apr–24 May 2026, €14,297.50) excluded per standing instruction.
         Test submissions (jean@forustraining.ie) excluded from all counts.
       </p>
     </div>
