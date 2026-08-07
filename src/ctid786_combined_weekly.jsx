@@ -6,23 +6,25 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID786 — CS & COOP LO Level 5 – Live and Online
-// W1–W8 all full weeks (Mon–Sun IST), no partial week
-// Window: 25 May – 19 Jul 2026
-// Forms = enq + app from HubSpot JSX (W1 cached from previous run, W2–W8 fresh)
+// W1–W8 full weeks + W9 partial ⚡ (Mon–Sun IST)
+// Window: 8 Jun – 7 Aug 2026
+// Forms = enq + app from HubSpot JSX (W1–W6 cached, W7–W9 fresh)
 //         Phone dupe merged (Chido Chibayamasango)
 // Registrations + Revenue from Paythen "Filtered" sheet
 //   CTID label: "CSCOOP LO - CTID786" · Status = Registered · deduped by email
-//   29 pre-W1 registrations (Apr–24 May, €14,297.50) excluded per standing instruction
+//   38 pre-W1 registrations (€18,421.25) excluded per standing instruction
+//   1 row excluded: "App form o/st"
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "25–31 May",     label: "W1", forms: 13, regs:  3, revenue: 1155.00, full: true },
-  { week: "1–7 Jun",       label: "W2", forms:  9, regs:  6, revenue: 2968.75, full: true },
-  { week: "8–14 Jun",      label: "W3", forms:  6, regs:  3, revenue: 1472.50, full: true },
-  { week: "15–21 Jun",     label: "W4", forms: 10, regs:  4, revenue: 1971.25, full: true },
-  { week: "22–28 Jun",     label: "W5", forms: 16, regs: 10, revenue: 4963.75, full: true },
-  { week: "29 Jun–5 Jul",  label: "W6", forms: 10, regs:  4, revenue: 1947.50, full: true },
-  { week: "6–12 Jul",      label: "W7", forms: 13, regs:  1, revenue:  498.75, full: true },
-  { week: "13–19 Jul",     label: "W8", forms: 11, regs:  4, revenue: 1971.25, full: true },
+  { week: "8–14 Jun",      label: "W1", forms:  6, regs:  3, revenue: 1472.50, full: true  },
+  { week: "15–21 Jun",     label: "W2", forms: 10, regs:  4, revenue: 1971.25, full: true  },
+  { week: "22–28 Jun",     label: "W3", forms: 16, regs: 10, revenue: 4963.75, full: true  },
+  { week: "29 Jun–5 Jul",  label: "W4", forms: 10, regs:  4, revenue: 1947.50, full: true  },
+  { week: "6–12 Jul",      label: "W5", forms: 13, regs:  1, revenue:  498.75, full: true  },
+  { week: "13–19 Jul",     label: "W6", forms: 11, regs:  4, revenue: 1971.25, full: true  },
+  { week: "20–26 Jul",     label: "W7", forms:  6, regs:  0, revenue:    0.00, full: true  },
+  { week: "27 Jul–2 Aug",  label: "W8", forms:  7, regs:  3, revenue: 1472.50, full: true  },
+  { week: "3–7 Aug ⚡",    label: "W9", forms:  4, regs:  3, revenue: 1472.50, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -102,7 +104,7 @@ export default function App() {
           Weekly Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          25 May – 19 Jul 2026 · IST boundaries · 8 full weeks
+          8 Jun – 7 Aug 2026 · IST boundaries · W1–W8 full weeks + W9 ⚡ partial
         </p>
       </div>
 
@@ -111,14 +113,13 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Key insight: </strong>
-        W5 (22–28 Jun) is the standout week with{" "}
+        W3 (22–28 Jun) is the standout week with{" "}
         <strong style={{ color: "#f1f5f9" }}>10 registrations</strong> and{" "}
         <strong style={{ color: "#34d399" }}>€4,963.75</strong> revenue — the busiest week on both
-        measures. W2 (1–7 Jun) delivers the highest conversion rate at{" "}
-        <strong style={{ color: "#f1f5f9" }}>66.7%</strong> (6 regs from 9 forms 🔥).
-        W7 (6–12 Jul) shows a sharp drop to 1 registration despite 13 forms — the largest gap
-        between form volume and registrations in the window, suggesting a lag in conversions
-        that may still come through. Overall conversion rate is{" "}
+        measures (62.5% CR). W5 (6–12 Jul) shows the sharpest drop: 13 forms but only 1 registration
+        (7.7% CR), suggesting a lag that has not yet converted. W7 (20–26 Jul) had zero registrations
+        despite 6 forms. W8 (27 Jul–2 Aug) recovered to 3 regs (42.9% CR). W9 ⚡ is tracking well
+        so far — 3 regs from 4 forms (75.0% CR). Overall conversion rate is{" "}
         <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong> across{" "}
         <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> and{" "}
         <strong style={{ color: "#34d399" }}>{fmt(totalRev)}</strong> expected revenue.
@@ -130,7 +131,7 @@ export default function App() {
           { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",         color: COLORS.cr    },
-          { label: "Total Exp. Revenue",  value: fmt(totalRev),   sub: "W1–W8 full weeks",     color: COLORS.rev   },
+          { label: "Total Exp. Revenue",  value: fmt(totalRev),   sub: "W1–W8 + W9⚡ partial", color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -227,7 +228,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>{row.label}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
                     {row.forms}{delta(row.forms, i > 0 ? data[i - 1].forms : null)}
@@ -252,7 +255,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8, all full weeks)
+                Total (W1–W8 + W9⚡ partial)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -269,9 +272,10 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        All 8 weeks are complete (Mon–Sun IST). W1 forms carried from previous run cache.
-        29 pre-W1 Paythen registrations (Apr–24 May 2026, €14,297.50) excluded per standing instruction.
-        Test submissions (jean@forustraining.ie) excluded from all counts.
+        Run: 7 Aug 2026. W1–W6 forms carried from previous run cache (confirmed matching). W7–W9 fresh.
+        38 pre-W1 Paythen registrations (€18,421.25) excluded per standing instruction. 1 row excluded: "App form o/st".
+        W9 (3–7 Aug) is a partial week ⚡ — excluded from averages. 2 pricing tiers: €475.00 / €498.75.
+        Phone dupe merged: Chido Chibayamasango (HubSpot merge recommended). jean@forustraining.ie excluded.
       </p>
     </div>
   );

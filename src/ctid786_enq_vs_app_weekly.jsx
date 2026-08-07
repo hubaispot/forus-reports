@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "25–31 May",     label: "W1", enq: 5,  app: 8,  full: true },
-  { week: "1–7 Jun",       label: "W2", enq: 4,  app: 5,  full: true },
-  { week: "8–14 Jun",      label: "W3", enq: 1,  app: 5,  full: true },
-  { week: "15–21 Jun",     label: "W4", enq: 3,  app: 7,  full: true },
-  { week: "22–28 Jun",     label: "W5", enq: 4,  app: 12, full: true },
-  { week: "29 Jun–5 Jul",  label: "W6", enq: 3,  app: 7,  full: true },
-  { week: "6–12 Jul",      label: "W7", enq: 8,  app: 5,  full: true },
-  { week: "13–19 Jul",     label: "W8", enq: 5,  app: 6,  full: true },
+  { week: "8–14 Jun",      enq: 1,  app: 5,  full: true  },
+  { week: "15–21 Jun",     enq: 3,  app: 7,  full: true  },
+  { week: "22–28 Jun",     enq: 4,  app: 12, full: true  },
+  { week: "29 Jun–5 Jul",  enq: 3,  app: 7,  full: true  },
+  { week: "6–12 Jul",      enq: 8,  app: 5,  full: true  },
+  { week: "13–19 Jul",     enq: 5,  app: 6,  full: true  },
+  { week: "20–26 Jul",     enq: 4,  app: 2,  full: true  },
+  { week: "27 Jul–2 Aug",  enq: 2,  app: 5,  full: true  },
+  { week: "3–7 Aug ⚡",    enq: 1,  app: 3,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -89,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          25 May – 19 Jul 2026 · IST boundaries · Unique contacts · last form only per contact
+          8 Jun – 7 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -98,11 +99,12 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Applications dominate throughout — 5 of 8 weeks hit 60%+ app rate 🔥.
-        W5 (22–28 Jun) was the standout week: 16 total submissions, 12 applications (75%). W3 (8–14 Jun)
-        had the highest app rate at 83% on 6 submissions. W7 (6–12 Jul) saw the strongest enquiry week
-        (8) as applications eased (5), bringing rate to 38%. W8 (13–19 Jul) shows continued steady
-        activity with 11 total. Overall 63% of all contacts applied directly.
+        Applications dominate throughout — 5 of 8 full weeks hit 60%+ app rate 🔥.
+        W3 (22–28 Jun) was the standout week: 16 total submissions, 12 applications (75%). W1 (8–14 Jun)
+        had the highest app rate at 83% on 6 submissions. W5 (6–12 Jul) saw the strongest enquiry week
+        (8) as applications eased (5), bringing rate to 38%. W7–W8 are the newest full weeks: enquiries
+        slowed (4→2) while applications held (2→5), with W8 returning to 71% 🔥. W9 is a partial week
+        (Mon–Fri) with 1 enquiry and 3 applications so far. Overall 63% of all contacts applied directly.
       </div>
 
       {/* KPIs */}
@@ -110,9 +112,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,        color: COLORS.enq },
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,        color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "8 full weeks",             color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,            sub: "W1–W8 + W9⚡ partial",     color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",             color: "#34d399"  },
-          { label: "Best Week",          value: "W3",             sub: "83% · 8–14 Jun",           color: "#fbbf24"  },
+          { label: "Best Week",          value: "W3",             sub: "83% · 22–28 Jun",          color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -200,7 +202,7 @@ export default function App() {
                   borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
-                  <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>{row.label}</td>
+                  <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i+1}</td>
                   <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center",
                     fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
@@ -223,7 +225,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8, all full weeks)              </td>
+                Total (W1–W8 + W9⚡ partial)</td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.enq, fontSize: 15 }}>{totalEnq}</td>
               <td style={{ padding: "11px 14px", textAlign: "center",
@@ -239,9 +241,10 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        ⚡ All 8 weeks are complete (Mon–Sun). W1 (25–31 May) carried from previous run cache.
-        Phone duplicate merged: Chido Chibayamasango (HubSpot merge recommended).
-        Test submissions (jean@forustraining.ie) excluded from all counts.
+        Run: 7 Aug 2026. W1–W6 (8 Jun – 19 Jul) reused from previous run cache (figures confirmed matching).
+        W7–W8 freshly processed. W9 (3–7 Aug) is a partial week ⚡ and excluded from averages.
+        Phone duplicate merged: Chido Chibayamasango — chidochibayamasango@gmail.com / chidomajongosi@gmail.com (HubSpot merge recommended).
+        Test submissions (jean@forustraining.ie) excluded. 0 rows outside window.
       </p>
     </div>
   );
