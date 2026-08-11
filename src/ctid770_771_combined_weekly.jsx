@@ -5,27 +5,27 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "8–14 Jun",      forms: 13, regs: 6, revenue: 4541.13, full: true  },
-  { week: "15–21 Jun",     forms: 11, regs: 4, revenue: 3228.75, full: true  },
-  { week: "22–28 Jun",     forms:  9, regs: 3, revenue: 2654.00, full: true  },
-  { week: "29 Jun–5 Jul",  forms: 14, regs: 4, revenue: 2782.50, full: true  },
-  { week: "6–12 Jul",      forms: 13, regs: 6, revenue: 4791.25, full: true  },
-  { week: "13–19 Jul",     forms: 16, regs: 7, revenue: 6954.15, full: true  },
-  { week: "20–26 Jul",     forms: 13, regs: 4, revenue: 3788.40, full: true  },
-  { week: "27 Jul–2 Aug",  forms: 10, regs: 1, revenue: 1155.00, full: true  },
-  { week: "3–7 Aug ⚡",    forms:  6, regs: 0, revenue:    0.00, full: false },
+  { week: "15–21 Jun",      forms: 11, regs: 4, revenue: 3228.75, full: true  },
+  { week: "22–28 Jun",      forms:  9, regs: 3, revenue: 2654.00, full: true  },
+  { week: "29 Jun–5 Jul",   forms: 14, regs: 5, revenue: 3937.50, full: true  },
+  { week: "6–12 Jul",       forms: 13, regs: 6, revenue: 4791.25, full: true  },
+  { week: "13–19 Jul",      forms: 14, regs: 7, revenue: 6954.15, full: true  },
+  { week: "20–26 Jul",      forms: 13, regs: 5, revenue: 4287.15, full: true  },
+  { week: "27 Jul–2 Aug",   forms: 10, regs: 1, revenue: 1155.00, full: true  },
+  { week: "3–9 Aug",        forms:  8, regs: 2, revenue: 2061.15, full: true  },
+  { week: "10–11 Aug ⚡",   forms:  3, regs: 0, revenue:    0.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
 }));
 
-const fullWeeks   = data.filter(d => d.full);
-const totalForms  = data.reduce((s,d) => s + d.forms, 0);
-const totalRegs   = data.reduce((s,d) => s + d.regs,  0);
-const totalRev    = data.reduce((s,d) => s + d.revenue, 0);
-const avgForms    = (fullWeeks.reduce((s,d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
-const avgRegs     = (fullWeeks.reduce((s,d) => s + d.regs,  0) / fullWeeks.length).toFixed(1);
-const overallCR   = totalForms > 0 ? (totalRegs / totalForms * 100).toFixed(1) : "0.0";
+const fullWeeks  = data.filter(d => d.full);
+const totalForms = data.reduce((s,d) => s + d.forms, 0);
+const totalRegs  = data.reduce((s,d) => s + d.regs,  0);
+const totalRev   = data.reduce((s,d) => s + d.revenue, 0);
+const avgForms   = (fullWeeks.reduce((s,d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
+const avgRegs    = (fullWeeks.reduce((s,d) => s + d.regs,  0) / fullWeeks.length).toFixed(1);
+const overallCR  = totalForms > 0 ? (totalRegs / totalForms * 100).toFixed(1) : "0.0";
 
 const COLORS = { forms:"#fb923c", regs:"#38bdf8", cr:"#a78bfa", rev:"#34d399" };
 
@@ -57,7 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Tue)</p>}
     </div>
   );
 };
@@ -79,7 +79,6 @@ export default function App() {
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
       fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9", textAlign:"left" }}>
 
-      {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
           HubSpot + Paythen · Healthcare Support MA L5 — LO (CTID771) + OA (CTID770)
@@ -88,26 +87,33 @@ export default function App() {
           Combined Revenue Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          8 Jun – 7 Aug 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts
+          15 Jun – 11 Aug 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts
         </p>
       </div>
 
-      {/* Asymmetry banner */}
       <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
         padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
         Enquiry figures are <strong style={{ color:"#f1f5f9" }}>CTID771 (LO) only</strong> — CTID770 (OA) has no enquiry form.
         Application figures include <strong style={{ color:"#f1f5f9" }}>both CTID770 (OA) and CTID771 (LO)</strong>.
-        Forms total = LO enquiries + (OA + LO) applications. All Paythen registrations are CTID770 (OA) — no CTID771 LO registrations present in this export.
+        All Paythen registrations are CTID770 (OA) — no CTID771 LO registrations in this export.
+        Note: Jyothsna Tandra appears twice in W3 (rows 366 &amp; 367, identical entries) — both kept per standing instruction.
       </div>
 
-      {/* KPI cards */}
+      <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
+        padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
+        <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
+        W5 (13–19 Jul) remains the peak at 7 registrations and €6,954 revenue.
+        W7 (27 Jul–2 Aug) was the softest full week at just 1 registration (€1,155).
+        W8 (3–9 Aug) recovered slightly to 2 registrations (€2,061). W9 ⚡ is 2 days in — 0 registrations so far but 3 applications already submitted.
+      </div>
+
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Forms",          value:totalForms,          sub:`avg ${avgForms}/wk (W1–W8)`,  color:COLORS.forms },
-          { label:"Total Registrations",  value:totalRegs,           sub:`avg ${avgRegs}/wk (W1–W8)`,   color:COLORS.regs  },
-          { label:"Overall Conv. Rate",   value:overallCR+"%",       sub:"regs ÷ forms",                color:COLORS.cr    },
-          { label:"Total Expected Rev.",  value:fmt(totalRev),       sub:"8 weeks + W9 ⚡",             color:COLORS.rev   },
+          { label:"Total Forms",          value:totalForms,    sub:`avg ${avgForms}/wk (W1–W8)`,  color:COLORS.forms },
+          { label:"Total Registrations",  value:totalRegs,     sub:`avg ${avgRegs}/wk (W1–W8)`,   color:COLORS.regs  },
+          { label:"Overall Conv. Rate",   value:overallCR+"%", sub:"regs ÷ forms",                color:COLORS.cr    },
+          { label:"Total Expected Rev.",  value:fmt(totalRev), sub:"8 weeks + W9 ⚡",             color:COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 130px", border:"1px solid #334155" }}>
@@ -118,14 +124,12 @@ export default function App() {
         ))}
       </div>
 
-      {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16, flexWrap:"wrap" }}>
         <Tab id="bars"    active={view==="bars"}    onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"      active={view==="cr"}      onClick={setView}>Conversion Rate %</Tab>
         <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
       </div>
 
-      {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
@@ -155,7 +159,7 @@ export default function App() {
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }} barCategoryGap="22%" barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,20]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,18]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="forms" ? "Forms (HubSpot)" : "Registrations (Paythen)"}/>
@@ -166,7 +170,6 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
-      {/* Table */}
       <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
@@ -228,9 +231,9 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
-        Forms = CTID771 (LO) enquiries + CTID770 (OA) &amp; CTID771 (LO) applications combined (HubSpot XLSX exports, 7 Aug 2026).
-        Registrations = Paythen "Courses Expected Revenue CTID" Filtered sheet (7 Aug 2026) — CTID770 (OA) only; 24 pre-W1 rows (€21,718.50) excluded.
-        1 email duplicate removed (Jyothsna Tandra). CTID771 (LO): 0 Paythen registrations in this export.
+        Forms = CTID771 (LO) enquiries + CTID770 (OA) &amp; CTID771 (LO) applications combined (HubSpot XLSX exports, 11 Aug 2026).
+        Registrations = Paythen "Courses Expected Revenue CTID" Filtered sheet (11 Aug 2026) — CTID770 (OA) only; 30 pre-W1 rows (€26,259.63) excluded.
+        Jyothsna Tandra rows 366 &amp; 367 (identical, 29 Jun) both retained per standing instruction. CTID771 (LO): 0 Paythen registrations in this export.
       </p>
     </div>
   );

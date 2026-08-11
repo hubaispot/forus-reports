@@ -5,7 +5,6 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "8–14 Jun",      enq: 1,  app: 5,  full: true  },
   { week: "15–21 Jun",     enq: 3,  app: 7,  full: true  },
   { week: "22–28 Jun",     enq: 4,  app: 12, full: true  },
   { week: "29 Jun–5 Jul",  enq: 3,  app: 7,  full: true  },
@@ -13,7 +12,8 @@ export const data = [
   { week: "13–19 Jul",     enq: 5,  app: 6,  full: true  },
   { week: "20–26 Jul",     enq: 4,  app: 2,  full: true  },
   { week: "27 Jul–2 Aug",  enq: 2,  app: 5,  full: true  },
-  { week: "3–7 Aug ⚡",    enq: 1,  app: 3,  full: false },
+  { week: "3–9 Aug",       enq: 5,  app: 5,  full: true  },
+  { week: "10–11 Aug ⚡",  enq: 2,  app: 2,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -90,7 +90,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          8 Jun – 7 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
+          15 Jun – 11 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -99,12 +99,11 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Applications dominate throughout — 5 of 8 full weeks hit 60%+ app rate 🔥.
-        W3 (22–28 Jun) was the standout week: 16 total submissions, 12 applications (75%). W1 (8–14 Jun)
-        had the highest app rate at 83% on 6 submissions. W5 (6–12 Jul) saw the strongest enquiry week
-        (8) as applications eased (5), bringing rate to 38%. W7–W8 are the newest full weeks: enquiries
-        slowed (4→2) while applications held (2→5), with W8 returning to 71% 🔥. W9 is a partial week
-        (Mon–Fri) with 1 enquiry and 3 applications so far. Overall 63% of all contacts applied directly.
+        Applications dominate throughout — 4 of 8 full weeks hit 60%+ app rate 🔥.
+        W2 (22–28 Jun) was the standout week: 16 total submissions, 12 applications (75% 🔥). W4 (6–12 Jul)
+        saw the strongest enquiry week (8) as applications eased (5, 38% CR). W7 (27 Jul–2 Aug) recovered
+        to 71% 🔥 and W8 (3–9 Aug) brought a balanced 5 enq / 5 app (50%). W9 ⚡ is a 2-day partial
+        week with 2 enq and 2 app so far. Overall 59% of all contacts applied directly.
       </div>
 
       {/* KPIs */}
@@ -112,9 +111,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,        color: COLORS.enq },
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,        color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "W1–W8 + W9⚡ partial",     color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,            sub: "W1–W8 + W9 ⚡ partial",    color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",             color: "#34d399"  },
-          { label: "Best Week",          value: "W3",             sub: "83% · 22–28 Jun",          color: "#fbbf24"  },
+          { label: "Best Week",          value: "W2",             sub: "75% · 22–28 Jun",          color: "#fbbf24"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -241,10 +240,9 @@ export default function App() {
 
       {/* Footer note */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Run: 7 Aug 2026. W1–W6 (8 Jun – 19 Jul) reused from previous run cache (figures confirmed matching).
-        W7–W8 freshly processed. W9 (3–7 Aug) is a partial week ⚡ and excluded from averages.
-        Phone duplicate merged: Chido Chibayamasango — chidochibayamasango@gmail.com / chidomajongosi@gmail.com (HubSpot merge recommended).
-        Test submissions (jean@forustraining.ie) excluded. 0 rows outside window.
+        Run: 11 Aug 2026. W1–W7 (15 Jun – 2 Aug) confirmed matching against previous run cache.
+        W8 (3–9 Aug) freshly processed. W9 (10–11 Aug) is a 2-day partial week ⚡, excluded from averages.
+        No phone duplicates. Test submissions (jean@forustraining.ie) excluded. 0 rows outside window.
       </p>
     </div>
   );

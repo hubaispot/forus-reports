@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "8–14 Jun",       enq: 4, app: 9,  full: true  },
   { week: "15–21 Jun",      enq: 2, app: 9,  full: true  },
   { week: "22–28 Jun",      enq: 2, app: 7,  full: true  },
   { week: "29 Jun–5 Jul",   enq: 4, app: 10, full: true  },
   { week: "6–12 Jul",       enq: 5, app: 8,  full: true  },
-  { week: "13–19 Jul",      enq: 4, app: 12, full: true  },
+  { week: "13–19 Jul",      enq: 4, app: 10, full: true  },
   { week: "20–26 Jul",      enq: 4, app: 9,  full: true  },
   { week: "27 Jul–2 Aug",   enq: 4, app: 6,  full: true  },
-  { week: "3–7 Aug ⚡",     enq: 3, app: 3,  full: false },
+  { week: "3–9 Aug",        enq: 3, app: 5,  full: true  },
+  { week: "10–11 Aug ⚡",   enq: 0, app: 3,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -53,7 +53,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Tue)</p>}
     </div>
   );
 };
@@ -75,7 +75,6 @@ export default function App() {
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
       fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9", textAlign:"left" }}>
 
-      {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
           HubSpot · Healthcare Support MA L5 — LO (CTID771) + OA (CTID770)
@@ -84,38 +83,33 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          8 Jun – 7 Aug 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts · last form only per contact
+          15 Jun – 11 Aug 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts · last form only per contact
         </p>
       </div>
 
-      {/* Asymmetry notice banner */}
       <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
         padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
         Enquiries are <strong style={{ color:"#f1f5f9" }}>LO (CTID771) only</strong>.
         Applications include <strong style={{ color:"#f1f5f9" }}>both LO (CTID771) and OA (CTID770)</strong>.
-        App rate % reflects this asymmetry and is not directly comparable to courses where enquiry
-        and application forms are matched 1:1.
+        App rate % reflects this asymmetry and is not directly comparable to courses with matched 1:1 forms.
       </div>
 
-      {/* Notable insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
         Every completed week has exceeded 60% app rate — driven by OA (CTID770) direct applications.
-        Enquiries have been <strong style={{ color:"#f1f5f9" }}>steady at 2–5/week</strong> throughout.
-        W6 (13–19 Jul) remains the peak at 16 total. W8 (27 Jul–2 Aug) saw a dip to 6 applications —
-        the lowest since W3 — while enquiries held at 4. W9 ⚡ is running at 3e / 3a through Friday.
+        W5 (13–19 Jul) and W3 (29 Jun–5 Jul) are joint peaks at 14 total each.
+        W8 (3–9 Aug) closes as a full week at 3e / 5a (8 total). W9 ⚡ is 2 days in with 3 applications already.
       </div>
 
-      {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
           { label:"Total Enquiries (LO only)",    value:totalEnq,       sub:`avg ${avgEnq}/wk (W1–W8)`,  color:COLORS.enq  },
           { label:"Total Applications (OA+LO)",   value:totalApp,       sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
           { label:"Total Submissions",             value:total,          sub:"8 weeks + W9 ⚡",           color:"#f1f5f9"   },
           { label:"Overall App Rate",              value:overallApp+"%", sub:"apps ÷ total",              color:"#34d399"   },
-          { label:"W9 ⚡ (3–7 Aug)",               value:`${data[8].enq}e / ${data[8].app}a`, sub:"partial week", color:"#fbbf24" },
+          { label:"W9 ⚡ (10–11 Aug)",             value:`${data[8].enq}e / ${data[8].app}a`, sub:"2 days only", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -126,14 +120,12 @@ export default function App() {
         ))}
       </div>
 
-      {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
-      {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
@@ -170,7 +162,6 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
-      {/* Table */}
       <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
@@ -184,8 +175,8 @@ export default function App() {
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const wowEnq = i>0 ? row.enq - data[i-1].enq : null;
-              const wowApp = i>0 ? row.app - data[i-1].app : null;
+              const wowEnq  = i>0 ? row.enq - data[i-1].enq : null;
+              const wowApp  = i>0 ? row.app - data[i-1].app : null;
               const rateHigh = row.appRate >= 60 && row.total > 0;
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
@@ -234,8 +225,8 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) + CTID771 (LO) application forms combined.
-        W3–W6 reused from previous run; W1, W2, W7, W8, W9 freshly processed from XLSX exports 7 Aug 2026.
-        App rate % is not a standard funnel conversion rate. Source: HubSpot XLSX exports, 7 Aug 2026.
+        1 APP_771 contact (9 Jun) excluded as pre-window. All weeks freshly processed from XLSX exports 11 Aug 2026.
+        App rate % is not a standard funnel conversion rate. Source: HubSpot XLSX exports, 11 Aug 2026.
       </p>
     </div>
   );
