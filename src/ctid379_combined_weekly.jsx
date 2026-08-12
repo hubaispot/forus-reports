@@ -8,20 +8,22 @@ import {
 // CTID379 — SNA Level 6 – Live and Online — Combined Weekly Revenue Report
 // Forms: HubSpot JSX (enq + app per week)
 // Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-//   Status = "Registered" only; deduplicated by email; 13 pre-W1 rows (13 Apr – 17 May) excluded
+//   Status = "Registered" only; deduplicated by email; 33 pre-W1 rows (13 Apr – 14 Jun) excluded
+//   1 Refunded Not Registered excluded; 1 blank status excluded
 // Week boundaries: Irish time (Europe/Dublin), Mon 00:00 → Sun 23:59
-// W1–W8 full completed weeks; no partial week
-// Run: 13 Jul 2026
+// W1–W8 full completed weeks; W9 partial current week (⚡)
+// Run: 12 Aug 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "18–24 May",    forms: 14, regs: 4, revenue: 1804.00,  full: true },
-  { week: "25–31 May",    forms: 9,  regs: 7, revenue: 3146.00,  full: true },
-  { week: "1–7 Jun",      forms: 14, regs: 5, revenue: 2244.00,  full: true },
-  { week: "8–14 Jun",     forms: 15, regs: 4, revenue: 1804.00,  full: true },
-  { week: "15–21 Jun",    forms: 9,  regs: 3, revenue: 1363.83,  full: true },
-  { week: "22–28 Jun",    forms: 10, regs: 3, revenue: 1363.66,  full: true },
-  { week: "29 Jun–5 Jul", forms: 21, regs: 7, revenue: 3205.49,  full: true },
-  { week: "6–12 Jul",     forms: 9,  regs: 2, revenue: 916.83,   full: true },
+  { week: "15–21 Jun",       forms: 8,  regs: 3, revenue: 1363.83, full: true  },
+  { week: "22–28 Jun",       forms: 10, regs: 3, revenue: 1363.66, full: true  },
+  { week: "29 Jun–5 Jul",    forms: 21, regs: 7, revenue: 3205.49, full: true  },
+  { week: "6–12 Jul",        forms: 9,  regs: 2, revenue:  916.83, full: true  },
+  { week: "13–19 Jul",       forms: 11, regs: 5, revenue: 2287.49, full: true  },
+  { week: "20–26 Jul",       forms: 2,  regs: 0, revenue:    0.00, full: true  },
+  { week: "27 Jul–2 Aug",    forms: 18, regs: 5, revenue: 2281.83, full: true  },
+  { week: "3–9 Aug",         forms: 10, regs: 2, revenue:  910.00, full: true  },
+  { week: "10–12 Aug ⚡",    forms: 4,  regs: 1, revenue:  440.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -101,7 +103,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          18 May – 12 Jul 2026 · W1–W8 full weeks · run 13 Jul 2026
+          15 Jun – 12 Aug 2026 · W1–W8 full weeks + W9 ⚡ partial · run 12 Aug 2026
         </p>
       </div>
 
@@ -111,12 +113,11 @@ export default function App() {
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key insight: </strong>
         CTID379 has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks.
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks + W9 partial.
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W2 (25–31 May) and W7 (29 Jun–5 Jul) each produced{" "}
-        <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> — W7 topped revenue at{" "}
-        <strong style={{ color: "#f1f5f9" }}>{fmt(3205.49)}</strong> and also led form volume with 21 submissions.
-        Applications are falling sharply from W6 onward — watch for lagged conversions from the W7 enquiry surge.
+        W3 (29 Jun–5 Jul) was the standout week with <strong style={{ color: "#f1f5f9" }}>7 registrations</strong> and{" "}
+        <strong style={{ color: "#f1f5f9" }}>{fmt(3205.49)}</strong> revenue on 21 form submissions.
+        W6 (20–26 Jul) was a flat week — 2 forms, zero registrations. W7 rebounded strongly with 5 regs.
       </div>
 
       {/* KPI Cards */}
@@ -125,7 +126,7 @@ export default function App() {
           { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
           { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",     color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 full weeks",             color: COLORS.rev   },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 + W9 ⚡",               color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -249,7 +250,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8)
+                Total (W1–W8 + W9 ⚡)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -268,8 +269,8 @@ export default function App() {
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
         <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only).
         Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
-        13 pre-window registrations (13 Apr – 17 May, excluded per standing instruction).
-        1 non-Registered row excluded (Refunded Not Registered).
+        33 pre-window registrations (13 Apr – 14 Jun) excluded per standing instruction.
+        1 Refunded Not Registered + 1 blank status excluded.
         Revenue tiers: €440.00, €455.00, €461.83, €462.00.
       </p>
 
