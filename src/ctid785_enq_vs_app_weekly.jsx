@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "21–27 Apr",    enq: 3, app: 0, full: true },
-  { week: "28 Apr–4 May", enq: 5, app: 0, full: true },
-  { week: "5–11 May",     enq: 2, app: 0, full: true },
-  { week: "12–18 May",    enq: 5, app: 0, full: true },
-  { week: "19–25 May",    enq: 7, app: 0, full: true },
-  { week: "26 May–1 Jun", enq: 4, app: 0, full: true },
-  { week: "1–7 Jun",      enq: 5, app: 0, full: true },
-  { week: "8–14 Jun",     enq: 4, app: 0, full: true },
+  { week: "15–21 Jun",      enq: 4, app: 0, full: true  },
+  { week: "22–28 Jun",      enq: 2, app: 0, full: true  },
+  { week: "29 Jun–5 Jul",   enq: 3, app: 0, full: true  },
+  { week: "6–12 Jul",       enq: 3, app: 0, full: true  },
+  { week: "13–19 Jul",      enq: 3, app: 0, full: true  },
+  { week: "20–26 Jul",      enq: 4, app: 0, full: true  },
+  { week: "27 Jul–2 Aug",   enq: 4, app: 0, full: true  },
+  { week: "3–9 Aug",        enq: 4, app: 0, full: true  },
+  { week: "10–14 Aug ⚡",   enq: 6, app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -22,6 +23,7 @@ const total      = totalEnq + totalApp;
 const avgEnq     = (fullWeeks.reduce((s,d) => s + d.enq, 0) / fullWeeks.length).toFixed(1);
 const avgApp     = (fullWeeks.reduce((s,d) => s + d.app, 0) / fullWeeks.length).toFixed(1);
 const overallApp = total > 0 ? Math.round(totalApp / total * 100) : 0;
+const peakWeek   = [...fullWeeks].sort((a,b) => b.enq - a.enq)[0];
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
@@ -52,6 +54,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
     </div>
   );
 };
@@ -71,8 +74,9 @@ export default function App() {
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
-      fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9" }}>
+      fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9", textAlign:"left" }}>
 
+      {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
           HubSpot · ELC Level 5 – Live and Online (CTID785)
@@ -81,25 +85,33 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          21 Apr – 14 Jun 2026 · Unique contacts · last form only per contact
+          15 Jun – 14 Aug 2026 · W1–W8 complete + W9 ⚡ partial · Unique contacts · last form only per contact
         </p>
       </div>
 
-      <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
+      {/* Insight banner */}
+      <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Key finding: </strong>
-        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 9 completed weeks — all {total} contacts are enquiry-only.
-        This strongly indicates the application form is not yet live, not correctly tagged in HubSpot, or not linked in course communications.
-        <strong style={{ color:"#fbbf24" }}> Action required: verify the application form is published and linked for this course.</strong>
+        CTID785 shows <strong style={{ color:"#f1f5f9" }}>0 application form submissions</strong> across all 8 complete weeks —
+        all {totalEnq} contacts captured are enquiry-only.
+        Peak enquiry week (W1, W6, W7, W8) was <strong style={{ color:"#f1f5f9" }}>4 contacts</strong>.
+        Volume has been steady at 3–4/wk throughout the window.
+        This week (W9 ⚡) is tracking at <strong style={{ color:"#fbbf24" }}>6 contacts</strong> with 3 days remaining.
+        <strong style={{ color:"#fbbf24" }}> Action recommended: verify the application form is published and linked for this course.</strong>
       </div>
 
+      {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,       sub:`avg ${avgEnq}/wk`,      color:COLORS.enq },
-          { label:"Total Applications", value:totalApp,       sub:"none received",          color:"#64748b"  },
-          { label:"Total Submissions",  value:total,          sub:"9 completed weeks",      color:"#f1f5f9"  },
-          { label:"Overall App Rate",   value:overallApp+"%", sub:"apps ÷ total",           color:"#fbbf24"  },
-          { label:"W9 (8–14 Jun)",      value:`${data[7].enq}e / ${data[7].app}a`, sub:"complete", color:"#94a3b8" },
+          { label:"Total Enquiries",    value:totalEnq,       sub:`avg ${avgEnq}/wk (W1–W8)`, color:COLORS.enq },
+          { label:"Total Applications", value:totalApp,       sub:"none received",             color:"#64748b"  },
+          { label:"Total Submissions",  value:total,          sub:"8 complete weeks",          color:"#f1f5f9"  },
+          { label:"Overall App Rate",   value:overallApp+"%", sub:"apps ÷ total",              color:"#fbbf24"  },
+          ...(data[data.length-1].full
+            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
+            : [{ label:"This week (Mon–Fri)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
+          ),
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -110,12 +122,14 @@ export default function App() {
         ))}
       </div>
 
+      {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
+      {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
@@ -126,11 +140,11 @@ export default function App() {
               <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
                 tickFormatter={v => v+"%"} domain={[0,110]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
-              <ReferenceLine y={0} stroke="#fbbf24" strokeDasharray="4 3"
-                label={{ value:"App rate: 0%", fill:"#fbbf24", fontSize:11, position:"insideTopRight" }}/>
+              <ReferenceLine y={overallApp} stroke="#64748b" strokeDasharray="4 3"
+                label={{ value:`Avg ${overallApp}%`, fill:"#64748b", fontSize:11, position:"insideTopRight" }}/>
               <Line dataKey="appRate" name="Application rate" type="monotone"
                 stroke="#a78bfa" strokeWidth={2.5}
-                dot={{ r:5, fill:"#a78bfa", strokeWidth:0 }} connectNulls/>
+                dot={{ r:6, fill:"#a78bfa", strokeWidth:0 }} connectNulls/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}
@@ -152,6 +166,7 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
+      {/* Table */}
       <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
@@ -171,8 +186,10 @@ export default function App() {
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
-                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+2}</td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
+                    {row.week}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
@@ -187,7 +204,7 @@ export default function App() {
                   </td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#f1f5f9", fontSize:15 }}>{row.total}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, fontSize:12,
-                    color: rateHigh ? "#34d399" : "#64748b" }}>
+                    color: rateHigh ? "#34d399" : COLORS.rate }}>
                     {row.total>0 ? row.appRate+"%" : "—"}{rateHigh?" 🔥":""}
                   </td>
                 </tr>
@@ -196,13 +213,21 @@ export default function App() {
             <tr style={{ background:"#0f172a", borderTop:"2px solid #334155" }}>
               <td colSpan={2} style={{ padding:"11px 14px", color:"#94a3b8", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Total</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.enq, fontSize:15 }}>{totalEnq}</td>
-              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:"#64748b", fontSize:15 }}>{totalApp}</td>
+              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.app, fontSize:15 }}>{totalApp}</td>
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:"#f1f5f9", fontSize:15 }}>{total}</td>
-              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#fbbf24", fontSize:13 }}>{overallApp}%</td>
+              <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#64748b", fontSize:13 }}>{overallApp}%</td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      {/* Footer note */}
+      <p style={{ marginTop:14, fontSize:11, color:"#475569", lineHeight:1.6 }}>
+        Sources: 2 enquiry form exports (main form + ads form) · Combined, cross-deduped by email · 
+        5 duplicate submissions removed (Sarah Obrien ×2, Ece Albak ×2, Vanessa Silva ×2, Rachel O'Driscoll ×2) · 
+        0 jean@forustraining.ie exclusions · No application form submissions received (0% app rate) ·
+        Run: 14 Aug 2026
+      </p>
     </div>
   );
 }
