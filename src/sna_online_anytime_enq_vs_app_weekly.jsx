@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "18–24 May",       enq: 1, app: 2, full: true  },
-  { week: "25–31 May",       enq: 0, app: 2, full: true  },
-  { week: "1–7 Jun",         enq: 5, app: 2, full: true  },
-  { week: "8–14 Jun",        enq: 2, app: 1, full: true  },
   { week: "15–21 Jun",       enq: 1, app: 1, full: true  },
   { week: "22–28 Jun",       enq: 0, app: 2, full: true  },
   { week: "29 Jun–5 Jul",    enq: 5, app: 0, full: true  },
   { week: "6–12 Jul",        enq: 1, app: 3, full: true  },
+  { week: "13–19 Jul",       enq: 2, app: 0, full: true  },
+  { week: "20–26 Jul",       enq: 1, app: 0, full: true  },
+  { week: "27 Jul–2 Aug",    enq: 3, app: 0, full: true  },
+  { week: "3–9 Aug",         enq: 1, app: 0, full: true  },
+  { week: "10–14 Aug ⚡",    enq: 2, app: 1, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -83,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          18 May – 12 Jul 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
+          15 Jun – 14 Aug 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
         </p>
       </div>
 
@@ -91,9 +92,9 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        SNA Online Anytime shows <strong style={{ color:"#f1f5f9" }}>alternating enquiry/application surges</strong> across the 8-week window.
-        Enquiries dominated in W3 and W7 (5 each), while applications led in W1, W2, W6, and W8. W7 had 5 enquiries
-        but zero applications — a conversion lag to watch. W8 closed strongly with 3 apps vs 1 enquiry.
+        Applications have <strong style={{ color:"#f1f5f9" }}>stalled since mid-July</strong> — W5 through W8 show zero applications while enquiries continue at 1–3/week.
+        W3 (29 Jun–5 Jul) remains the enquiry peak at 5, and W4 (6–12 Jul) was the strongest conversion week (3 apps, 75% app rate 🔥).
+        W9 partial has already recorded 1 application this week — a potential sign of recovery to monitor.
       </div>
 
       {/* KPIs */}
@@ -101,7 +102,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W8",             color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"W1–W8 + W9⚡",      color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           ...(data[data.length-1].full
             ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
