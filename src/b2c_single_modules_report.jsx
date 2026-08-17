@@ -4,9 +4,8 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 14 Aug 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 17 Aug 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
-// amount = deal amount from HubSpot (null / "" if not set; stored as number or 0)
 const RAW_DEALS = [
   { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon", createdate:"2026-06-02T22:05:18Z", stage:"app", amount:455 },
   { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania", createdate:"2026-06-09T09:43:02Z", stage:"won", amount:295 },
@@ -21,7 +20,7 @@ const RAW_DEALS = [
   { id:"506231288040", dealname:"Anatomy and Physiology - Online Anytime 1:1 (5N0749 OA DHC) -  for Mc loughlin Mc loughlin", createdate:"2026-06-16T20:36:09Z", stage:"won", amount:295 },
   { id:"506268626117", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Edel Ryan", createdate:"2026-06-17T06:44:06Z", stage:"app", amount:440 },
   { id:"506253296845", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Kate Galvin", createdate:"2026-06-17T10:27:20Z", stage:"app", amount:440 },
-  { id:"506298626274", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Janice Uí Thuama", createdate:"2026-06-17T13:03:27Z", stage:"won", amount:440 },
+  { id:"506298626274", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Janice Ui Thuama", createdate:"2026-06-17T13:03:27Z", stage:"won", amount:440 },
   { id:"506587284673", dealname:"Psychology - Online Anytime 1:1 (5N0754 OA DHC) -  for Vilija Dockute", createdate:"2026-06-17T15:37:17Z", stage:"won", amount:295 },
   { id:"506517127362", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Laurem Hickey", createdate:"2026-06-17T17:05:16Z", stage:"app", amount:440 },
   { id:"506565664988", dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Rathbone Rathbone", createdate:"2026-06-17T19:06:56Z", stage:"app", amount:295 },
@@ -98,8 +97,8 @@ const RAW_DEALS = [
   { id:"510019711177", dealname:"Care Skills - Online Anytime 1:1 (5N2770 OA DHC) -  for Joelma Cristiane Garabine", createdate:"2026-07-12T20:28:40Z", stage:"won", amount:295 },
   { id:"510139523264", dealname:"Barista training (1169 CNY DBU) - Mullingar for Brendan Tape", createdate:"2026-07-14T13:56:52Z", stage:"app", amount:0 },
   { id:"510140278974", dealname:"Barista training (1169 CNY DBU) - Mullingar for Leesha Whyte", createdate:"2026-07-14T14:40:21Z", stage:"app", amount:0 },
-  { id:"510159136988", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Emma O\'Neill", createdate:"2026-07-14T21:20:42Z", stage:"app", amount:440 },
-  { id:"510159345860", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Emma O\'Neill", createdate:"2026-07-14T22:21:25Z", stage:"won", amount:440 },
+  { id:"510159136988", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Emma O'Neill", createdate:"2026-07-14T21:20:42Z", stage:"app", amount:440 },
+  { id:"510159345860", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Emma O'Neill", createdate:"2026-07-14T22:21:25Z", stage:"won", amount:440 },
   { id:"510177593572", dealname:"Barista training (1169 CNY DBU) - Mullingar for Arwa Alkhalifa", createdate:"2026-07-15T01:46:06Z", stage:"app", amount:0 },
   { id:"510171730136", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Dearbhaile Mayclim", createdate:"2026-07-15T01:46:24Z", stage:"app", amount:440 },
   { id:"510208079093", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Sharon Hickey", createdate:"2026-07-15T11:06:29Z", stage:"app", amount:440 },
@@ -115,7 +114,7 @@ const RAW_DEALS = [
   { id:"510489483508", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Isabelle Meyler", createdate:"2026-07-16T17:21:55Z", stage:"app", amount:440 },
   { id:"510565759195", dealname:"FAR First Aid Responder (FAR CNY DHP) - Mullingar for Rachael Kehinde Abraham", createdate:"2026-07-17T07:30:10Z", stage:"app", amount:0 },
   { id:"510578336982", dealname:"Barista training (1169 CNY DBU) - Mullingar for Deesathi Vidanage", createdate:"2026-07-17T09:44:56Z", stage:"won", amount:170 },
-  { id:"510647687417", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Navan for SANDRA O\'BRIEN", createdate:"2026-07-17T09:48:02Z", stage:"app", amount:440 },
+  { id:"510647687417", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Navan for SANDRA O'BRIEN", createdate:"2026-07-17T09:48:02Z", stage:"app", amount:440 },
   { id:"510615946436", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for June Kelliher", createdate:"2026-07-17T12:52:06Z", stage:"app", amount:440 },
   { id:"510855113973", dealname:"Barista training (1169 CNY DBU) - Mullingar for Elizabeth Farrell", createdate:"2026-07-17T13:47:37Z", stage:"app", amount:0 },
   { id:"510871314658", dealname:"Barista training (1169 CNY DBU) - Mullingar for Elizabeth Farrell", createdate:"2026-07-17T13:52:20Z", stage:"won", amount:170 },
@@ -135,7 +134,7 @@ const RAW_DEALS = [
   { id:"511986187459", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Sarah Kelly", createdate:"2026-07-22T13:49:16Z", stage:"app", amount:295 },
   { id:"512217608397", dealname:"Anatomy and Physiology - Online Anytime 1:1 (5N0749 OA DHC) -  for Aigbe Sandra Liberty", createdate:"2026-07-22T19:16:42Z", stage:"won", amount:295 },
   { id:"512340209850", dealname:"Conflict Management - Online Anytime 1:1 (6N2775 OA DHC) -  for Jennifer Whelan", createdate:"2026-07-23T08:50:08Z", stage:"app", amount:380 },
-  { id:"512135469282", dealname:"Text Production - Online Anytime 1:1 (5N1422 OA DBU) -  for Serena O\'Kane", createdate:"2026-07-23T09:55:41Z", stage:"app", amount:295 },
+  { id:"512135469282", dealname:"Text Production - Online Anytime 1:1 (5N1422 OA DBU) -  for Serena O'Kane", createdate:"2026-07-23T09:55:41Z", stage:"app", amount:295 },
   { id:"512132184307", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Sandra Loughlin", createdate:"2026-07-23T14:12:40Z", stage:"app", amount:440 },
   { id:"512317967592", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Pauline maguire", createdate:"2026-07-23T19:48:46Z", stage:"app", amount:440 },
   { id:"512796773596", dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DHC) -  for Tanya Flynn", createdate:"2026-07-24T19:29:32Z", stage:"won", amount:295 },
@@ -147,7 +146,7 @@ const RAW_DEALS = [
   { id:"513367669951", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Midleton for Michelle Healy", createdate:"2026-07-27T11:25:29Z", stage:"won", amount:440 },
   { id:"513310049518", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Niamh Culleton", createdate:"2026-07-27T12:00:08Z", stage:"app", amount:455 },
   { id:"513446036726", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Thays Dutra", createdate:"2026-07-27T22:40:51Z", stage:"app", amount:295 },
-  { id:"513662416114", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Navan for Sandra O\'Brien", createdate:"2026-07-28T14:00:34Z", stage:"won", amount:440 },
+  { id:"513662416114", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Navan for Sandra O'Brien", createdate:"2026-07-28T14:00:34Z", stage:"won", amount:440 },
   { id:"513644798154", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Srebrenka Stojanovic", createdate:"2026-07-28T15:09:15Z", stage:"app", amount:295 },
   { id:"513684338903", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Kathleen Gallagher", createdate:"2026-07-28T17:33:04Z", stage:"app", amount:295 },
   { id:"513760180424", dealname:"Communications (Healthcare) - Online Anytime 1:1 (5N0690 OA DHC) -  for Bernadette Bates", createdate:"2026-07-29T09:48:46Z", stage:"won", amount:295 },
@@ -195,8 +194,8 @@ const RAW_DEALS = [
   { id:"516108258543", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Fiona Scarlett", createdate:"2026-08-11T15:01:37Z", stage:"app", amount:295 },
   { id:"516056595685", dealname:"Cardiac First Response Community (CFRC CNY DHP) - Mullingar for Scott Hyland", createdate:"2026-08-11T17:35:15Z", stage:"won", amount:170 },
   { id:"516122631359", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Catherine Gogan", createdate:"2026-08-11T20:16:23Z", stage:"app", amount:295 },
-  { id:"516116139200", dealname:"Barista training (1169 CNY DBU) - Mullingar for André Marx", createdate:"2026-08-12T05:33:27Z", stage:"won", amount:170 },
-  { id:"516070541560", dealname:"Barista training (1169 CNY DBU) - Mullingar for André Marx", createdate:"2026-08-12T05:48:11Z", stage:"app", amount:0 },
+  { id:"516116139200", dealname:"Barista training (1169 CNY DBU) - Mullingar for Andre Marx", createdate:"2026-08-12T05:33:27Z", stage:"won", amount:170 },
+  { id:"516070541560", dealname:"Barista training (1169 CNY DBU) - Mullingar for Andre Marx", createdate:"2026-08-12T05:48:11Z", stage:"app", amount:0 },
   { id:"516260792538", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Clonakilty for Patricia O Flynn O Donoghue", createdate:"2026-08-12T06:43:49Z", stage:"won", amount:440 },
   { id:"516362988787", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Ralph Sulayi manda", createdate:"2026-08-12T15:22:32Z", stage:"app", amount:295 },
   { id:"516382823648", dealname:"Barista training (1169 CNY DBU) - Mullingar for Ciaran Monaghan", createdate:"2026-08-12T16:11:32Z", stage:"app", amount:0 },
@@ -205,12 +204,30 @@ const RAW_DEALS = [
   { id:"516467687613", dealname:"Barista training (1169 CNY DBU) - Mullingar for Beth Atli", createdate:"2026-08-12T21:03:52Z", stage:"won", amount:170 },
   { id:"516514982129", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Zak Breen", createdate:"2026-08-13T01:01:04Z", stage:"won", amount:440 },
   { id:"516549595336", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Eimear Dykes", createdate:"2026-08-13T11:51:02Z", stage:"app", amount:440 },
-  { id:"516750512321", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Adeola Aromire", createdate:"2026-08-13T19:43:30Z", stage:"won", amount:440 },
   { id:"516760289480", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Killarney for Niall Anthony Lombard", createdate:"2026-08-13T20:20:23Z", stage:"app", amount:440 },
   { id:"516730614985", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Tralee for Rachel Bulman", createdate:"2026-08-13T21:59:57Z", stage:"app", amount:440 },
   { id:"516702006464", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Gillian Cooney", createdate:"2026-08-14T06:47:14Z", stage:"app", amount:440 },
   { id:"516762553582", dealname:"Barista training (1169 CNY DBU) - Mullingar for Christopher Bookless", createdate:"2026-08-14T08:26:35Z", stage:"won", amount:170 },
   { id:"516700067018", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Gillian Cooney", createdate:"2026-08-14T08:33:12Z", stage:"won", amount:440 },
+  { id:"516764331198", dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DSC) -  for Lydia Rodgers", createdate:"2026-08-14T10:54:53Z", stage:"app", amount:295 },
+  { id:"516759207118", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Joanne Strydom", createdate:"2026-08-14T12:21:26Z", stage:"won", amount:295 },
+  { id:"516784179446", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Anna Johnston", createdate:"2026-08-14T12:42:41Z", stage:"app", amount:0 },
+  { id:"516726169799", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Ciaran Monaghan", createdate:"2026-08-14T12:49:06Z", stage:"won", amount:170 },
+  { id:"516796157126", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Anna Johnston", createdate:"2026-08-14T12:58:38Z", stage:"won", amount:170 },
+  { id:"516738816235", dealname:"Bookkeeping Manual and Computerised - Online Anytime 1:1 (5N1354 OA DBU) -  for Stephen Cranley", createdate:"2026-08-14T13:20:36Z", stage:"won", amount:295 },
+  { id:"516733606080", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Saoirse OHagan", createdate:"2026-08-14T16:57:33Z", stage:"won", amount:295 },
+  { id:"516879577291", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Aisling Bhreathnach", createdate:"2026-08-14T19:10:59Z", stage:"app", amount:440 },
+  { id:"516961304824", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) -  for Catherine Gogan", createdate:"2026-08-15T10:33:28Z", stage:"won", amount:295 },
+  { id:"516907597040", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Mark Lynch", createdate:"2026-08-15T12:54:16Z", stage:"app", amount:0 },
+  { id:"516945542375", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Portlaoise for Aobha Doyle Byrne", createdate:"2026-08-15T16:03:07Z", stage:"app", amount:440 },
+  { id:"516957986013", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Jill Fleming", createdate:"2026-08-15T17:22:16Z", stage:"app", amount:440 },
+  { id:"516905756913", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Anna Shaw Luby", createdate:"2026-08-15T17:58:51Z", stage:"won", amount:170 },
+
+  { id:"517052664019", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Melissa Griffin", createdate:"2026-08-16T18:22:56Z", stage:"app", amount:455 },
+  { id:"516983695601", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Fiona McCormack", createdate:"2026-08-16T13:13:03Z", stage:"won", amount:455 },
+  { id:"516984967378", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Eimear Dykes", createdate:"2026-08-16T15:04:39Z", stage:"won", amount:440 },
+  { id:"517063805149", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Chloe Bannon", createdate:"2026-08-16T20:32:46Z", stage:"won", amount:170 },
+  { id:"517006829805", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Zoe", createdate:"2026-08-17T09:13:24Z", stage:"won", amount:170 },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -284,7 +301,7 @@ const WEEKS = [
   { wk:"W6", label:"20 Jul–26 Jul", start:new Date("2026-07-20T00:00:00+01:00"), end:new Date("2026-07-26T23:59:59+01:00"), full:true },
   { wk:"W7", label:"27 Jul–2 Aug", start:new Date("2026-07-27T00:00:00+01:00"), end:new Date("2026-08-02T23:59:59+01:00"), full:true },
   { wk:"W8", label:"3 Aug–9 Aug", start:new Date("2026-08-03T00:00:00+01:00"), end:new Date("2026-08-09T23:59:59+01:00"), full:true },
-  { wk:"W9", label:"10 Aug–14 Aug ⚡", start:new Date("2026-08-10T00:00:00+01:00"), end:new Date("2026-08-14T09:59:07+01:00"), full:false },
+  { wk:"W9", label:"10 Aug–16 Aug", start:new Date("2026-08-10T00:00:00+01:00"), end:new Date("2026-08-16T23:59:59+01:00"), full:true },
 ];
 
 function countWeek(deals, wk) {
@@ -489,7 +506,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          15 Jun – 14 Aug 2026 · last 8 weeks + ⚡ W9 partial
+          15 Jun – 16 Aug 2026 · W1–W9
         </p>
       </div>
 
@@ -769,7 +786,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 14 Aug 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 17 Aug 2026 · deal create date as week anchor
       </p>
     </div>
   );

@@ -8,21 +8,23 @@ import {
 // CTID379 — SNA Level 6 – Live and Online — Combined Weekly Revenue Report
 // Forms: HubSpot JSX (enq + app per week)
 // Registrations & Revenue: Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-//   Status = "Registered" only; deduplicated by email; 33 pre-W1 rows (13 Apr – 12 Jun) excluded
+//   Status = "Registered" only; deduplicated by email;
+//   34 pre-W1 registrations (1 Apr – 12 Jun) excluded per standing instruction
+//   1 row excluded: Refunded Not Registered (Anna marie mulholland)
 // Week boundaries: Irish time (Europe/Dublin), Mon 00:00 → Sun 23:59
-// W1–W8 full completed weeks; W9 partial (10–14 Aug ⚡)
-// Run: 14 Aug 2026
+// W1–W8 full completed weeks; W9 = 10–16 Aug (partial ⚡)
+// Run: 17 Aug 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",      forms: 8,  regs: 3, revenue: 1363.83, full: true  },
-  { week: "22–28 Jun",      forms: 10, regs: 3, revenue: 1363.66, full: true  },
-  { week: "29 Jun–5 Jul",   forms: 21, regs: 7, revenue: 3205.49, full: true  },
-  { week: "6–12 Jul",       forms: 9,  regs: 2, revenue: 916.83,  full: true  },
-  { week: "13–19 Jul",      forms: 11, regs: 5, revenue: 2287.49, full: true  },
-  { week: "20–26 Jul",      forms: 2,  regs: 0, revenue: 0,       full: true  },
-  { week: "27 Jul–2 Aug",   forms: 18, regs: 5, revenue: 2281.83, full: true  },
-  { week: "3–9 Aug",        forms: 10, regs: 2, revenue: 910.00,  full: true  },
-  { week: "10–14 Aug ⚡",   forms: 4,  regs: 4, revenue: 1818.83, full: false },
+  { week: "15–21 Jun",     forms: 8,  regs: 3, revenue: 1363.83, full: true  },
+  { week: "22–28 Jun",     forms: 10, regs: 3, revenue: 1363.66, full: true  },
+  { week: "29 Jun–5 Jul",  forms: 21, regs: 7, revenue: 3205.49, full: true  },
+  { week: "6–12 Jul",      forms: 9,  regs: 2, revenue: 916.83,  full: true  },
+  { week: "13–19 Jul",     forms: 11, regs: 5, revenue: 2287.49, full: true  },
+  { week: "20–26 Jul",     forms: 2,  regs: 0, revenue: 0,       full: true  },
+  { week: "27 Jul–2 Aug",  forms: 18, regs: 5, revenue: 2281.83, full: true  },
+  { week: "3–9 Aug",       forms: 10, regs: 2, revenue: 910.00,  full: true  },
+  { week: "10–16 Aug ⚡",  forms: 9,  regs: 6, revenue: 2742.49, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -70,7 +72,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week</p>}
     </div>
   );
 };
@@ -102,7 +104,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 9 Aug 2026 · W1–W8 full weeks + W9 ⚡ partial · run 14 Aug 2026
+          15 Jun – 16 Aug 2026 · W1–W8 full weeks + W9 ⚡ · run 17 Aug 2026
         </p>
       </div>
 
@@ -112,10 +114,13 @@ export default function App() {
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key insight: </strong>
         CTID379 has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 8 completed weeks + W9 partial.
+        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across 9 weeks (W1–W8 + partial W9).
         Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W3 (29 Jun–5 Jul) led both registrations (7) and revenue ({fmt(3205.49)}) coinciding with the peak enquiry week (21 forms).
-        W9 is tracking strongly — 4 registrations from just 4 form submissions (100% CR so far this week).
+        W3 (29 Jun–5 Jul) led both forms (21) and registrations (7) at {fmt(3205.49)}.
+        W9 ⚡ is tracking strongly with 6 registrations on 9 forms (66.7% CR) —
+        watch for continued lagged conversions from the W7 enquiry surge.
+        Note: CR% &gt; 100% is possible in any week where Paythen payment date
+        falls in a different week than the originating form submission.
       </div>
 
       {/* KPI Cards */}
@@ -124,7 +129,7 @@ export default function App() {
           { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
           { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",     color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 + W9⚡",                color: COLORS.rev   },
+          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "W1–W8 + W9 ⚡",               color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 140px", border: "1px solid #334155" }}>
@@ -154,7 +159,7 @@ export default function App() {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false} />
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 110]} />
+                tickFormatter={v => v + "%"} domain={[0, 100]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <ReferenceLine y={overallCR} stroke="#a78bfa" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#a78bfa", fontSize: 11, position: "insideBottomRight" }} />
@@ -248,7 +253,7 @@ export default function App() {
             <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
               <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
                 fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8 + W9⚡)
+                Total (all weeks)
               </td>
               <td style={{ padding: "11px 14px", textAlign: "center",
                 fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
@@ -267,9 +272,10 @@ export default function App() {
       <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
         <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions (unique contacts, last form only).
         Registrations = Paythen "Registered" rows (Filtered sheet, deduplicated by email).
-        33 pre-window registrations (13 Apr – 12 Jun, €14,850.00) excluded per standing instruction.
-        1 Refunded Not Registered row excluded. Revenue tiers: €440.00, €455.00, €461.83, €462.00.
-        All times Europe/Dublin.
+        34 pre-window registrations (1 Apr – 12 Jun) excluded per standing instruction.
+        1 non-Registered row excluded (Refunded Not Registered).
+        Revenue tiers: €440.00, €455.00, €461.83, €462.00.
+        CR% &gt;100% possible where Paythen payment date falls in a different week than the originating form.
       </p>
 
     </div>

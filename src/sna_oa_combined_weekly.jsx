@@ -4,80 +4,80 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ── DATA ─────────────────────────────────────────────────────────────────────
-// CTID490 + CTID423 — SNA Online Anytime (merged) — Combined Weekly Revenue Report
-// Forms: from HubSpot JSX (enq + app per week), W1–W8 full weeks + W9 partial
-// Registrations & Revenue: from Paythen "Courses Expected Revenue CTID" (Filtered sheet)
-// Week boundaries: IST (UTC+1), Mon 00:00 → Sun 23:59. W1 start: 15 Jun 2026.
-// 14 pre-W1 rows excluded (before 15 Jun): Caroline Hopkins 15 Apr, Samantha Murphy 16 Apr,
-//   Rachel Ryan 19 Apr, Sarah Martin 20 Apr, Kay Sheehan 20 Apr, Krishna Blake 3 May,
-//   Nicolette Spelic 10 May, Jennifer McLoughlin 11 May, Eilish Walsh 12 May,
-//   Collette Stephenson 14 May, Trudy Walsh 28 May, Ben Gallagher 5 Jun,
-//   Shannon Campbell 9 Jun, Janine Doherty 14 Jun.
-// Revenue tiers: CTID490 €295.00/€309.75/€320.00/€324.80 · CTID423 €295.00/€440.00/€462.00
-// ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",       forms: 2,  regs: 1, revenue:  324.80, full: true  },
-  { week: "22–28 Jun",       forms: 2,  regs: 1, revenue:  440.00, full: true  },
-  { week: "29 Jun–5 Jul",    forms: 5,  regs: 1, revenue:  295.00, full: true  },
-  { week: "6–12 Jul",        forms: 4,  regs: 1, revenue:  440.00, full: true  },
-  { week: "13–19 Jul",       forms: 2,  regs: 0, revenue:    0.00, full: true  },
-  { week: "20–26 Jul",       forms: 1,  regs: 2, revenue:  604.75, full: true  },
-  { week: "27 Jul–2 Aug",    forms: 3,  regs: 1, revenue:  462.00, full: true  },
-  { week: "3–9 Aug",         forms: 1,  regs: 1, revenue:  295.00, full: true  },
-  { week: "10–14 Aug ⚡",    forms: 3,  regs: 6, revenue: 2136.50, full: false },
+  { week: "15–21 Jun",    forms: 2,  regs: 1, revenue: 324.80,  full: true  },
+  { week: "22–28 Jun",    forms: 2,  regs: 1, revenue: 440.00,  full: true  },
+  { week: "29 Jun–5 Jul", forms: 5,  regs: 1, revenue: 295.00,  full: true  },
+  { week: "6–12 Jul",     forms: 4,  regs: 1, revenue: 440.00,  full: true  },
+  { week: "13–19 Jul",    forms: 2,  regs: 0, revenue: 0,        full: true  },
+  { week: "20–26 Jul",    forms: 1,  regs: 2, revenue: 604.75,  full: true  },
+  { week: "27 Jul–2 Aug", forms: 3,  regs: 1, revenue: 462.00,  full: true  },
+  { week: "3–9 Aug",      forms: 1,  regs: 1, revenue: 295.00,  full: true  },
+  { week: "10–16 Aug ⚡", forms: 7,  regs: 9, revenue: 3188.50, full: false },
 ].map(d => ({
   ...d,
-  cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
+  cr: d.forms > 0 ? +((d.regs / d.forms) * 100).toFixed(1) : null,
 }));
 
-const fullWeeks  = data.filter(d => d.full);
-const totalForms = data.reduce((s, d) => s + d.forms, 0);
-const totalRegs  = data.reduce((s, d) => s + d.regs,  0);
-const totalRev   = data.reduce((s, d) => s + d.revenue, 0);
-const avgForms   = (fullWeeks.reduce((s, d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
-const avgRegs    = (fullWeeks.reduce((s, d) => s + d.regs,  0) / fullWeeks.length).toFixed(1);
-const overallCR  = totalForms > 0 ? +(totalRegs / totalForms * 100).toFixed(1) : 0;
+const fullWeeks   = data.filter(d => d.full);
+const totalForms  = data.reduce((s, d) => s + d.forms, 0);
+const totalRegs   = data.reduce((s, d) => s + d.regs, 0);
+const totalRev    = data.reduce((s, d) => s + d.revenue, 0);
+const avgForms    = (fullWeeks.reduce((s, d) => s + d.forms, 0) / fullWeeks.length).toFixed(1);
+const avgRegs     = (fullWeeks.reduce((s, d) => s + d.regs, 0) / fullWeeks.length).toFixed(1);
+const overallCR   = totalForms > 0 ? +((totalRegs / totalForms) * 100).toFixed(1) : 0;
 
-const fmt = n => "€" + n.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const C = {
+  forms:   "#fb923c",
+  regs:    "#38bdf8",
+  cr:      "#a78bfa",
+  rev:     "#34d399",
+  bg:      "#0f172a",
+  card:    "#1e293b",
+  border:  "#334155",
+  text:    "#f1f5f9",
+  muted:   "#94a3b8",
+  dim:     "#64748b",
+};
 
-const COLORS = { forms: "#fb923c", regs: "#38bdf8", cr: "#a78bfa", rev: "#34d399" };
+const fmt = v => "€" + v.toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
-  const d     = payload[0]?.payload;
-  const forms = d?.forms ?? 0;
-  const regs  = d?.regs  ?? 0;
-  const rev   = d?.revenue ?? 0;
-  const cr    = d?.cr;
-  const crOver = cr !== null && cr > 100;
+  const d = payload[0]?.payload;
   return (
-    <div style={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
-      padding: "10px 14px", fontSize: 13, color: "#f1f5f9", minWidth: 230 }}>
+    <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 8,
+      padding: "10px 14px", fontSize: 13, color: C.text, minWidth: 220 }}>
       <p style={{ fontWeight: 700, marginBottom: 8, color: "#cbd5e1" }}>{label}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
-          <span style={{ color: COLORS.forms }}>● Form submissions</span><strong>{forms}</strong>
+          <span style={{ color: C.forms }}>● Forms</span><strong>{d.forms}</strong>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
-          <span style={{ color: COLORS.regs }}>● Registrations</span><strong>{regs}</strong>
+          <span style={{ color: C.regs }}>● Registrations</span><strong>{d.regs}</strong>
         </div>
-        <div style={{ borderTop: "1px solid #334155", marginTop: 4, paddingTop: 4,
+        <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 4, paddingTop: 4,
           display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ color: COLORS.cr }}>Conv. rate</span>
-            <strong style={{ color: COLORS.cr }}>
-              {cr !== null ? cr + "%" + (crOver ? " ⚡" : "") : "—"}
-            </strong>
+            <span style={{ color: C.cr }}>Conv. Rate</span>
+            <strong style={{ color: C.cr }}>{d.cr !== null ? d.cr + "%" : "—"}</strong>
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ color: COLORS.rev }}>Expected revenue</span>
-            <strong style={{ color: COLORS.rev }}>{fmt(rev)}</strong>
+            <span style={{ color: C.rev }}>Expected Revenue</span>
+            <strong style={{ color: C.rev }}>{fmt(d.revenue)}</strong>
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Fri)</p>}
-      {crOver && <p style={{ margin: "6px 0 0", color: "#a78bfa", fontSize: 11 }}>CR &gt;100%: registrations exceed HubSpot forms — learners registered directly via Paythen</p>}
+      {!d.full && (
+        <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>
+          ⚡ Partial week — counts may grow
+        </p>
+      )}
+      {d.cr !== null && d.cr > 100 && (
+        <p style={{ margin: "6px 0 0", color: C.muted, fontSize: 10, lineHeight: 1.4 }}>
+          CR% &gt;100% — payment date falls in a later week than the originating form submission.
+        </p>
+      )}
     </div>
   );
 };
@@ -86,214 +86,179 @@ const Tab = ({ id, active, onClick, children }) => (
   <button onClick={() => onClick(id)} style={{
     padding: "6px 16px", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer",
     border: "1px solid",
-    borderColor: active ? "#38bdf8" : "#334155",
+    borderColor: active ? C.regs : C.border,
     background:  active ? "rgba(56,189,248,0.15)" : "transparent",
-    color:       active ? "#38bdf8" : "#64748b"
+    color:       active ? C.regs : C.dim,
   }}>{children}</button>
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("bars");
 
   return (
-    <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
-      fontFamily: "'Inter','Segoe UI',sans-serif", color: "#f1f5f9" }}>
+    <div style={{ background: C.bg, minHeight: "100vh", padding: "32px 24px",
+      fontFamily: "'Inter','Segoe UI',sans-serif", color: C.text }}>
 
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <p style={{ color: "#64748b", fontSize: 12, textTransform: "uppercase",
-          letterSpacing: "0.08em", margin: "0 0 6px" }}>
-          Paythen + HubSpot · SNA Online Anytime (CTID490 + CTID423)
+        <p style={{ color: C.dim, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 6px" }}>
+          HubSpot + Paythen · SNA Online Anytime — CTID490 + CTID423 combined
         </p>
-        <h1 style={{ margin: "0 0 4px", fontSize: 22, fontWeight: 700, color: "#f8fafc" }}>
-          Weekly Combined Report — Forms, Registrations &amp; Revenue
+        <h1 style={{ margin: "0 0 4px", fontSize: 22, fontWeight: 700, color: C.text }}>
+          Combined Weekly Revenue Report
         </h1>
-        <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 14 Aug 2026 · W1–W8 full weeks + W9 partial ⚡ · CTID490 &amp; CTID423 merged
+        <p style={{ margin: 0, color: C.muted, fontSize: 13 }}>
+          15 Jun – 16 Aug 2026 · W1–W8 full weeks + W9 ⚡ partial · CTID490 + CTID423
         </p>
       </div>
 
       {/* Insight banner */}
-      <div style={{ background: "rgba(167,139,250,0.08)", border: "1px solid #a78bfa",
-        borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
-        color: "#94a3b8", lineHeight: 1.7 }}>
-        <strong style={{ color: "#a78bfa" }}>📌 Key insight: </strong>
-        SNA Online Anytime has generated <strong style={{ color: "#f1f5f9" }}>{fmt(totalRev)} in expected revenue</strong> from{" "}
-        <strong style={{ color: "#f1f5f9" }}>{totalRegs} registrations</strong> across W1–W8 + W9 partial (15 Jun – 14 Aug).
-        Overall conversion rate is <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
-        W9 (partial, 10–14 Aug) is the standout week with 6 registrations and €2,136.50 revenue.
-        Applications dried up across W5–W8 (0 app registrations), but W9 shows a strong rebound.
-        CR &gt;100% in W6 and W9 reflects Paythen registrations landing later than form submissions.
+      <div style={{ background: "rgba(52,211,153,0.08)", border: `1px solid ${C.rev}`, borderRadius: 8,
+        padding: "10px 14px", marginBottom: 20, fontSize: 12, color: C.muted, lineHeight: 1.7 }}>
+        <strong style={{ color: C.rev }}>📌 Key characteristic: </strong>
+        Registrations were low and steady through W1–W8 (1–2/week), with a{" "}
+        <strong style={{ color: C.text }}>significant W9 surge of 9 registrations (€3,188.50)</strong> — more than half of all
+        in-window revenue landed in the final week. CR% &gt;100% in W6, W8, and W9 reflects Paythen
+        payment dates falling in a later week than the originating enquiry or application — this is expected
+        and not a data error. 15 pre-window registrations (€6,189.60) were excluded per standing instruction.
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Form Submissions", value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,      color: COLORS.forms },
-          { label: "Total Registrations",    value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,       color: COLORS.regs  },
-          { label: "Overall Conv. Rate",     value: overallCR + "%", sub: "regs ÷ forms (all weeks)",        color: COLORS.cr    },
-          { label: "Total Expected Revenue", value: fmt(totalRev),   sub: "15 Jun – 14 Aug 2026",            color: COLORS.rev   },
+          { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk (W1–W8)`,  color: C.forms },
+          { label: "Total Registrations", value: totalRegs,         sub: `avg ${avgRegs}/wk (W1–W8)`,  color: C.regs  },
+          { label: "Overall Conv. Rate",  value: overallCR + "%",   sub: "regs ÷ forms",               color: C.cr    },
+          { label: "Total Expected Rev.", value: fmt(totalRev),     sub: "W1–W9 combined",             color: C.rev   },
         ].map(k => (
-          <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
-            flex: "1 1 130px", border: "1px solid #334155" }}>
-            <p style={{ margin: "0 0 3px", fontSize: 10, color: "#64748b",
-              textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
-            <p style={{ margin: "0 0 2px", fontSize: 22, fontWeight: 800,
-              color: k.color, lineHeight: 1 }}>{k.value}</p>
-            <p style={{ margin: 0, fontSize: 10, color: "#64748b" }}>{k.sub}</p>
+          <div key={k.label} style={{ background: C.card, borderRadius: 10, padding: "12px 18px",
+            flex: "1 1 130px", border: `1px solid ${C.border}` }}>
+            <p style={{ margin: "0 0 3px", fontSize: 10, color: C.dim, textTransform: "uppercase", letterSpacing: "0.06em" }}>{k.label}</p>
+            <p style={{ margin: "0 0 2px", fontSize: 20, fontWeight: 800, color: k.color, lineHeight: 1 }}>{k.value}</p>
+            <p style={{ margin: 0, fontSize: 10, color: C.dim }}>{k.sub}</p>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <Tab id="grouped" active={view === "grouped"} onClick={setView}>Forms vs Registrations</Tab>
-        <Tab id="cr"      active={view === "cr"}      onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="rev"     active={view === "rev"}     onClick={setView}>Expected Revenue</Tab>
+        <Tab id="bars" active={view === "bars"} onClick={setView}>Forms vs Registrations</Tab>
+        <Tab id="cr"   active={view === "cr"}   onClick={setView}>Conversion Rate %</Tab>
+        <Tab id="rev"  active={view === "rev"}  onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
-      <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
-        border: "1px solid #334155", marginBottom: 20 }}>
+      <div style={{ background: C.card, borderRadius: 12, padding: "24px 16px 16px",
+        border: `1px solid ${C.border}`, marginBottom: 20 }}>
         <ResponsiveContainer width="100%" height={300}>
           {view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
-                axisLine={{ stroke: "#334155" }} tickLine={false} />
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
+              <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
+              <XAxis dataKey="week" tick={{ fill: C.muted, fontSize: 11 }} axisLine={{ stroke: C.border }} tickLine={false} />
+              <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false}
                 tickFormatter={v => v + "%"} domain={[0, 220]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
-              <ReferenceLine y={100} stroke="#64748b" strokeDasharray="4 3"
-                label={{ value: "100%", fill: "#64748b", fontSize: 10, position: "insideTopRight" }} />
-              <ReferenceLine y={overallCR} stroke="#a78bfa" strokeDasharray="4 3"
-                label={{ value: `Avg ${overallCR}%`, fill: "#a78bfa", fontSize: 11, position: "insideBottomRight" }} />
-              <Line dataKey="cr" name="Conv. rate" type="monotone"
-                stroke={COLORS.cr} strokeWidth={2.5}
-                dot={({ cx, cy, index }) => {
-                  if (data[index]?.cr === null) return null;
-                  return (
-                    <circle key={index} cx={cx} cy={cy} r={6}
-                      fill={data[index]?.full ? COLORS.cr : "#fbbf24"}
-                      stroke="none" />
-                  );
-                }} connectNulls={false} />
+              <ReferenceLine y={100} stroke="#f87171" strokeDasharray="4 3"
+                label={{ value: "100%", fill: "#f87171", fontSize: 10, position: "insideTopRight" }} />
+              <ReferenceLine y={overallCR} stroke={C.dim} strokeDasharray="4 3"
+                label={{ value: `Avg ${overallCR}%`, fill: C.dim, fontSize: 11, position: "insideTopLeft" }} />
+              <Line dataKey="cr" name="Conv. Rate" type="monotone"
+                stroke={C.cr} strokeWidth={2.5}
+                dot={{ r: 6, fill: C.cr, strokeWidth: 0 }} connectNulls />
             </ComposedChart>
           ) : view === "rev" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
-                axisLine={{ stroke: "#334155" }} tickLine={false} />
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€" + (v / 1000).toFixed(1) + "k"} domain={[0, 2500]} />
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
+              <XAxis dataKey="week" tick={{ fill: C.muted, fontSize: 11 }} axisLine={{ stroke: C.border }} tickLine={false} />
+              <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false}
+                tickFormatter={v => "€" + v.toLocaleString()} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
-              <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]} />
+              <Bar dataKey="revenue" name="Expected Revenue" fill={C.rev} radius={[5, 5, 0, 0]} />
             </ComposedChart>
           ) : (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
-              barCategoryGap="22%" barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
-                axisLine={{ stroke: "#334155" }} tickLine={false} />
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                domain={[0, 10]} />
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.border} vertical={false} />
+              <XAxis dataKey="week" tick={{ fill: C.muted, fontSize: 11 }} axisLine={{ stroke: C.border }} tickLine={false} />
+              <YAxis tick={{ fill: C.muted, fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 12]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
-                formatter={v => v === "forms" ? "Form submissions" : "Registrations"} />
-              <Bar dataKey="forms" name="forms" fill={COLORS.forms} radius={[5, 5, 0, 0]} />
-              <Bar dataKey="regs"  name="regs"  fill={COLORS.regs}  radius={[5, 5, 0, 0]} />
+                formatter={v => v === "forms" ? "Forms (ENQ + APP)" : "Registrations (Paythen)"} />
+              <Bar dataKey="forms" name="forms" fill={C.forms} radius={[5, 5, 0, 0]} />
+              <Bar dataKey="regs"  name="regs"  fill={C.regs}  radius={[5, 5, 0, 0]} />
             </ComposedChart>
           )}
         </ResponsiveContainer>
       </div>
 
       {/* Table */}
-      <div style={{ background: "#1e293b", borderRadius: 12,
-        border: "1px solid #334155", overflow: "hidden" }}>
+      <div style={{ background: C.card, borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <thead>
-            <tr style={{ background: "#0f172a" }}>
-              {["Wk", "Dates", "Forms", "Registrations", "Conv. Rate", "Expected Revenue"].map((h, i) => (
+            <tr style={{ background: C.bg }}>
+              {["Wk", "Dates", "Forms", "Registrations", "CR%", "Expected Revenue"].map((h, i) => (
                 <th key={h} style={{ padding: "11px 14px", textAlign: i <= 1 ? "left" : "center",
-                  color: "#64748b", fontWeight: 600, fontSize: 11, textTransform: "uppercase",
-                  letterSpacing: "0.06em", borderBottom: "1px solid #334155" }}>{h}</th>
+                  color: C.dim, fontWeight: 600, fontSize: 11, textTransform: "uppercase",
+                  letterSpacing: "0.06em", borderBottom: `1px solid ${C.border}` }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const crOver = row.cr !== null && row.cr > 100;
-              const crHigh = row.cr !== null && row.cr >= 80 && row.cr <= 100 && row.forms > 0;
-              const delta = (val, prev) => {
-                if (prev === null) return null;
-                const diff = val - prev;
-                if (diff > 0) return <span style={{ fontSize: 10, marginLeft: 4, color: "#34d399" }}>▲{diff}</span>;
-                if (diff < 0) return <span style={{ fontSize: 10, marginLeft: 4, color: "#f87171" }}>▼{Math.abs(diff)}</span>;
-                return <span style={{ fontSize: 10, marginLeft: 4, color: "#64748b" }}>=</span>;
-              };
+              const wowForms = i > 0 ? row.forms - data[i - 1].forms : null;
+              const wowRegs  = i > 0 ? row.regs  - data[i - 1].regs  : null;
+              const crHigh   = row.cr !== null && row.cr >= 100;
               return (
-                <tr key={i} style={{
-                  borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
-                  background: !row.full ? "rgba(251,191,36,0.04)" : i % 2 === 0 ? "#1e293b" : "#162032"
-                }}>
-                  <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
+                <tr key={i} style={{ borderBottom: i < data.length - 1 ? `1px solid #1e2d3d` : "none",
+                  background: i % 2 === 0 ? C.card : "#162032" }}>
+                  <td style={{ padding: "11px 14px", color: C.dim, fontWeight: 700 }}>W{i + 1}</td>
                   <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}
-                    {!row.full && (
-                      <span style={{ marginLeft: 6, fontSize: 10, color: "#fbbf24",
-                        background: "rgba(251,191,36,0.12)", borderRadius: 4,
-                        padding: "1px 5px" }}>partial</span>
-                    )}
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
                   </td>
-                  <td style={{ padding: "11px 14px", textAlign: "center",
-                    fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
-                    {row.forms}{delta(row.forms, i > 0 ? data[i - 1].forms : null)}
+                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: C.forms, fontSize: 15 }}>
+                    {row.forms}
+                    {wowForms !== null && <span style={{ fontSize: 10, marginLeft: 4, color: wowForms > 0 ? C.rev : wowForms < 0 ? "#f87171" : C.dim }}>
+                      {wowForms > 0 ? `▲${wowForms}` : wowForms < 0 ? `▼${Math.abs(wowForms)}` : "="}
+                    </span>}
                   </td>
-                  <td style={{ padding: "11px 14px", textAlign: "center",
-                    fontWeight: 700, color: COLORS.regs, fontSize: 15 }}>
-                    {row.regs}{delta(row.regs, i > 0 ? data[i - 1].regs : null)}
+                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: C.regs, fontSize: 15 }}>
+                    {row.regs}
+                    {wowRegs !== null && <span style={{ fontSize: 10, marginLeft: 4, color: wowRegs > 0 ? C.rev : wowRegs < 0 ? "#f87171" : C.dim }}>
+                      {wowRegs > 0 ? `▲${wowRegs}` : wowRegs < 0 ? `▼${Math.abs(wowRegs)}` : "="}
+                    </span>}
                   </td>
-                  <td style={{ padding: "11px 14px", textAlign: "center",
-                    fontWeight: 700, fontSize: 12,
-                    color: crOver ? "#fbbf24" : crHigh ? "#34d399" : COLORS.cr }}>
+                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, fontSize: 12,
+                    color: crHigh ? "#fbbf24" : C.cr }}>
                     {row.cr !== null ? row.cr + "%" : "—"}
-                    {crOver ? " ⚡" : crHigh ? " 🔥" : ""}
+                    {crHigh && <span style={{ fontSize: 9, marginLeft: 3, color: C.muted }}>†</span>}
                   </td>
-                  <td style={{ padding: "11px 14px", textAlign: "center",
-                    fontWeight: 700, color: row.revenue > 0 ? COLORS.rev : "#475569", fontSize: 13 }}>
+                  <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: C.rev, fontSize: 13 }}>
                     {row.revenue > 0 ? fmt(row.revenue) : "—"}
                   </td>
                 </tr>
               );
             })}
-            <tr style={{ background: "#0f172a", borderTop: "2px solid #334155" }}>
-              <td colSpan={2} style={{ padding: "11px 14px", color: "#94a3b8",
-                fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>
-                Total (W1–W8 + W9 ⚡)
-              </td>
-              <td style={{ padding: "11px 14px", textAlign: "center",
-                fontWeight: 800, color: COLORS.forms, fontSize: 15 }}>{totalForms}</td>
-              <td style={{ padding: "11px 14px", textAlign: "center",
-                fontWeight: 800, color: COLORS.regs, fontSize: 15 }}>{totalRegs}</td>
-              <td style={{ padding: "11px 14px", textAlign: "center",
-                fontWeight: 700, color: COLORS.cr, fontSize: 13 }}>{overallCR}%</td>
-              <td style={{ padding: "11px 14px", textAlign: "center",
-                fontWeight: 800, color: COLORS.rev, fontSize: 14 }}>{fmt(totalRev)}</td>
+            <tr style={{ background: C.bg, borderTop: `2px solid ${C.border}` }}>
+              <td colSpan={2} style={{ padding: "11px 14px", color: C.muted, fontWeight: 700, fontSize: 10, textTransform: "uppercase" }}>Total</td>
+              <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 800, color: C.forms, fontSize: 15 }}>{totalForms}</td>
+              <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 800, color: C.regs,  fontSize: 15 }}>{totalRegs}</td>
+              <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: C.cr,    fontSize: 13 }}>{overallCR}%</td>
+              <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 800, color: C.rev,   fontSize: 13 }}>{fmt(totalRev)}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Footer note */}
-      <p style={{ margin: "16px 0 0", fontSize: 11, color: "#475569", lineHeight: 1.6 }}>
-        <strong style={{ color: "#64748b" }}>Notes:</strong> Forms = HubSpot enquiry + application submissions
-        (CTID490 + CTID423 combined, unique contacts, last form only, deduped on email/phone).
-        Registrations = Paythen "Registered" status rows (Filtered sheet). W1 start: 15 Jun 2026.
-        14 pre-W1 registrations excluded (15 Apr – 14 Jun): Caroline Hopkins, Samantha Murphy,
-        Rachel Ryan, Sarah Martin, Kay Sheehan, Krishna Blake, Nicolette Spelic, Jennifer McLoughlin,
-        Eilish Walsh, Collette Stephenson, Trudy Walsh, Ben Gallagher, Shannon Campbell, Janine Doherty.
-        CR &gt;100% in W6 and W9 ⚡ reflects Paythen payments landing later than the corresponding HubSpot form submission.
-      </p>
+      {/* Footer */}
+      <div style={{ marginTop: 14, fontSize: 11, color: "#475569", lineHeight: 1.7 }}>
+        <p style={{ margin: 0 }}>
+          † CR% &gt;100% — Paythen payment date falls in a later week than the originating HubSpot form submission. Not a data error.
+        </p>
+        <p style={{ margin: "4px 0 0" }}>
+          Run: 17 Aug 2026 · Window: W1 15 Jun – W9 16 Aug 2026 · CTID490 + CTID423 combined ·
+          Pre-window excluded: 5 CTID490 (€1,726.60) + 10 CTID423 (€4,463.00) = 15 rows (€6,189.60) ·
+          No email duplicates · No cross-CTID overlaps
+        </p>
+      </div>
     </div>
   );
 }

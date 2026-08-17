@@ -13,15 +13,15 @@ import {
 // If include_current_week = false, all 8 rows have full: true — no ⚡ row.
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",        enq: 3,  app: 5, full: true  },
-  { week: "22–28 Jun",        enq: 8,  app: 2, full: true  },
-  { week: "29 Jun–5 Jul",     enq: 18, app: 3, full: true  },
-  { week: "6–12 Jul",         enq: 8,  app: 1, full: true  },
-  { week: "13–19 Jul",        enq: 9,  app: 2, full: true  },
-  { week: "20–26 Jul",        enq: 2,  app: 0, full: true  },
-  { week: "27 Jul–2 Aug",     enq: 14, app: 4, full: true  },
-  { week: "3–9 Aug",          enq: 10, app: 0, full: true  },
-  { week: "10–14 Aug ⚡",     enq: 2,  app: 2, full: false },
+  { week: "15–21 Jun",      enq: 3,  app: 5,  full: true  },
+  { week: "22–28 Jun",      enq: 8,  app: 2,  full: true  },
+  { week: "29 Jun–5 Jul",   enq: 18, app: 3,  full: true  },
+  { week: "6–12 Jul",       enq: 8,  app: 1,  full: true  },
+  { week: "13–19 Jul",      enq: 9,  app: 2,  full: true  },
+  { week: "20–26 Jul",      enq: 2,  app: 0,  full: true  },
+  { week: "27 Jul–2 Aug",   enq: 14, app: 4,  full: true  },
+  { week: "3–9 Aug",        enq: 10, app: 0,  full: true  },
+  { week: "10–16 Aug ⚡",   enq: 7,  app: 2,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -61,7 +61,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -92,17 +92,17 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 14 Aug 2026 · Unique contacts · last form only per contact
+          15 Jun – 16 Aug 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
       {/* Notable insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#34d399" }}>📌 Key pattern: </strong>
-        Enquiries remain strong — <strong style={{ color:"#f1f5f9" }}>W3 (29 Jun–5 Jul) peaked at 18</strong>, and W7 &amp; W8 show a sustained uptick (14 and 10).
-        Applications have been sparse since mid-July, with zero in W6 and W8 — the enquiry wave has not yet converted.
-        Overall app rate is {overallApp}%. Watch for a lagged applications bounce in coming weeks.
+        <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
+        Enquiry volume dominates — <strong style={{ color:"#f1f5f9" }}>overall app rate is {overallApp}%</strong> across W1–W8.
+        W3 (29 Jun–5 Jul) was the peak enquiry week with 18 submissions. W6 and W8 saw zero applications,
+        while W7 (27 Jul–2 Aug) delivered a secondary surge of 14 enquiries and 4 applications.
       </div>
 
       {/* KPIs */}
@@ -110,7 +110,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 full weeks + W9⚡", color:"#f1f5f9"  },
+          { label:"Total Submissions",  value:total,           sub:`${fullWeeks.length} full weeks`,  color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           // Last KPI card: partial week if full:false, otherwise show W8 total
           ...(data[data.length-1].full
@@ -156,7 +156,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0, view==="stacked" ? 24 : 20]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,10]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -225,11 +225,6 @@ export default function App() {
           </tbody>
         </table>
       </div>
-
-      {/* Footer */}
-      <p style={{ marginTop:14, fontSize:11, color:"#475569", textAlign:"center" }}>
-        Window: 15 Jun – 9 Aug 2026 (W1–W8) · W9 ⚡ partial: 10–14 Aug · Run: 14 Aug 2026 · All times Europe/Dublin
-      </p>
     </div>
   );
 }

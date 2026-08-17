@@ -13,7 +13,7 @@ export const data = [
   { week: "20–26 Jul",       enq: 1, app: 0, full: true  },
   { week: "27 Jul–2 Aug",    enq: 3, app: 0, full: true  },
   { week: "3–9 Aug",         enq: 1, app: 0, full: true  },
-  { week: "10–14 Aug ⚡",    enq: 2, app: 1, full: false },
+  { week: "10–16 Aug ⚡",    enq: 6, app: 1, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -53,7 +53,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week — counts may grow</p>}
     </div>
   );
 };
@@ -78,13 +78,13 @@ export default function App() {
       {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
-          HubSpot · SNA Online Anytime (CTID490 + CTID423 combined)
+          HubSpot · SNA Online Anytime — CTID490 + CTID423 combined
         </p>
         <h1 style={{ margin:"0 0 4px", fontSize:22, fontWeight:700, color:"#f8fafc" }}>
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 14 Aug 2026 · Unique contacts per file · last submission only · CTID490 + CTID423 summed
+          15 Jun – 16 Aug 2026 · Unique contacts · last submission only · CTID490 + CTID423 summed
         </p>
       </div>
 
@@ -92,9 +92,9 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        Applications have <strong style={{ color:"#f1f5f9" }}>stalled since mid-July</strong> — W5 through W8 show zero applications while enquiries continue at 1–3/week.
-        W3 (29 Jun–5 Jul) remains the enquiry peak at 5, and W4 (6–12 Jul) was the strongest conversion week (3 apps, 75% app rate 🔥).
-        W9 partial has already recorded 1 application this week — a potential sign of recovery to monitor.
+        Enquiries dominate this window — applications clustered early (W1–W4) then stalled from W5 onwards.
+        W9 (10–16 Aug) is the strongest enquiry week at 6, suggesting a late-summer surge worth monitoring.
+        {" "}<strong style={{ color:"#f1f5f9" }}>1 person enquired via both CTID490 and CTID423</strong> on 11 Aug and was counted once (cross-CTID dedup applied).
       </div>
 
       {/* KPIs */}
@@ -106,7 +106,7 @@ export default function App() {
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           ...(data[data.length-1].full
             ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
+            : [{ label:`This week (Mon–Sun)`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial W9", color:"#fbbf24" }]
           ),
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
@@ -147,7 +147,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,10]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,8]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -215,6 +215,15 @@ export default function App() {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Footer */}
+      <div style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.7 }}>
+        <p style={{ margin:0 }}>
+          Run: 17 Aug 2026 · Window: W1 15 Jun – W9 16 Aug 2026 · CTID490 + CTID423 combined ·
+          ENQ: 11 (CTID490) + 10 (CTID423) = 21 raw → 20 after cross-CTID dedup (1 overlap: Rema Burwise) ·
+          APP: 2 (CTID490) + 5 (CTID423) = 7 unique · No phone-based duplicates detected.
+        </p>
       </div>
     </div>
   );

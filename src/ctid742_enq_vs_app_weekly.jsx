@@ -6,23 +6,21 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: Mon 15 Jun – Sun 9 Aug 2026 (W1–W8, all full)
-// + W9 ⚡ partial: Mon 10 Aug – Fri 14 Aug 2026 (run at ~10:08 IST)
-// Methodology: global dedup per form · cols A–D (First name, Last name, Phone, Email)
-//              email primary · phone fallback · most recent submission kept
-// W1–W4 confirmed match against 17 Jul cache · W5–W9 freshly processed from XLSX 14 Aug 2026
-// 102 unique enquiries · 111 unique apps (W1–W9) · no phone-based dupes detected
+// Fixed window: Mon 15 Jun – Sun 16 Aug 2026 (W1–W9, all 9 full weeks)
+// Methodology: global dedup per form · email primary · phone fallback · most recent kept
+// W1–W8 confirmed match against 14 Aug run (no drift) · W9 freshly processed 17 Aug 2026
+// 108 unique enquiries · 115 unique apps · no phone/email dupes detected
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",      enq: 3,  app: 15, full: true  },
-  { week: "22–28 Jun",      enq: 16, app: 14, full: true  },
-  { week: "29 Jun–5 Jul",   enq: 24, app: 22, full: true  },
-  { week: "6–12 Jul",       enq: 16, app: 17, full: true  },
-  { week: "13–19 Jul",      enq: 11, app: 13, full: true  },
-  { week: "20–26 Jul",      enq: 8,  app: 10, full: true  },
-  { week: "27 Jul–2 Aug",   enq: 5,  app: 6,  full: true  },
-  { week: "3–9 Aug",        enq: 12, app: 8,  full: true  },
-  { week: "10–14 Aug ⚡",   enq: 7,  app: 6,  full: false },
+  { week: "15–21 Jun",     enq: 3,  app: 15, full: true },
+  { week: "22–28 Jun",     enq: 16, app: 14, full: true },
+  { week: "29 Jun–5 Jul",  enq: 24, app: 22, full: true },
+  { week: "6–12 Jul",      enq: 16, app: 17, full: true },
+  { week: "13–19 Jul",     enq: 11, app: 13, full: true },
+  { week: "20–26 Jul",     enq: 8,  app: 10, full: true },
+  { week: "27 Jul–2 Aug",  enq: 5,  app: 6,  full: true },
+  { week: "3–9 Aug",       enq: 12, app: 8,  full: true },
+  { week: "10–16 Aug",     enq: 13, app: 10, full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -70,7 +68,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon–Fri)</p>}
     </div>
   );
 };
@@ -106,7 +103,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 14 Aug 2026 · 8 full weeks + W9 ⚡ · Unique contacts · global dedup per form
+          15 Jun – 16 Aug 2026 · 9 full weeks · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -116,20 +113,19 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 maintains a <strong style={{ color: "#f1f5f9" }}>consistently high application rate ({overallApp}% overall)</strong> —
-        W1 (15–21 Jun) leads at 83% 🔥, with W3 (29 Jun–5 Jul) the peak volume week at 46 total submissions.
-        Activity has softened through Jul–Aug: W7 (27 Jul–2 Aug) is the quietest week at 11 submissions,
-        though W8 (3–9 Aug) shows a partial rebound with 12 enquiries. W9 ⚡ (10–14 Aug) is tracking at 46% app rate.
+        CTID742 holds a <strong style={{ color: "#f1f5f9" }}>consistently strong {overallApp}% application rate</strong> across
+        9 full weeks. W1 (15–21 Jun) leads at 83% 🔥 with applications dominating from day one.
+        Peak volume week is W3 (29 Jun–5 Jul) at 46 submissions. Activity softened through Jul–Aug
+        but W9 (10–16 Aug) closed solidly at 23 submissions, confirming sustained interest through mid-August.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",       value: totalEnq,       sub: `avg ${avgEnq}/wk`,    color: COLORS.enq  },
-          { label: "Total Applications",    value: totalApp,       sub: `avg ${avgApp}/wk`,    color: COLORS.app  },
-          { label: "Total Submissions",     value: total,          sub: "8 full wks + W9 ⚡",   color: "#f1f5f9"   },
-          { label: "Overall App Rate",      value: overallApp+"%", sub: "apps ÷ total",         color: "#34d399"   },
-          { label: "W9 so far (10–14 Aug)", value: "7e / 6a",     sub: "⚡ 46% app rate",      color: "#fbbf24"   },
+          { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
+          { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app },
+          { label: "Total Submissions",  value: total,          sub: "9 full weeks",        color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",        color: "#34d399"  },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -213,9 +209,7 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
-                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
-                  </td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
                     {wowEnq !== null && (
@@ -250,9 +244,9 @@ export default function App() {
         </table>
       </div>
 
-      {/* Footer note */}
+      {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 14 Aug 2026 · W1–W4 confirmed match against 17 Jul cache · W5–W9 freshly processed · no duplicate contacts detected
+        Updated 17 Aug 2026 · W1–W8 confirmed match against 14 Aug run · W9 freshly processed · no duplicates detected
       </p>
 
     </div>
