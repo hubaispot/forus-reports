@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "15–21 Jun",      enq: 2, app: 9,  full: true  },
-  { week: "22–28 Jun",      enq: 2, app: 7,  full: true  },
-  { week: "29 Jun–5 Jul",   enq: 4, app: 10, full: true  },
-  { week: "6–12 Jul",       enq: 5, app: 8,  full: true  },
-  { week: "13–19 Jul",      enq: 4, app: 10, full: true  },
-  { week: "20–26 Jul",      enq: 4, app: 9,  full: true  },
-  { week: "27 Jul–2 Aug",   enq: 4, app: 6,  full: true  },
-  { week: "3–9 Aug",        enq: 3, app: 5,  full: true  },
-  { week: "10–11 Aug ⚡",   enq: 0, app: 3,  full: false },
+  { week: "15 Jun–21 Jun",    enq: 2,  app: 9,  full: true  },
+  { week: "22 Jun–28 Jun",    enq: 2,  app: 7,  full: true  },
+  { week: "29 Jun–5 Jul",     enq: 4,  app: 10, full: true  },
+  { week: "6 Jul–12 Jul",     enq: 5,  app: 8,  full: true  },
+  { week: "13 Jul–19 Jul",    enq: 4,  app: 10, full: true  },
+  { week: "20 Jul–26 Jul",    enq: 4,  app: 9,  full: true  },
+  { week: "27 Jul–2 Aug",     enq: 4,  app: 6,  full: true  },
+  { week: "3 Aug–9 Aug",      enq: 3,  app: 4,  full: true  },
+  { week: "10 Aug–16 Aug ⚡", enq: 4,  app: 8,  full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           <span style={{ color:COLORS.enq }}>● Enquiry (LO/CTID771)</span><strong>{enq}</strong>
         </div>
         <div style={{ display:"flex", justifyContent:"space-between", gap:16 }}>
-          <span style={{ color:COLORS.app }}>● Applications (OA+LO)</span><strong>{app}</strong>
+          <span style={{ color:COLORS.app }}>● Applications (OA/CTID770)</span><strong>{app}</strong>
         </div>
         <div style={{ borderTop:"1px solid #334155", marginTop:4, paddingTop:4,
           display:"flex", flexDirection:"column", gap:3 }}>
@@ -49,11 +49,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
           <div style={{ display:"flex", justifyContent:"space-between" }}>
             <span style={{ color:COLORS.rate }}>App rate</span>
-            <strong style={{ color:COLORS.rate }}>{d?.appRate}%</strong>
+            <strong style={{ color:COLORS.rate }}>{d?.appRate}%{d?.appRate >= 60 ? " 🔥" : ""}</strong>
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Tue)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Sun)</p>}
     </div>
   );
 };
@@ -75,6 +75,7 @@ export default function App() {
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
       fontFamily:"'Inter','Segoe UI',sans-serif", color:"#f1f5f9", textAlign:"left" }}>
 
+      {/* Header */}
       <div style={{ marginBottom:24 }}>
         <p style={{ color:"#64748b", fontSize:12, textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 6px" }}>
           HubSpot · Healthcare Support MA L5 — LO (CTID771) + OA (CTID770)
@@ -83,33 +84,39 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 11 Aug 2026 · 8 completed weeks + W9 ⚡ partial · Unique contacts · last form only per contact
+          15 Jun – 16 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts · last form only per contact
         </p>
       </div>
 
+      {/* Asymmetry notice banner */}
       <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
         padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
         Enquiries are <strong style={{ color:"#f1f5f9" }}>LO (CTID771) only</strong>.
-        Applications include <strong style={{ color:"#f1f5f9" }}>both LO (CTID771) and OA (CTID770)</strong>.
-        App rate % reflects this asymmetry and is not directly comparable to courses with matched 1:1 forms.
+        Applications shown are <strong style={{ color:"#f1f5f9" }}>OA (CTID770) only</strong>.
+        App rate % reflects this asymmetry and is not directly comparable to courses where enquiry
+        and application forms are matched 1:1.
       </div>
 
+      {/* Notable insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Every completed week has exceeded 60% app rate — driven by OA (CTID770) direct applications.
-        W5 (13–19 Jul) and W3 (29 Jun–5 Jul) are joint peaks at 14 total each.
-        W8 (3–9 Aug) closes as a full week at 3e / 5a (8 total). W9 ⚡ is 2 days in with 3 applications already.
+        <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
+        This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
+        driven by OA (CTID770) direct applications with no enquiry step.
+        7 of 8 full weeks exceeded 60% app rate 🔥. Applications eased in W7–W8 (6 and 4)
+        after running 9–10 for several weeks — W9 partial has already recovered to 8.
+        Enquiries have been steady at 2–5/week throughout.
       </div>
 
+      {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries (LO only)",    value:totalEnq,       sub:`avg ${avgEnq}/wk (W1–W8)`,  color:COLORS.enq  },
-          { label:"Total Applications (OA+LO)",   value:totalApp,       sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
-          { label:"Total Submissions",             value:total,          sub:"8 weeks + W9 ⚡",           color:"#f1f5f9"   },
-          { label:"Overall App Rate",              value:overallApp+"%", sub:"apps ÷ total",              color:"#34d399"   },
-          { label:"W9 ⚡ (10–11 Aug)",             value:`${data[8].enq}e / ${data[8].app}a`, sub:"2 days only", color:"#fbbf24" },
+          { label:"Total Enquiries (LO only)",  value:totalEnq,       sub:`avg ${avgEnq}/wk`,   color:COLORS.enq  },
+          { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
+          { label:"Total Submissions",           value:total,          sub:"8 wks + W9 ⚡",      color:"#f1f5f9"   },
+          { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
+          { label:"W9 ⚡ (10–16 Aug)",           value:data[8].total,  sub:`${data[8].enq}e / ${data[8].app}a`, color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -120,12 +127,14 @@ export default function App() {
         ))}
       </div>
 
+      {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
+      {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
@@ -147,10 +156,10 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,16]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,14]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
-                formatter={v => v==="enq" ? "Enquiry (LO/CTID771)" : "Applications (OA+LO)"}/>
+                formatter={v => v==="enq" ? "Enquiry (LO/CTID771)" : "Applications (OA/CTID770)"}/>
               <Bar dataKey="enq" name="enq" fill={COLORS.enq}
                 radius={view==="stacked"?[0,0,0,0]:[5,5,0,0]}
                 stackId={view==="stacked"?"a":undefined}/>
@@ -162,11 +171,12 @@ export default function App() {
         </ResponsiveContainer>
       </div>
 
+      {/* Table */}
       <div style={{ background:"#1e293b", borderRadius:12, border:"1px solid #334155", overflow:"hidden" }}>
         <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
           <thead>
             <tr style={{ background:"#0f172a" }}>
-              {["Wk","Dates","Enquiry (LO)","Applications (OA+LO)","Total","App Rate"].map((h,i) => (
+              {["Wk","Dates","Enquiry (LO)","Applications (OA)","Total","App Rate"].map((h,i) => (
                 <th key={h} style={{ padding:"11px 14px", textAlign:i<=1?"left":"center",
                   color:"#64748b", fontWeight:600, fontSize:11, textTransform:"uppercase",
                   letterSpacing:"0.06em", borderBottom:"1px solid #334155" }}>{h}</th>
@@ -175,16 +185,16 @@ export default function App() {
           </thead>
           <tbody>
             {data.map((row, i) => {
-              const wowEnq  = i>0 ? row.enq - data[i-1].enq : null;
-              const wowApp  = i>0 ? row.app - data[i-1].app : null;
+              const wowEnq = i>0 ? row.enq - data[i-1].enq : null;
+              const wowApp = i>0 ? row.app - data[i-1].app : null;
               const rateHigh = row.appRate >= 60 && row.total > 0;
               return (
                 <tr key={i} style={{ borderBottom:i<data.length-1?"1px solid #1e2d3d":"none",
                   background:i%2===0?"#1e293b":"#162032" }}>
-                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>
-                    W{i+1}{!row.full&&<span style={{ color:"#fbbf24", marginLeft:3 }}>⚡</span>}
+                  <td style={{ padding:"11px 14px", color:"#64748b", fontWeight:700 }}>W{i+1}</td>
+                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>
+                    {row.week.replace(" ⚡","")}{!row.full&&<span style={{ marginLeft:5, color:"#fbbf24", fontSize:10 }}>⚡</span>}
                   </td>
-                  <td style={{ padding:"11px 14px", color:"#cbd5e1" }}>{row.week}</td>
                   <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:COLORS.enq, fontSize:15 }}>
                     {row.enq}
                     {wowEnq!==null&&<span style={{ fontSize:10, marginLeft:4, color:wowEnq>0?"#34d399":wowEnq<0?"#f87171":"#64748b" }}>
@@ -224,9 +234,9 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
-        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) + CTID771 (LO) application forms combined.
-        1 APP_771 contact (9 Jun) excluded as pre-window. All weeks freshly processed from XLSX exports 11 Aug 2026.
-        App rate % is not a standard funnel conversion rate. Source: HubSpot XLSX exports, 11 Aug 2026.
+        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
+        All weeks freshly processed from 17 Aug 2026 XLSX exports. App rate % is not a standard funnel conversion rate.
+        Source: HubSpot XLSX exports, 17 Aug 2026.
       </p>
     </div>
   );
