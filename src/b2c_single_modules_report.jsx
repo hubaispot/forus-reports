@@ -4,9 +4,12 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 18 Aug 2026) ─────────────────────────────────────
+// ─── RAW DEAL DATA (fetched 19 Aug 2026) ─────────────────────────────────────
 // Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
 // Exclusions: 21 deals removed (tests/junk/dups/untracked). Barista/FAR/CFRC won nulls → €170.
+// ─── RAW DEAL DATA (fetched 20 Aug 2026) ─────────────────────────────────────
+// Stages: 5381718219 + 5381718220 = Application received | 756357056 = Won
+// Exclusions: 25 deals removed. Barista/FAR/CFRC won nulls → €170.
 const RAW_DEALS = [
   { id:"505205340373", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) for Yvonne Nixon", createdate:"2026-06-02T22:05:18Z", stage:"app", amount:455 },
   { id:"505719685355", dealname:"Intellectual Disability Studies - Online Anytime 1:1 (5N1652 OA DSC) for Kania Kania", createdate:"2026-06-09T09:43:02Z", stage:"won", amount:295 },
@@ -233,9 +236,30 @@ const RAW_DEALS = [
   { id:"517142558913", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Caoimhe Reilly", createdate:"2026-08-17T19:10:34Z", stage:"won", amount:295 },
   { id:"517328967893", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Bray for Alison Boyce", createdate:"2026-08-17T21:30:15Z", stage:"won", amount:440 },
   { id:"517272477918", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for Kate Quinn", createdate:"2026-08-17T22:16:15Z", stage:"app", amount:295 },
-  { id:"517307384038", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Rebecca Gibney Armstrong", createdate:"2026-08-18T06:01:13Z", stage:"app", amount:440 },
-  { id:"517256741058", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - New Ross for Fern Bohill", createdate:"2026-08-18T06:27:29Z", stage:"app", amount:440 },
-  { id:"517300188406", dealname:"Human Resources Management - Online Anytime 1:1 (6N3750 OA DBU) -  for Ciara Caslin", createdate:"2026-08-18T07:32:44Z", stage:"app", amount:380 },
+  { id:"517267765468", dealname:"Human Resources Management - Online Anytime 1:1 (6N3750 OA DBU) -  for Ciara Caslin", createdate:"2026-08-18T09:33:49Z", stage:"app", amount:380 },
+  { id:"517258759365", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Melanie Boazman", createdate:"2026-08-18T09:39:38Z", stage:"app", amount:440 },
+  { id:"517332961499", dealname:"Human Resources Management - Online Anytime 1:1 (6N3750 OA DBU) -  for Ciara Caslin", createdate:"2026-08-18T10:33:21Z", stage:"won", amount:380 },
+  { id:"517239920833", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Jade Oladipo", createdate:"2026-08-18T11:34:48Z", stage:"app", amount:295 },
+  { id:"517287497919", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Fiona Collins", createdate:"2026-08-18T12:20:57Z", stage:"app", amount:440 },
+  { id:"517431791844", dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DSC) -  for Amanda Hackett", createdate:"2026-08-18T14:09:57Z", stage:"won", amount:295 },
+  { id:"517466641622", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Jorja Yates", createdate:"2026-08-18T14:14:44Z", stage:"app", amount:440 },
+  { id:"517507449020", dealname:"Human Growth and Development - Online Anytime 1:1 (5N1279 OA DHC) -  for Maryan ahmed Mohamud", createdate:"2026-08-18T15:54:29Z", stage:"app", amount:295 },
+  { id:"517413922030", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Mullingar for Noelle Slowey", createdate:"2026-08-18T16:19:56Z", stage:"app", amount:440 },
+  { id:"517477645505", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Navan for Lisa McCabe", createdate:"2026-08-18T18:23:13Z", stage:"app", amount:440 },
+  { id:"517464509650", dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DHC) -  for Donna Kelly", createdate:"2026-08-18T20:05:02Z", stage:"won", amount:295 },
+  { id:"517490761942", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Shauna Mcdonnell", createdate:"2026-08-19T07:52:20Z", stage:"app", amount:440 },
+  { id:"517432612059", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Rebecca Gibney Armstrong", createdate:"2026-08-19T09:17:40Z", stage:"app", amount:440 },
+  { id:"517517197557", dealname:"Care Support - Online Anytime 1:1 (5N0758 OA DHC) -  for Lydia Rodgers", createdate:"2026-08-19T13:25:14Z", stage:"won", amount:295 },
+  { id:"517432909002", dealname:"Psychology - Online Anytime 1:1 (5N0754 OA DHC) -  for Virginia Heneghan", createdate:"2026-08-19T14:01:40Z", stage:"won", amount:295 },
+  { id:"517467616448", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Sam Crawford", createdate:"2026-08-19T14:31:29Z", stage:"app", amount:440 },
+  { id:"517527524571", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Tahlya Kelly", createdate:"2026-08-19T14:34:53Z", stage:"app", amount:295 },
+  { id:"517429147884", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Laura Keegan", createdate:"2026-08-19T14:46:52Z", stage:"won", amount:440 },
+  { id:"517595211977", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Grainne Faulkner", createdate:"2026-08-19T16:39:05Z", stage:"won", amount:440 },
+  { id:"517635035348", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Maureen Canavan", createdate:"2026-08-19T16:41:32Z", stage:"app", amount:440 },
+  { id:"517653057755", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Michelle McCaul", createdate:"2026-08-19T17:09:26Z", stage:"app", amount:440 },
+  { id:"517633286362", dealname:"Special Needs Assisting - Classroom Near You (6N1957 CNY DSN) - Portlaoise for Andrea Hamm", createdate:"2026-08-19T17:15:03Z", stage:"app", amount:440 },
+  { id:"517637959914", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Jack Moore", createdate:"2026-08-19T21:38:51Z", stage:"won", amount:295 },
+  { id:"517593017538", dealname:"Nutrition - Online Anytime 1:1 (5N2006 OA DHC) -  for Niamh Kelly", createdate:"2026-08-20T04:22:52Z", stage:"won", amount:295 },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -292,7 +316,6 @@ function parseDeal(d) {
   }
 
   const dt     = new Date(d.createdate);
-  // Normalise amount: HubSpot returns a string or null; store as number (0 if missing)
   const amount = parseFloat(d.amount) || 0;
 
   return { ...d, courseName, courseLabel, courseCode, level, delivCode, delivery, dept, deptCode, location, dt, amount };
@@ -310,7 +333,7 @@ const WEEKS = [
   { wk:"W6",  label:"27 Jul–2 Aug",      start:new Date("2026-07-27T00:00:00+01:00"), end:new Date("2026-08-02T23:59:59+01:00"), full:true  },
   { wk:"W7",  label:"3 Aug–9 Aug",       start:new Date("2026-08-03T00:00:00+01:00"), end:new Date("2026-08-09T23:59:59+01:00"), full:true  },
   { wk:"W8",  label:"10 Aug–16 Aug",     start:new Date("2026-08-10T00:00:00+01:00"), end:new Date("2026-08-16T23:59:59+01:00"), full:true  },
-  { wk:"W9",  label:"17 Aug–18 Aug ⚡",  start:new Date("2026-08-17T00:00:00+01:00"), end:new Date("2026-08-18T09:39:00+01:00"), full:false },
+  { wk:"W9",  label:"17 Aug–20 Aug ⚡",  start:new Date("2026-08-17T00:00:00+01:00"), end:new Date("2026-08-20T06:00:00+01:00"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -515,7 +538,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          22 Jun – 18 Aug 2026 · deal create date · ⚡ W9 partial week
+          22 Jun – 20 Aug 2026 · deal create date · ⚡ W9 partial week
         </p>
       </div>
 
@@ -795,7 +818,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 18 Aug 2026 · deal create date as week anchor
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 20 Aug 2026 · deal create date as week anchor
       </p>
     </div>
   );
