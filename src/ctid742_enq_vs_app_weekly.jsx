@@ -6,21 +6,21 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Fixed window: Mon 15 Jun – Sun 16 Aug 2026 (W1–W9, all 9 full weeks)
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
+// W1 = Mon 22 Jun 2026 · W8 = Sun 16 Aug 2026 · W9 = 17–21 Aug 2026 ⚡ partial
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
-// W1–W8 confirmed match against 14 Aug run (no drift) · W9 freshly processed 17 Aug 2026
-// 108 unique enquiries · 115 unique apps · no phone/email dupes detected
+// Freshly processed 21 Aug 2026 · 117 unique enquiries · 109 unique apps · no dupes detected
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",     enq: 3,  app: 15, full: true },
-  { week: "22–28 Jun",     enq: 16, app: 14, full: true },
-  { week: "29 Jun–5 Jul",  enq: 24, app: 22, full: true },
-  { week: "6–12 Jul",      enq: 16, app: 17, full: true },
-  { week: "13–19 Jul",     enq: 11, app: 13, full: true },
-  { week: "20–26 Jul",     enq: 8,  app: 10, full: true },
-  { week: "27 Jul–2 Aug",  enq: 5,  app: 6,  full: true },
-  { week: "3–9 Aug",       enq: 12, app: 8,  full: true },
-  { week: "10–16 Aug",     enq: 13, app: 10, full: true },
+  { week: "22–28 Jun",     enq: 16, app: 14, full: true  },
+  { week: "29 Jun–5 Jul",  enq: 24, app: 22, full: true  },
+  { week: "6–12 Jul",      enq: 16, app: 17, full: true  },
+  { week: "13–19 Jul",     enq: 11, app: 13, full: true  },
+  { week: "20–26 Jul",     enq: 8,  app: 10, full: true  },
+  { week: "27 Jul–2 Aug",  enq: 5,  app: 6,  full: true  },
+  { week: "3–9 Aug",       enq: 12, app: 8,  full: true  },
+  { week: "10–16 Aug",     enq: 13, app: 10, full: true  },
+  { week: "17–21 Aug ⚡",  enq: 12, app: 9,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -103,7 +103,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 16 Aug 2026 · 9 full weeks · Unique contacts · global dedup per form
+          22 Jun – 21 Aug 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -113,10 +113,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 holds a <strong style={{ color: "#f1f5f9" }}>consistently strong {overallApp}% application rate</strong> across
-        9 full weeks. W1 (15–21 Jun) leads at 83% 🔥 with applications dominating from day one.
-        Peak volume week is W3 (29 Jun–5 Jul) at 46 submissions. Activity softened through Jul–Aug
-        but W9 (10–16 Aug) closed solidly at 23 submissions, confirming sustained interest through mid-August.
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>steady {overallApp}% overall application rate</strong> across
+        8 full weeks plus a partial W9. Peak volume was W2 (29 Jun–5 Jul) at 46 submissions.
+        Enquiries lead applications in most weeks. W9 (17–21 Aug ⚡) is tracking at 21 submissions
+        with 3 days still to run — on pace with recent weeks.
       </div>
 
       {/* KPIs */}
@@ -124,7 +124,7 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
           { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app },
-          { label: "Total Submissions",  value: total,          sub: "9 full weeks",        color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,          sub: "8 wks + W9 ⚡",       color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",        color: "#34d399"  },
         ].map(k => (
           <div key={k.label} style={{
@@ -209,7 +209,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 4, color: "#fbbf24", fontSize: 10 }}>⚡ partial</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
                     {wowEnq !== null && (
@@ -246,7 +248,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 17 Aug 2026 · W1–W8 confirmed match against 14 Aug run · W9 freshly processed · no duplicates detected
+        Updated 21 Aug 2026 · W1–W8 fully processed from fresh exports · W9 partial (Mon–Fri) · no duplicates detected
       </p>
 
     </div>

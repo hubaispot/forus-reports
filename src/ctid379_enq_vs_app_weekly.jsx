@@ -4,24 +4,21 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ── SUBSTITUTION GUIDE ───────────────────────────────────────────────────────
-// Replace the data rows below with the actual fetched values.
-// All weeks are Mon–Sun Irish time (IST/BST).
-// • full: true  → completed week, counts are final
-// • full: false → current partial week (include_current_week = true only)
-//                 append " ⚡" to the week label e.g. "9–11 Jun ⚡"
-// If include_current_week = false, all 8 rows have full: true — no ⚡ row.
+// ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
+// Generated: 21 Aug 2026 | W1 22 Jun → W9 17–21 Aug 2026 (W9 partial ⚡)
+// ENQ: 79 raw → 79 unique | APP: 15 raw → 14 unique (1 dup removed)
+// 3 ENQ rows outside W1–W8 window assigned to W9 partial
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",      enq: 3,  app: 5,  full: true  },
-  { week: "22–28 Jun",      enq: 8,  app: 2,  full: true  },
-  { week: "29 Jun–5 Jul",   enq: 18, app: 3,  full: true  },
-  { week: "6–12 Jul",       enq: 8,  app: 1,  full: true  },
-  { week: "13–19 Jul",      enq: 9,  app: 2,  full: true  },
-  { week: "20–26 Jul",      enq: 2,  app: 0,  full: true  },
-  { week: "27 Jul–2 Aug",   enq: 14, app: 4,  full: true  },
-  { week: "3–9 Aug",        enq: 10, app: 0,  full: true  },
-  { week: "10–16 Aug ⚡",   enq: 7,  app: 2,  full: false },
+  { week: "22 Jun–28 Jun",    enq: 8,  app: 2, full: true  },
+  { week: "29 Jun–5 Jul",     enq: 18, app: 3, full: true  },
+  { week: "6 Jul–12 Jul",     enq: 8,  app: 1, full: true  },
+  { week: "13 Jul–19 Jul",    enq: 9,  app: 2, full: true  },
+  { week: "20 Jul–26 Jul",    enq: 2,  app: 0, full: true  },
+  { week: "27 Jul–2 Aug",     enq: 14, app: 4, full: true  },
+  { week: "3 Aug–9 Aug",      enq: 10, app: 0, full: true  },
+  { week: "10 Aug–16 Aug",    enq: 7,  app: 2, full: true  },
+  { week: "17 Aug–21 Aug ⚡", enq: 3,  app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -61,7 +58,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
     </div>
   );
 };
@@ -92,31 +89,28 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 16 Aug 2026 · Unique contacts · last form only per contact
+          22 Jun – 21 Aug 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
       {/* Notable insight banner */}
-      <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
+      <div style={{ background:"rgba(251,146,60,0.08)", border:"1px solid #fb923c", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        Enquiry volume dominates — <strong style={{ color:"#f1f5f9" }}>overall app rate is {overallApp}%</strong> across W1–W8.
-        W3 (29 Jun–5 Jul) was the peak enquiry week with 18 submissions. W6 and W8 saw zero applications,
-        while W7 (27 Jul–2 Aug) delivered a secondary surge of 14 enquiries and 4 applications.
+        <strong style={{ color:"#fb923c" }}>📌 Note: </strong>
+        CTID379 application counts are likely <strong style={{ color:"#f1f5f9" }}>understated</strong> —
+        applications may be routing to the B2C Single Modules pipeline rather than the CTID379 application form.
+        Cross-reference the B2C Single Modules report for a fuller picture of CTID379 applications.
+        Overall app rate from this form: <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:`${fullWeeks.length} full weeks`,  color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          // Last KPI card: partial week if full:false, otherwise show W8 total
-          ...(data[data.length-1].full
-            ? [{ label:`W${data.length} (full week)`, value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" }]
-            : [{ label:`This week (Mon–${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][new Date().getDay()===0?6:new Date().getDay()-1]})`, value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ partial", color:"#fbbf24" }]
-          ),
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk (W1–W8)`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"W1–W9",                      color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",               color:"#34d399"   },
+          { label:"This week (Mon–Fri)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -156,7 +150,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,10]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,22]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -225,6 +219,11 @@ export default function App() {
           </tbody>
         </table>
       </div>
+
+      {/* Footer */}
+      <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
+        CTID379 · SNA L6 LO · Generated 21 Aug 2026 · ENQ 79 raw → 79 unique · APP 15 raw → 14 unique (1 dup removed: Dawn O'Rourke) · W9 partial ⚡ Mon–Fri
+      </p>
     </div>
   );
 }

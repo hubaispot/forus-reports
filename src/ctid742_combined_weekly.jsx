@@ -6,23 +6,23 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Fixed window: Mon 15 Jun – Sun 16 Aug 2026 (W1–W9, all 9 full weeks)
-// Forms: from ctid742_enq_vs_app_weekly.jsx (confirmed 17 Aug 2026)
-// Paythen: Courses_Expected_Revenue_CTID__10_.xlsx (Filtered sheet)
-//   45 in-window regs · 45 pre-window regs (1 Apr–12 Jun, €32,231.20) excluded
-//   0 email dupes · 0 jean rows · 4 non-Registered excluded
-// W1–W8 exact match vs 14 Aug run
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
+// W1 = Mon 22 Jun 2026 · W8 = Sun 16 Aug 2026 · W9 = 17–21 Aug 2026 ⚡ partial
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 21 Aug 2026)
+// Paythen: Courses_Expected_Revenue_CTID__2_.xlsx (Filtered sheet)
+//   43 in-window regs · 52 pre-window regs (1 Apr–18 Jun, €37,323.90) excluded
+//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 1 App form o/st excluded
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "15–21 Jun",     forms: 18, regs: 7,  revenue: 5092.70, full: true },
-  { week: "22–28 Jun",     forms: 30, regs: 6,  revenue: 4313.80, full: true },
-  { week: "29 Jun–5 Jul",  forms: 46, regs: 13, revenue: 9361.55, full: true },
-  { week: "6–12 Jul",      forms: 33, regs: 5,  revenue: 3624.80, full: true },
-  { week: "13–19 Jul",     forms: 24, regs: 3,  revenue: 2177.39, full: true },
-  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true },
-  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true },
-  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true },
-  { week: "10–16 Aug",     forms: 23, regs: 2,  revenue: 1378.00, full: true },
+  { week: "22–28 Jun",     forms: 30, regs: 6,  revenue: 4313.80, full: true  },
+  { week: "29 Jun–5 Jul",  forms: 46, regs: 13, revenue: 9361.55, full: true  },
+  { week: "6–12 Jul",      forms: 33, regs: 5,  revenue: 3624.80, full: true  },
+  { week: "13–19 Jul",     forms: 24, regs: 3,  revenue: 2177.39, full: true  },
+  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true  },
+  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true  },
+  { week: "10–16 Aug",     forms: 23, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "17–21 Aug ⚡",  forms: 21, regs: 5,  revenue: 3600.34, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -102,7 +102,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 16 Aug 2026 · 9 full weeks · 45 pre-window regs (€32,231.20) excluded
+          22 Jun – 21 Aug 2026 · 8 full weeks + W9 partial ⚡ · 52 pre-window regs (€37,323.90) excluded
         </p>
       </div>
 
@@ -112,10 +112,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W3 (29 Jun–5 Jul) remains the standout week — <strong style={{ color: "#f1f5f9" }}>46 forms and 13 registrations</strong> generating
-        €9,361.55 (29% of in-window revenue). Conversion rate peaks at 38.9% in W1 before softening.
-        W9 (10–16 Aug) CR of 8.7% is low but expected — Paythen payments for late-week forms typically
-        post within days and may not yet be fully reflected. Overall CR is {overallCR}% across 9 full weeks.
+        W2 (29 Jun–5 Jul) is the standout week — <strong style={{ color: "#f1f5f9" }}>46 forms and 13 registrations</strong> generating
+        €9,361.55 (30% of in-window revenue). Overall CR is {overallCR}% across 8 full weeks.
+        W9 (17–21 Aug ⚡) is tracking at 5 registrations with 3 days still to run — revenue already at €3,600.34,
+        on pace to be the second-strongest revenue week if momentum holds.
       </div>
 
       {/* KPI cards */}
@@ -211,7 +211,9 @@ export default function App() {
                   background: i % 2 === 0 ? "#1e293b" : "#162032"
                 }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 4, color: "#fbbf24", fontSize: 10 }}>⚡ partial</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700, color: COLORS.forms, fontSize: 15 }}>
                     {row.forms}
                     {wowForms !== null && (
@@ -250,7 +252,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 17 Aug 2026 · 45 in-window registrations · 45 pre-window regs (€32,231.20) excluded · no duplicate emails detected
+        Updated 21 Aug 2026 · 43 in-window registrations · 52 pre-window regs (€37,323.90) excluded · no duplicate emails detected
       </p>
 
     </div>
