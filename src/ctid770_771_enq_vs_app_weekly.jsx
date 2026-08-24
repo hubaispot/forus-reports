@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "15 Jun–21 Jun",    enq: 2,  app: 9,  full: true  },
   { week: "22 Jun–28 Jun",    enq: 2,  app: 7,  full: true  },
   { week: "29 Jun–5 Jul",     enq: 4,  app: 10, full: true  },
   { week: "6 Jul–12 Jul",     enq: 5,  app: 8,  full: true  },
   { week: "13 Jul–19 Jul",    enq: 4,  app: 10, full: true  },
   { week: "20 Jul–26 Jul",    enq: 4,  app: 9,  full: true  },
-  { week: "27 Jul–2 Aug",     enq: 4,  app: 6,  full: true  },
+  { week: "27 Jul–2 Aug",     enq: 4,  app: 5,  full: true  },
   { week: "3 Aug–9 Aug",      enq: 3,  app: 4,  full: true  },
-  { week: "10 Aug–16 Aug ⚡", enq: 4,  app: 8,  full: false },
+  { week: "10 Aug–16 Aug",    enq: 4,  app: 7,  full: true  },
+  { week: "17 Aug–23 Aug ⚡", enq: 4,  app: 10, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -84,18 +84,8 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 16 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts · last form only per contact
+          22 Jun – 23 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts · last form only per contact
         </p>
-      </div>
-
-      {/* Asymmetry notice banner */}
-      <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
-        padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
-        Enquiries are <strong style={{ color:"#f1f5f9" }}>LO (CTID771) only</strong>.
-        Applications shown are <strong style={{ color:"#f1f5f9" }}>OA (CTID770) only</strong>.
-        App rate % reflects this asymmetry and is not directly comparable to courses where enquiry
-        and application forms are matched 1:1.
       </div>
 
       {/* Notable insight banner */}
@@ -104,8 +94,8 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        7 of 8 full weeks exceeded 60% app rate 🔥. Applications eased in W7–W8 (6 and 4)
-        after running 9–10 for several weeks — W9 partial has already recovered to 8.
+        6 of 8 full weeks exceeded 60% app rate 🔥. Applications dipped in W6–W7 (5 and 4)
+        before recovering strongly — W8 closed at 7 and W9 ⚡ is already at 10.
         Enquiries have been steady at 2–5/week throughout.
       </div>
 
@@ -116,7 +106,7 @@ export default function App() {
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
           { label:"Total Submissions",           value:total,          sub:"8 wks + W9 ⚡",      color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W9 ⚡ (10–16 Aug)",           value:data[8].total,  sub:`${data[8].enq}e / ${data[8].app}a`, color:"#fbbf24" },
+          { label:"W9 ⚡ (17–23 Aug)",           value:data[8].total,  sub:`${data[8].enq}e / ${data[8].app}a`, color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -235,8 +225,8 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks freshly processed from 17 Aug 2026 XLSX exports. App rate % is not a standard funnel conversion rate.
-        Source: HubSpot XLSX exports, 17 Aug 2026.
+        All weeks freshly processed from 24 Aug 2026 XLSX exports. App rate % is not a standard funnel conversion rate.
+        Source: HubSpot XLSX exports, 24 Aug 2026.
       </p>
     </div>
   );

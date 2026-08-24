@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "15 Jun–21 Jun",    forms: 11, regs: 4, revenue: 3228.75,  full: true  },
   { week: "22 Jun–28 Jun",    forms:  9, regs: 3, revenue: 2654.00,  full: true  },
   { week: "29 Jun–5 Jul",     forms: 14, regs: 4, revenue: 2782.50,  full: true  },
   { week: "6 Jul–12 Jul",     forms: 13, regs: 6, revenue: 4791.25,  full: true  },
   { week: "13 Jul–19 Jul",    forms: 14, regs: 7, revenue: 6954.15,  full: true  },
   { week: "20 Jul–26 Jul",    forms: 13, regs: 5, revenue: 4287.15,  full: true  },
-  { week: "27 Jul–2 Aug",     forms: 10, regs: 1, revenue: 1155.00,  full: true  },
+  { week: "27 Jul–2 Aug",     forms:  9, regs: 1, revenue: 1155.00,  full: true  },
   { week: "3 Aug–9 Aug",      forms:  7, regs: 3, revenue: 3147.90,  full: true  },
-  { week: "10 Aug–16 Aug ⚡", forms: 12, regs: 5, revenue: 4930.00,  full: false },
+  { week: "10 Aug–16 Aug",    forms: 11, regs: 5, revenue: 4930.00,  full: true  },
+  { week: "17 Aug–23 Aug ⚡", forms: 14, regs: 2, revenue: 1585.50,  full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -90,29 +90,19 @@ export default function App() {
           Combined Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          15 Jun – 16 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
+          22 Jun – 23 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
         </p>
-      </div>
-
-      {/* Asymmetry banner */}
-      <div style={{ background:"rgba(251,191,36,0.08)", border:"1px solid #fbbf24", borderRadius:8,
-        padding:"10px 14px", marginBottom:16, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
-        <strong style={{ color:"#fbbf24" }}>⚠️ Merged report — asymmetric forms: </strong>
-        Enquiry figures are <strong style={{ color:"#f1f5f9" }}>CTID771 (LO) only</strong> — CTID770 (OA) has no enquiry form.
-        Application figures include <strong style={{ color:"#f1f5f9" }}>both CTID770 + CTID771</strong>.
-        Forms total = LO enquiries + (OA + LO) applications. All Paythen registrations are CTID770 (OA) — CTID771 has no Paythen rows.
-        Conv. Rate % reflects this combined funnel and is not directly comparable to courses with matched 1:1 forms.
       </div>
 
       {/* Insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Peak week was <strong style={{ color:"#f1f5f9" }}>W5 (13–19 Jul)</strong> with 7 registrations and
-        <strong style={{ color:"#f1f5f9" }}> €6,954</strong> revenue. W7 (27 Jul–2 Aug) was a notable dip — only 1 registration (€1,155).
+        Peak week was <strong style={{ color:"#f1f5f9" }}>W4 (13–19 Jul)</strong> with 7 registrations and
+        <strong style={{ color:"#f1f5f9" }}> €6,954</strong> revenue. W6 (27 Jul–2 Aug) was a notable dip — only 1 registration (€1,155).
         Overall conversion rate is <strong style={{ color:"#f1f5f9" }}>{overallCR}%</strong> across {totalForms} form submissions,
         yielding <strong style={{ color:"#f1f5f9" }}>€{totalRev.toLocaleString("en-IE", {minimumFractionDigits:2})}</strong> expected revenue.
-        39 pre-window registrations (Apr–Jun, €33,024) excluded per standing instruction.
+        43 pre-window registrations (Apr–21 Jun, €36,531) excluded per standing instruction.
       </div>
 
       {/* KPIs */}
@@ -245,8 +235,8 @@ export default function App() {
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) + CTID771 (LO) applications combined.
         Registrations = CTID770 (OA) Paythen rows only (CTID771 has no Paythen registrations in this file).
-        39 pre-window registrations (Apr–14 Jun 2026, €33,023.63) excluded per standing instruction.
-        Sources: HubSpot XLSX exports + Paythen Courses Expected Revenue CTID, 17 Aug 2026.
+        43 pre-window registrations (Apr–21 Jun 2026) excluded per standing instruction.
+        Sources: HubSpot XLSX exports + Paythen Courses Expected Revenue CTID, 24 Aug 2026.
       </p>
     </div>
   );

@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "15–21 Jun",    enq: 3,  app: 7,  full: true },
-  { week: "22–28 Jun",    enq: 4,  app: 12, full: true },
+  { week: "22–28 Jun",    enq: 4,  app: 11, full: true },
   { week: "29 Jun–5 Jul", enq: 3,  app: 7,  full: true },
-  { week: "6–12 Jul",     enq: 8,  app: 5,  full: true },
+  { week: "6–12 Jul",     enq: 7,  app: 5,  full: true },
   { week: "13–19 Jul",    enq: 5,  app: 6,  full: true },
-  { week: "20–26 Jul",    enq: 4,  app: 2,  full: true },
+  { week: "20–26 Jul",    enq: 4,  app: 1,  full: true },
   { week: "27 Jul–2 Aug", enq: 2,  app: 5,  full: true },
   { week: "3–9 Aug",      enq: 5,  app: 5,  full: true },
-  { week: "10–16 Aug",    enq: 6,  app: 11, full: true },
+  { week: "10–16 Aug",    enq: 6,  app: 10, full: true },
+  { week: "17–23 Aug",    enq: 7,  app: 10, full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -88,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          15 Jun – 16 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
+          22 Jun – 23 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -97,12 +97,11 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Applications lead overall with a <strong style={{ color: "#f1f5f9" }}>60% app rate across 9 weeks</strong>.
-        W2 (22–28 Jun) was the standout: 16 total, 12 applications (75% 🔥). W9 (10–16 Aug) shows a strong 
-        late-summer surge — 17 submissions, 11 applications (65% 🔥), the highest weekly total in the period. 
-        W4 (6–12 Jul) reversed the pattern with enquiries at their peak (8) and a lower 38% app rate, 
-        suggesting a wave of exploratory interest. W6 (20–26 Jul) was the quietest week (6 total) but 
-        recovered sharply in W7–W9.
+        Applications dominate with a <strong style={{ color: "#f1f5f9" }}>58% app rate across 9 full weeks</strong>.
+        W1 (22–28 Jun) was the standout opener: 15 total, 11 applications (73% 🔥). W9 (17–23 Aug) closed 
+        strongly — 17 submissions, 10 applications (59%), the joint-highest weekly total alongside W8. 
+        W5 (20–26 Jul) was the quietest week (5 total, 20% app rate), suggesting a mid-summer lull. 
+        W8 (10–16 Aug) marked the strongest late-summer recovery with 62% 🔥.
       </div>
 
       {/* KPIs */}
@@ -110,9 +109,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,   color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "9 full weeks",        color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,            sub: "9 full weeks",         color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",        color: "#34d399"  },
-          { label: "Best Week",          value: "W9",             sub: "17 total · 10–16 Aug", color: "#fbbf24" },
+          { label: "Best Week",          value: "W9",             sub: "17 total · 17–23 Aug", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -242,8 +241,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 15 Jun – 16 Aug 2026 · IST boundaries ·
-        Unique contacts (last submission per contact) · 40 ENQ / 60 APP · No test records excluded
+        CTID786 · CS &amp; COOP LO L5 · 22 Jun – 23 Aug 2026 · IST boundaries ·
+        Unique contacts (last submission per contact) · 43 ENQ / 60 APP · No test records excluded
       </p>
     </div>
   );
