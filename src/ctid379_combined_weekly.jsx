@@ -5,20 +5,20 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 21 Aug 2026 | W1 22 Jun → W9 17–21 Aug 2026 (W9 partial ⚡)
-// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx
+// Generated: 25 Aug 2026 | W1 22 Jun → W9 17–23 Aug 2026 (all full weeks)
+// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (W7 +1, W8 -1 vs prior)
 // Paythen: 69 Registered rows → 32 in-window (37 pre-window excluded)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "22 Jun–28 Jun",    forms: 10, regs: 3, revenue: 1363.66, full: true  },
-  { week: "29 Jun–5 Jul",     forms: 21, regs: 7, revenue: 3205.49, full: true  },
-  { week: "6 Jul–12 Jul",     forms:  9, regs: 2, revenue:  916.83, full: true  },
-  { week: "13 Jul–19 Jul",    forms: 11, regs: 5, revenue: 2287.49, full: true  },
-  { week: "20 Jul–26 Jul",    forms:  2, regs: 0, revenue:    0.00, full: true  },
-  { week: "27 Jul–2 Aug",     forms: 18, regs: 5, revenue: 2281.83, full: true  },
-  { week: "3 Aug–9 Aug",      forms: 10, regs: 2, revenue:  910.00, full: true  },
-  { week: "10 Aug–16 Aug",    forms:  9, regs: 6, revenue: 2742.49, full: true  },
-  { week: "17 Aug–21 Aug ⚡", forms:  3, regs: 2, revenue:  923.66, full: false },
+  { week: "22 Jun–28 Jun", forms: 10, regs: 3, revenue: 1363.66, full: true },
+  { week: "29 Jun–5 Jul",  forms: 21, regs: 7, revenue: 3205.49, full: true },
+  { week: "6 Jul–12 Jul",  forms:  9, regs: 2, revenue:  916.83, full: true },
+  { week: "13 Jul–19 Jul", forms: 11, regs: 5, revenue: 2287.49, full: true },
+  { week: "20 Jul–26 Jul", forms:  2, regs: 0, revenue:    0.00, full: true },
+  { week: "27 Jul–2 Aug",  forms: 18, regs: 5, revenue: 2281.83, full: true },
+  { week: "3 Aug–9 Aug",   forms: 11, regs: 2, revenue:  910.00, full: true },
+  { week: "10 Aug–16 Aug", forms:  8, regs: 6, revenue: 2742.49, full: true },
+  { week: "17 Aug–23 Aug", forms:  3, regs: 2, revenue:  923.66, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +((d.regs / d.forms) * 100).toFixed(1) : 0,
@@ -78,7 +78,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("formsRegs");
+  const [view, setView] = useState("revenue");
 
   return (
     <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
@@ -93,7 +93,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          22 Jun – 21 Aug 2026 · W1–W8 complete + W9 partial ⚡ · Paythen: 37 pre-window registrations excluded
+          22 Jun – 23 Aug 2026 · W1–W9 all full weeks · Paythen: 37 pre-window registrations excluded
         </p>
       </div>
 
@@ -110,8 +110,8 @@ export default function App() {
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk (W1–W8)`,  color: COLORS.forms },
-          { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W8)`,   color: COLORS.regs  },
+          { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk (W1–W9)`,  color: COLORS.forms },
+          { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W9)`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",                color: COLORS.cr    },
           { label: "Total Expected Rev.", value: fmt(totalRev),   sub: "W1–W9 · Paythen",             color: COLORS.rev   },
         ].map(k => (
@@ -126,9 +126,9 @@ export default function App() {
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <Tab id="revenue"   active={view === "revenue"}   onClick={setView}>Expected Revenue</Tab>
         <Tab id="formsRegs" active={view === "formsRegs"} onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"        active={view === "cr"}        onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="revenue"   active={view === "revenue"}   onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
@@ -231,8 +231,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID379 · SNA L6 LO · Generated 21 Aug 2026 · Forms: ENQ 79 + APP 14 unique contacts ·
-        Paythen: 69 Registered → 32 in-window · 37 pre-window excluded (before 22 Jun) · W9 partial ⚡ Mon–Fri
+        CTID379 · SNA L6 LO · Generated 25 Aug 2026 · Forms: ENQ 79 + APP 14 unique contacts ·
+        Paythen: 69 Registered → 32 in-window · 37 pre-window excluded (before 22 Jun) · W1–W9 all full weeks · W7 forms +1 / W8 forms -1 vs prior run
       </p>
     </div>
   );
