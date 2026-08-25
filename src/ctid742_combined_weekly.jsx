@@ -6,23 +6,22 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
-// W1 = Mon 22 Jun 2026 · W8 = Sun 16 Aug 2026 · W9 = 17–21 Aug 2026 ⚡ partial
-// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 21 Aug 2026)
-// Paythen: Courses_Expected_Revenue_CTID__2_.xlsx (Filtered sheet)
-//   43 in-window regs · 52 pre-window regs (1 Apr–18 Jun, €37,323.90) excluded
-//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 1 App form o/st excluded
+// Window: W1 Mon 22 Jun 2026 → W9 Sun 23 Aug 2026 · 9 completed full weeks
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 25 Aug 2026)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered.csv
+//   43 in-window regs · 52 pre-window regs (Apr–18 Jun) excluded
+//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 1 App form o/st + 1 blank excluded
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "22–28 Jun",     forms: 30, regs: 6,  revenue: 4313.80, full: true  },
-  { week: "29 Jun–5 Jul",  forms: 46, regs: 13, revenue: 9361.55, full: true  },
-  { week: "6–12 Jul",      forms: 33, regs: 5,  revenue: 3624.80, full: true  },
-  { week: "13–19 Jul",     forms: 24, regs: 3,  revenue: 2177.39, full: true  },
-  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true  },
-  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true  },
-  { week: "10–16 Aug",     forms: 23, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "17–21 Aug ⚡",  forms: 21, regs: 5,  revenue: 3600.34, full: false },
+  { week: "22–28 Jun",     forms: 31, regs: 6,  revenue: 4313.80, full: true },
+  { week: "29 Jun–5 Jul",  forms: 46, regs: 13, revenue: 9361.55, full: true },
+  { week: "6–12 Jul",      forms: 33, regs: 5,  revenue: 3624.80, full: true },
+  { week: "13–19 Jul",     forms: 23, regs: 3,  revenue: 2177.39, full: true },
+  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true },
+  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true },
+  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true },
+  { week: "10–16 Aug",     forms: 23, regs: 2,  revenue: 1378.00, full: true },
+  { week: "17–23 Aug",     forms: 23, regs: 5,  revenue: 3600.34, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -82,7 +81,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("forms");
+  const [view, setView] = useState("revenue");
 
   return (
     <div style={{
@@ -102,7 +101,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          22 Jun – 21 Aug 2026 · 8 full weeks + W9 partial ⚡ · 52 pre-window regs (€37,323.90) excluded
+          22 Jun – 23 Aug 2026 · 9 completed full weeks · 52 pre-window regs excluded
         </p>
       </div>
 
@@ -113,9 +112,8 @@ export default function App() {
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         W2 (29 Jun–5 Jul) is the standout week — <strong style={{ color: "#f1f5f9" }}>46 forms and 13 registrations</strong> generating
-        €9,361.55 (30% of in-window revenue). Overall CR is {overallCR}% across 8 full weeks.
-        W9 (17–21 Aug ⚡) is tracking at 5 registrations with 3 days still to run — revenue already at €3,600.34,
-        on pace to be the second-strongest revenue week if momentum holds.
+        €9,361.55 (30% of in-window revenue). Overall CR is {overallCR}% across 9 completed weeks.
+        W9 (17–23 Aug) delivered 5 registrations and €3,600.34 — the second-strongest revenue week in the window.
       </div>
 
       {/* KPI cards */}
@@ -252,7 +250,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 21 Aug 2026 · 43 in-window registrations · 52 pre-window regs (€37,323.90) excluded · no duplicate emails detected
+        Updated 25 Aug 2026 · 43 in-window registrations · 52 pre-window regs excluded · no duplicate emails detected
       </p>
 
     </div>
