@@ -75,7 +75,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("bars");
+  const [view, setView] = useState("revenue");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -124,9 +124,9 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
         <Tab id="bars"    active={view==="bars"}    onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"      active={view==="cr"}      onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
