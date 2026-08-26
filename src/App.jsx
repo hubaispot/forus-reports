@@ -20,6 +20,8 @@ import CTID770771rev, { data as hc770771RevRaw } from "./ctid770_771_combined_we
 import CTID786rev,    { data as hc786RevRaw    } from "./ctid786_combined_weekly";
 // B2C Single Modules
 import B2CSingleModules from "./b2c_single_modules_report";
+// Tools
+import SNAProfitabilityCalculator from "./sna_profitability_calculator";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
@@ -151,6 +153,10 @@ const NAV = {
   B2C: {
     label: "B2C", color: "#f472b6",
     standalone: B2CSingleModules,
+  },
+  Tools: {
+    label: "Tools", color: "#a78bfa",
+    standalone: SNAProfitabilityCalculator,
   },
 };
 
