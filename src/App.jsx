@@ -14,15 +14,12 @@ import CTID742rev,  { data as sna742RevRaw  } from "./ctid742_combined_weekly";
 import CTID379rev,  { data as sna379RevRaw  } from "./ctid379_combined_weekly";
 import SNAOArev,    { data as snaOARevRaw   } from "./sna_oa_combined_weekly";
 // Healthcare — Enquiry & Application
-import CTID771enq,  { data as hc771Raw    } from "./ctid771_enq_vs_app_weekly";
-import CTID786enq,  { data as hc786Raw    } from "./ctid786_enq_vs_app_weekly";
-import CTID770enq,  { data as hc770Raw    } from "./ctid770_enq_vs_app_weekly";
-import CTID770rev,  { data as hc770RevRaw } from "./ctid770_combined_weekly";
-import CTID786rev,  { data as hc786RevRaw } from "./ctid786_combined_weekly";
+import CTID770771enq, { data as hc770771Raw    } from "./ctid770_771_enq_vs_app_weekly";
+import CTID786enq,    { data as hc786Raw       } from "./ctid786_enq_vs_app_weekly";
+import CTID770771rev, { data as hc770771RevRaw } from "./ctid770_771_combined_weekly";
+import CTID786rev,    { data as hc786RevRaw    } from "./ctid786_combined_weekly";
 // B2C Single Modules
 import B2CSingleModules from "./b2c_single_modules_report";
-// Tools
-import SNAProfitabilityCalculator from "./sna_profitability_calculator";
 // ELC — Enquiry & Application
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
@@ -44,11 +41,10 @@ const normaliseRev = rows => rows.map(d => ({
 const sna742Data    = normaliseEnq(sna742Raw);
 const sna379Data    = normaliseEnq(sna379Raw);
 const snaOAData     = normaliseEnq(snaOARaw);
-const hc771Data     = normaliseEnq(hc771Raw);
-const hc786Data     = normaliseEnq(hc786Raw);
-const hc770Data     = normaliseEnq(hc770Raw);
-const hc770RevData  = normaliseRev(hc770RevRaw);
-const hc786RevData  = normaliseRev(hc786RevRaw);
+const hc770771Data    = normaliseEnq(hc770771Raw);
+const hc786Data       = normaliseEnq(hc786Raw);
+const hc770771RevData = normaliseRev(hc770771RevRaw);
+const hc786RevData    = normaliseRev(hc786RevRaw);
 const elc785Data    = normaliseEnq(elc785Raw);
 const elc5mData     = normaliseEnq(elc5mRaw);
 const sna742RevData = normaliseRev(sna742RevRaw);
@@ -124,18 +120,17 @@ const NAV = {
     label: "Healthcare", color: "#f87171",
     enqApp: {
       courses: [
-        { id: "771", label: "Healthcare Support MA Level 5 LO", Component: CTID771enq, data: hc771Data, insightKey: "771-enqApp" },
-        { id: "786", label: "CS & COOP Level 5 LO",      Component: CTID786enq, data: hc786Data, insightKey: "786-enqApp" },
-        { id: "770", label: "Healthcare Support MA Level 5 OA", Component: CTID770enq, data: hc770Data, insightKey: "770-enqApp" },
+        { id: "770771", label: "Healthcare Support MA Level 5 OA+LO", Component: CTID770771enq, data: hc770771Data, insightKey: "771-enqApp" },
+        { id: "786",    label: "CS & COOP Level 5 LO",                Component: CTID786enq,    data: hc786Data,    insightKey: "786-enqApp" },
       ],
-      get combined() { return mergeEnqApp([hc771Data, hc786Data, hc770Data]); },
+      get combined() { return mergeEnqApp([hc770771Data, hc786Data]); },
     },
     revenue: {
       courses: [
-        { id: "786rev", label: "CS & COOP Level 5 LO",      Component: CTID786rev, data: hc786RevData, insightKey: "786-rev" },
-        { id: "770rev", label: "Healthcare Support MA Level 5 OA", Component: CTID770rev, data: hc770RevData, insightKey: "770-rev" },
+        { id: "770771rev", label: "Healthcare Support MA Level 5 OA+LO", Component: CTID770771rev, data: hc770771RevData, insightKey: "770-rev" },
+        { id: "786rev",    label: "CS & COOP Level 5 LO",                Component: CTID786rev,    data: hc786RevData,    insightKey: "786-rev" },
       ],
-      get combined() { return mergeRevenue([hc786RevData, hc770RevData]); },
+      get combined() { return mergeRevenue([hc770771RevData, hc786RevData]); },
     },
   },
   ELC: {
@@ -156,10 +151,6 @@ const NAV = {
   B2C: {
     label: "B2C", color: "#f472b6",
     standalone: B2CSingleModules,
-  },
-  Tools: {
-    label: "Tools", color: "#a78bfa",
-    standalone: SNAProfitabilityCalculator,
   },
 };
 
