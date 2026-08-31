@@ -51,6 +51,30 @@ const LO_BASE = [
   { n: 20, rev: 13780, base: 1763.40 },
 ];
 
+// SNA Live & Online Level 6 only (CTID379) — advertising €0
+const L6_BASE = [
+  { n: 1,  rev: 440,  base: 359.19  },
+  { n: 2,  rev: 880,  base: 395.49  },
+  { n: 3,  rev: 1320, base: 431.79  },
+  { n: 4,  rev: 1760, base: 468.09  },
+  { n: 5,  rev: 2200, base: 504.39  },
+  { n: 6,  rev: 2640, base: 540.69  },
+  { n: 7,  rev: 3080, base: 576.99  },
+  { n: 8,  rev: 3520, base: 613.29  },
+  { n: 9,  rev: 3960, base: 649.59  },
+  { n: 10, rev: 4400, base: 685.89  },
+  { n: 11, rev: 4840, base: 722.19  },
+  { n: 12, rev: 5280, base: 758.49  },
+  { n: 13, rev: 5720, base: 794.79  },
+  { n: 14, rev: 6160, base: 831.09  },
+  { n: 15, rev: 6600, base: 867.39  },
+  { n: 16, rev: 7040, base: 903.69  },
+  { n: 17, rev: 7480, base: 939.99  },
+  { n: 18, rev: 7920, base: 976.29  },
+  { n: 19, rev: 8360, base: 1012.59 },
+  { n: 20, rev: 8800, base: 1048.89 },
+];
+
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 const fmt  = n => "€" + Math.abs(n).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtI = n => "€" + Math.round(Math.abs(n)).toLocaleString("en-IE");
@@ -202,6 +226,12 @@ export default function SNAProfitabilityCalculator() {
       tableData:     LO_BASE,
       defaultBudget: 0,
       footerNote:    "€689/learner · Min 4 learners · Ad spend added to base cost",
+    },
+    {
+      label:         "SNA Live & Online Level 6",
+      tableData:     L6_BASE,
+      defaultBudget: 0,
+      footerNote:    "€440/learner · Min 4 learners · Ad spend added to base cost",
     },
   ];
 
