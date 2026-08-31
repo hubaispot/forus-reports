@@ -94,7 +94,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          29 Jun – 30 Aug 2026 · W1–W9 all full · Paythen: 40 pre-window registrations excluded (€18,039.49) · W9 CR% >100% expected †
+          29 Jun – 30 Aug 2026 · W1–W9 all full · Paythen: 40 pre-window registrations excluded (€18,039.49) · W9 CR% {'>'}100% expected †
         </p>
       </div>
 
@@ -234,7 +234,7 @@ export default function App() {
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
         CTID379 · SNA L6 LO · Generated 31 Aug 2026 · Forms: ENQ 75 + APP 12 unique contacts ·
-        Paythen: 74 Registered → 34 in-window · 40 pre-window excluded (before 29 Jun, €18,039.49) · W1–W9 all full · † W9 CR% >100% expected artefact
+        Paythen: 74 Registered → 34 in-window · 40 pre-window excluded (before 29 Jun, €18,039.49) · W1–W9 all full · † W9 CR% {'>'}100% expected artefact
       </p>
     </div>
   );
