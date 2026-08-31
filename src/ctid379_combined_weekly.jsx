@@ -5,12 +5,12 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 25 Aug 2026 | W1 22 Jun → W9 17–23 Aug 2026 (all full weeks)
-// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (W7 +1, W8 -1 vs prior)
-// Paythen: 69 Registered rows → 32 in-window (37 pre-window excluded)
+// Generated: 31 Aug 2026 | W1 29 Jun → W9 24–30 Aug 2026 (all 9 full)
+// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (ENQ 75 + APP 12 unique)
+// Paythen: 74 Registered rows → 34 in-window (40 pre-window excluded, €18,039.49)
+// W9 CR% 125% expected artefact: payments landed after enquiry week
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "22 Jun–28 Jun", forms: 10, regs: 3, revenue: 1363.66, full: true },
   { week: "29 Jun–5 Jul",  forms: 21, regs: 7, revenue: 3205.49, full: true },
   { week: "6 Jul–12 Jul",  forms:  9, regs: 2, revenue:  916.83, full: true },
   { week: "13 Jul–19 Jul", forms: 11, regs: 5, revenue: 2287.49, full: true },
@@ -19,6 +19,7 @@ export const data = [
   { week: "3 Aug–9 Aug",   forms: 11, regs: 2, revenue:  910.00, full: true },
   { week: "10 Aug–16 Aug", forms:  8, regs: 6, revenue: 2742.49, full: true },
   { week: "17 Aug–23 Aug", forms:  3, regs: 2, revenue:  923.66, full: true },
+  { week: "24 Aug–30 Aug", forms:  4, regs: 5, revenue: 2302.32, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +((d.regs / d.forms) * 100).toFixed(1) : 0,
@@ -78,7 +79,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("revenue");
+  const [view, setView] = useState("formsRegs");
 
   return (
     <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
@@ -93,7 +94,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          22 Jun – 23 Aug 2026 · W1–W9 all full weeks · Paythen: 37 pre-window registrations excluded
+          29 Jun – 30 Aug 2026 · W1–W9 all full · Paythen: 40 pre-window registrations excluded (€18,039.49) · W9 CR% >100% expected †
         </p>
       </div>
 
@@ -102,18 +103,19 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Note: </strong>
         CTID379 application form counts are likely <strong style={{ color: "#f1f5f9" }}>understated</strong> —
-        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 32)
+        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 34)
         provide a more complete signal of actual enrolments. Overall conversion rate from forms to Paythen
         registrations: <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>.
+        W9 shows CR% &gt;100% — an expected artefact where payments landed after the enquiry week (†).
       </div>
 
       {/* KPI Cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk (W1–W9)`,  color: COLORS.forms },
-          { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk (W1–W9)`,   color: COLORS.regs  },
-          { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",                color: COLORS.cr    },
-          { label: "Total Expected Rev.", value: fmt(totalRev),   sub: "W1–W9 · Paythen",             color: COLORS.rev   },
+          { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
+          { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
+          { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",        color: COLORS.cr    },
+          { label: "Total Expected Rev.", value: fmt(totalRev),   sub: "W1–W9 · Paythen",     color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10, padding: "12px 18px",
             flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -126,9 +128,9 @@ export default function App() {
 
       {/* Tabs */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <Tab id="revenue"   active={view === "revenue"}   onClick={setView}>Expected Revenue</Tab>
         <Tab id="formsRegs" active={view === "formsRegs"} onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"        active={view === "cr"}        onClick={setView}>Conversion Rate %</Tab>
+        <Tab id="revenue"   active={view === "revenue"}   onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
@@ -140,7 +142,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false} />
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 80]} />
+                tickFormatter={v => v + "%"} domain={[0, 140]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <ReferenceLine y={overallCR} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }} />
@@ -231,8 +233,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID379 · SNA L6 LO · Generated 25 Aug 2026 · Forms: ENQ 79 + APP 14 unique contacts ·
-        Paythen: 69 Registered → 32 in-window · 37 pre-window excluded (before 22 Jun) · W1–W9 all full weeks · W7 forms +1 / W8 forms -1 vs prior run
+        CTID379 · SNA L6 LO · Generated 31 Aug 2026 · Forms: ENQ 75 + APP 12 unique contacts ·
+        Paythen: 74 Registered → 34 in-window · 40 pre-window excluded (before 29 Jun, €18,039.49) · W1–W9 all full · † W9 CR% >100% expected artefact
       </p>
     </div>
   );

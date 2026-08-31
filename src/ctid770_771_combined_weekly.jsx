@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "22 Jun–28 Jun",    forms:  9, regs: 3, revenue: 2654.00,  full: true  },
-  { week: "29 Jun–5 Jul",     forms: 14, regs: 4, revenue: 2782.50,  full: true  },
-  { week: "6 Jul–12 Jul",     forms: 13, regs: 6, revenue: 4791.25,  full: true  },
-  { week: "13 Jul–19 Jul",    forms: 14, regs: 7, revenue: 6954.15,  full: true  },
-  { week: "20 Jul–26 Jul",    forms: 13, regs: 5, revenue: 4287.15,  full: true  },
-  { week: "27 Jul–2 Aug",     forms:  9, regs: 1, revenue: 1155.00,  full: true  },
-  { week: "3 Aug–9 Aug",      forms:  7, regs: 3, revenue: 3147.90,  full: true  },
-  { week: "10 Aug–16 Aug",    forms: 11, regs: 5, revenue: 4930.00,  full: true  },
-  { week: "17 Aug–23 Aug ⚡", forms: 14, regs: 2, revenue: 1585.50,  full: false },
+  { week: "29 Jun–5 Jul",  forms: 14, regs: 4, revenue: 2782.50,  full: true },
+  { week: "6 Jul–12 Jul",  forms: 13, regs: 6, revenue: 4791.25,  full: true },
+  { week: "13 Jul–19 Jul", forms: 13, regs: 7, revenue: 6954.15,  full: true },
+  { week: "20 Jul–26 Jul", forms: 13, regs: 5, revenue: 4287.15,  full: true },
+  { week: "27 Jul–2 Aug",  forms:  9, regs: 1, revenue: 1155.00,  full: true },
+  { week: "3 Aug–9 Aug",   forms:  6, regs: 3, revenue: 3147.90,  full: true },
+  { week: "10 Aug–16 Aug", forms: 11, regs: 5, revenue: 4930.00,  full: true },
+  { week: "17 Aug–23 Aug", forms: 13, regs: 4, revenue: 3183.50,  full: true },
+  { week: "24 Aug–30 Aug", forms: 13, regs: 4, revenue: 4415.25,  full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -75,7 +75,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("revenue");
+  const [view, setView] = useState("bars");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -90,7 +90,7 @@ export default function App() {
           Combined Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          22 Jun – 23 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
+          29 Jun – 30 Aug 2026 · 9 completed weeks · Unique contacts
         </p>
       </div>
 
@@ -98,18 +98,18 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Peak week was <strong style={{ color:"#f1f5f9" }}>W4 (13–19 Jul)</strong> with 7 registrations and
-        <strong style={{ color:"#f1f5f9" }}> €6,954</strong> revenue. W6 (27 Jul–2 Aug) was a notable dip — only 1 registration (€1,155).
+        Peak week was <strong style={{ color:"#f1f5f9" }}>W3 (13–19 Jul)</strong> with 7 registrations and
+        <strong style={{ color:"#f1f5f9" }}> €6,954</strong> revenue. W5 (27 Jul–2 Aug) was a notable dip — only 1 registration (€1,155).
         Overall conversion rate is <strong style={{ color:"#f1f5f9" }}>{overallCR}%</strong> across {totalForms} form submissions,
         yielding <strong style={{ color:"#f1f5f9" }}>€{totalRev.toLocaleString("en-IE", {minimumFractionDigits:2})}</strong> expected revenue.
-        43 pre-window registrations (Apr–21 Jun, €36,531) excluded per standing instruction.
+        46 pre-window registrations (€38,906) excluded per standing instruction.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Forms",           value:totalForms,         sub:`avg ${avgForms}/wk (W1–W8)`,  color:COLORS.forms },
-          { label:"Total Registrations",   value:totalRegs,          sub:`avg ${avgRegs}/wk (W1–W8)`,   color:COLORS.regs  },
+          { label:"Total Forms",           value:totalForms,         sub:`avg ${avgForms}/wk (W1–W9)`,  color:COLORS.forms },
+          { label:"Total Registrations",   value:totalRegs,          sub:`avg ${avgRegs}/wk (W1–W9)`,   color:COLORS.regs  },
           { label:"Overall Conv. Rate",    value:overallCR+"%",      sub:"regs ÷ forms",                color:COLORS.cr    },
           { label:"Total Expected Revenue",value:fmt(totalRev),      sub:"W1–W9 combined",              color:COLORS.rev   },
         ].map(k => (
@@ -124,9 +124,9 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
         <Tab id="bars"    active={view==="bars"}    onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"      active={view==="cr"}      onClick={setView}>Conversion Rate %</Tab>
+        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
@@ -222,7 +222,7 @@ export default function App() {
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:800, color:COLORS.rev,   fontSize:13 }}>{fmt(totalRev)}</td>
             </tr>
             <tr style={{ background:"#0f172a" }}>
-              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg/wk (W1–W8)</td>
+              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg/wk (W1–W9)</td>
               <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.forms, fontSize:13 }}>{avgForms}</td>
               <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.regs,  fontSize:13 }}>{avgRegs}</td>
               <td></td>
@@ -235,8 +235,8 @@ export default function App() {
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) + CTID771 (LO) applications combined.
         Registrations = CTID770 (OA) Paythen rows only (CTID771 has no Paythen registrations in this file).
-        43 pre-window registrations (Apr–21 Jun 2026) excluded per standing instruction.
-        Sources: HubSpot XLSX exports + Paythen Courses Expected Revenue CTID, 24 Aug 2026.
+        46 pre-window registrations (€38,906.38) excluded per standing instruction.
+        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 31 Aug 2026.
       </p>
     </div>
   );

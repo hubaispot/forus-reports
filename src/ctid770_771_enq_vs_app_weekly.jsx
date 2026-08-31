@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "22 Jun–28 Jun",    enq: 2,  app: 7,  full: true  },
-  { week: "29 Jun–5 Jul",     enq: 4,  app: 10, full: true  },
-  { week: "6 Jul–12 Jul",     enq: 5,  app: 8,  full: true  },
-  { week: "13 Jul–19 Jul",    enq: 4,  app: 10, full: true  },
-  { week: "20 Jul–26 Jul",    enq: 4,  app: 9,  full: true  },
-  { week: "27 Jul–2 Aug",     enq: 4,  app: 5,  full: true  },
-  { week: "3 Aug–9 Aug",      enq: 3,  app: 4,  full: true  },
-  { week: "10 Aug–16 Aug",    enq: 4,  app: 7,  full: true  },
-  { week: "17 Aug–23 Aug ⚡", enq: 4,  app: 10, full: false },
+  { week: "29 Jun–5 Jul",  enq: 4,  app: 10, full: true },
+  { week: "6 Jul–12 Jul",  enq: 5,  app: 8,  full: true },
+  { week: "13 Jul–19 Jul", enq: 4,  app: 9,  full: true },
+  { week: "20 Jul–26 Jul", enq: 4,  app: 9,  full: true },
+  { week: "27 Jul–2 Aug",  enq: 4,  app: 5,  full: true },
+  { week: "3 Aug–9 Aug",   enq: 3,  app: 3,  full: true },
+  { week: "10 Aug–16 Aug", enq: 4,  app: 7,  full: true },
+  { week: "17 Aug–23 Aug", enq: 4,  app: 9,  full: true },
+  { week: "24 Aug–30 Aug", enq: 5,  app: 8,  full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -69,7 +69,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("stacked");
+  const [view, setView] = useState("grouped");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -84,7 +84,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          22 Jun – 23 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts · last form only per contact
+          29 Jun – 30 Aug 2026 · 9 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -94,9 +94,8 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        6 of 8 full weeks exceeded 60% app rate 🔥. Applications dipped in W6–W7 (5 and 4)
-        before recovering strongly — W8 closed at 7 and W9 ⚡ is already at 10.
-        Enquiries have been steady at 2–5/week throughout.
+        7 of 9 weeks exceeded 60% app rate 🔥. A mid-summer dip in W5–W6 (5 and 3 apps)
+        recovered strongly in W7–W9 (7, 9 and 8 apps). Enquiries have been steady at 3–5/week throughout.
       </div>
 
       {/* KPIs */}
@@ -104,9 +103,9 @@ export default function App() {
         {[
           { label:"Total Enquiries (LO only)",  value:totalEnq,       sub:`avg ${avgEnq}/wk`,   color:COLORS.enq  },
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
-          { label:"Total Submissions",           value:total,          sub:"8 wks + W9 ⚡",      color:"#f1f5f9"   },
+          { label:"Total Submissions",           value:total,          sub:"9 completed weeks",  color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W9 ⚡ (17–23 Aug)",           value:data[8].total,  sub:`${data[8].enq}e / ${data[8].app}a`, color:"#fbbf24" },
+          { label:"W9 (24–30 Aug)",              value:data[8].total,  sub:`${data[8].enq}e / ${data[8].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -119,8 +118,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
+        <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
@@ -213,7 +212,7 @@ export default function App() {
               <td style={{ padding:"11px 14px", textAlign:"center", fontWeight:700, color:"#34d399", fontSize:13 }}>{overallApp}%</td>
             </tr>
             <tr style={{ background:"#0f172a" }}>
-              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg/wk (W1–W8)</td>
+              <td colSpan={2} style={{ padding:"8px 14px", color:"#64748b", fontWeight:700, fontSize:10, textTransform:"uppercase" }}>Avg/wk (W1–W9)</td>
               <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.enq, fontSize:13 }}>{avgEnq}</td>
               <td style={{ padding:"8px 14px", textAlign:"center", color:COLORS.app, fontSize:13 }}>{avgApp}</td>
               <td style={{ padding:"8px 14px", textAlign:"center", color:"#94a3b8", fontSize:13 }}>{(parseFloat(avgEnq)+parseFloat(avgApp)).toFixed(1)}</td>
@@ -225,8 +224,8 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks freshly processed from 24 Aug 2026 XLSX exports. App rate % is not a standard funnel conversion rate.
-        Source: HubSpot XLSX exports, 24 Aug 2026.
+        All 9 weeks freshly processed from 31 Aug 2026 CSV exports. App rate % is not a standard funnel conversion rate.
+        Source: HubSpot CSV exports, 31 Aug 2026.
       </p>
     </div>
   );

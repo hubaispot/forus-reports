@@ -5,12 +5,10 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 25 Aug 2026 | W1 22 Jun → W9 17–23 Aug 2026 (all full weeks)
-// ENQ: 79 raw → 79 unique | APP: 14 raw → 14 unique (0 dups)
-// W1–W6 unchanged from 21 Aug run | W7 ENQ +1, W8 ENQ -1 | W9 now full
+// Generated: 31 Aug 2026 | W1 29 Jun → W9 24–30 Aug 2026 (all 9 full)
+// ENQ: 75 unique | APP: 12 unique | No duplicates removed
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "22 Jun–28 Jun", enq: 8,  app: 2, full: true },
   { week: "29 Jun–5 Jul",  enq: 18, app: 3, full: true },
   { week: "6 Jul–12 Jul",  enq: 8,  app: 1, full: true },
   { week: "13 Jul–19 Jul", enq: 9,  app: 2, full: true },
@@ -19,6 +17,7 @@ export const data = [
   { week: "3 Aug–9 Aug",   enq: 11, app: 0, full: true },
   { week: "10 Aug–16 Aug", enq: 6,  app: 2, full: true },
   { week: "17 Aug–23 Aug", enq: 3,  app: 0, full: true },
+  { week: "24 Aug–30 Aug", enq: 4,  app: 0, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -74,7 +73,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("stacked");
+  const [view, setView] = useState("grouped");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -89,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          22 Jun – 23 Aug 2026 · Unique contacts · last form only per contact · W1–W9 all full weeks
+          29 Jun – 30 Aug 2026 · Unique contacts · last form only per contact · W1–W9 all full
         </p>
       </div>
 
@@ -106,11 +105,11 @@ export default function App() {
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk (W1–W9)`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (W1–W9)`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W9 all full",             color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",               color:"#34d399"   },
-          { label:"W9 (17–23 Aug)",     value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" },
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"W1–W9 all full",    color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
+          { label:"W9 (24–30 Aug)",     value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -222,7 +221,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 25 Aug 2026 · ENQ 79 raw → 79 unique · APP 14 raw → 14 unique · W1–W9 all full weeks · W7 ENQ +1 / W8 ENQ -1 vs prior run
+        CTID379 · SNA L6 LO · Generated 31 Aug 2026 · ENQ 75 unique · APP 12 unique · No duplicates removed · W1–W9 all full weeks
       </p>
     </div>
   );

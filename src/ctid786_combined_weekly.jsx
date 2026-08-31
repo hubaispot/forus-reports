@@ -5,15 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "22–28 Jun",    forms: 15, regs: 10, revenue: 4963.75, full: true },
-  { week: "29 Jun–5 Jul", forms: 10, regs:  4, revenue: 1947.50, full: true },
-  { week: "6–12 Jul",     forms: 12, regs:  1, revenue:  498.75, full: true },
-  { week: "13–19 Jul",    forms: 11, regs:  4, revenue: 1971.25, full: true },
-  { week: "20–26 Jul",    forms:  5, regs:  0, revenue:    0.00, full: true },
-  { week: "27 Jul–2 Aug", forms:  7, regs:  3, revenue: 1472.50, full: true },
-  { week: "3–9 Aug",      forms: 10, regs:  5, revenue: 2446.25, full: true },
-  { week: "10–16 Aug",    forms: 16, regs:  6, revenue: 2992.50, full: true },
-  { week: "17–23 Aug",    forms: 17, regs:  8, revenue: 3990.00, full: true },
+  { week: "29 Jun–5 Jul",  forms: 10, regs: 4,  revenue: 1947.50, full: true  },
+  { week: "6–12 Jul",      forms: 11, regs: 1,  revenue:  498.75, full: true  },
+  { week: "13–19 Jul",     forms: 11, regs: 4,  revenue: 1971.25, full: true  },
+  { week: "20–26 Jul",     forms:  5, regs: 0,  revenue:    0.00, full: true  },
+  { week: "27 Jul–2 Aug",  forms:  7, regs: 3,  revenue: 1472.50, full: true  },
+  { week: "3–9 Aug",       forms:  9, regs: 5,  revenue: 2446.25, full: true  },
+  { week: "10–16 Aug",     forms: 16, regs: 6,  revenue: 2992.50, full: true  },
+  { week: "17–23 Aug",     forms: 17, regs: 8,  revenue: 3990.00, full: true  },
+  { week: "24–30 Aug ⚡",  forms: 13, regs: 3,  revenue: 1496.25, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -88,7 +88,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          22 Jun – 23 Aug 2026 · 9 full weeks · IST boundaries · Unique contacts
+          29 Jun – 30 Aug 2026 · 8 full weeks + W9 ⚡ · IST boundaries · Unique contacts
         </p>
       </div>
 
@@ -97,11 +97,11 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W1 (22–28 Jun) was the standout week — <strong style={{ color: "#f1f5f9" }}>10 registrations and €4,964</strong>,
-        accounting for 24% of all registrations across 9 weeks. W5 (20–26 Jul) recorded zero registrations despite 5 forms,
-        the mid-summer low point. W9 (17–23 Aug) closed as the highest-volume week (17 forms, 8 registrations, €3,990) —
-        strong late-summer momentum. Overall CR of 39.8% reflects a solid pipeline; 56 pre-window registrations (€27,280)
-        confirm a large cohort established prior to this reporting period.
+        W8 (17–23 Aug) was the standout week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
+        the highest registration and revenue week in the period. W4 (20–26 Jul) recorded zero registrations despite 5 forms,
+        suggesting a mid-summer conversion pause. Late summer shows strong momentum: W6–W8 delivered 19 registrations and
+        €9,429 combined. W9 (24–30 Aug ⚡) is still open with 3 registrations already. Overall CR of 34.3% reflects a
+        healthy pipeline with 66 pre-window registrations (€32,244) on record prior to this window.
       </div>
 
       {/* KPI cards */}
@@ -110,7 +110,7 @@ export default function App() {
           { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,         sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%",   sub: "regs ÷ forms",        color: COLORS.cr    },
-          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "9 full weeks",         color: COLORS.rev   },
+          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full + 1 partial ⚡", color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -247,8 +247,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 22 Jun – 23 Aug 2026 · IST boundaries ·
-        HubSpot: 103 unique form contacts · Paythen: 41 registered (56 pre-window excluded, €27,280) · 1 email dedup (Claire Condon)
+        CTID786 · CS &amp; COOP LO L5 · 29 Jun – 30 Aug 2026 · IST boundaries ·
+        HubSpot: 99 form submissions · Paythen: 34 registered in window (66 pre-window excluded · €32,244) · Revenue tiers: €475.00 / €498.75
       </p>
     </div>
   );

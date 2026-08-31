@@ -6,20 +6,20 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Window: W1 Mon 22 Jun 2026 → W9 Sun 23 Aug 2026 · 9 completed full weeks
+// Window: W1 = Mon 29 Jun 2026 · W9 = Sun 30 Aug 2026 · all 9 weeks full
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
-// Freshly processed 25 Aug 2026 · 119 unique enquiries · 109 unique apps · no dupes detected
+// Freshly processed 31 Aug 2026 · 118 unique enquiries · 112 unique apps · no dupes detected
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "22–28 Jun",     enq: 17, app: 14, full: true },
   { week: "29 Jun–5 Jul",  enq: 23, app: 23, full: true },
   { week: "6–12 Jul",      enq: 16, app: 17, full: true },
   { week: "13–19 Jul",     enq: 11, app: 12, full: true },
   { week: "20–26 Jul",     enq: 8,  app: 10, full: true },
   { week: "27 Jul–2 Aug",  enq: 5,  app: 6,  full: true },
   { week: "3–9 Aug",       enq: 12, app: 8,  full: true },
-  { week: "10–16 Aug",     enq: 13, app: 10, full: true },
+  { week: "10–16 Aug",     enq: 13, app: 9,  full: true },
   { week: "17–23 Aug",     enq: 14, app: 9,  full: true },
+  { week: "24–30 Aug",     enq: 16, app: 18, full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -82,7 +82,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("stacked");
+  const [view, setView] = useState("grouped");
 
   return (
     <div style={{
@@ -102,7 +102,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          22 Jun – 23 Aug 2026 · 9 completed full weeks · Unique contacts · global dedup per form
+          29 Jun – 30 Aug 2026 · 9 full weeks · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -112,10 +112,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>steady {overallApp}% overall application rate</strong> across
-        9 completed full weeks (22 Jun – 23 Aug). Peak volume was W2 (29 Jun–5 Jul) at 46 submissions.
-        Enquiries lead applications in most weeks. Activity has remained consistent through August,
-        with W8 and W9 each delivering 23 combined submissions.
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>consistent {overallApp}% overall application rate</strong> across
+        9 full weeks. Peak volume was W1 (29 Jun–5 Jul) at 46 submissions. W9 (24–30 Aug) saw
+        a strong close with 16 enquiries and 18 applications — the only week where applications
+        outpaced enquiries, suggesting a late-season surge in direct intent.
       </div>
 
       {/* KPIs */}
@@ -247,7 +247,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 25 Aug 2026 · W1–W9 fully processed from fresh exports · 9 completed weeks · no duplicates detected
+        Updated 31 Aug 2026 · W1–W9 fully processed from fresh exports · all 9 weeks complete · no duplicates detected
       </p>
 
     </div>
