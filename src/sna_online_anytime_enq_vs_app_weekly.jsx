@@ -13,15 +13,14 @@ import {
 // If include_current_week = false, all 8 rows have full: true — no ⚡ row.
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "29 Jun–5 Jul",    enq: 5, app: 0, full: true  },
-  { week: "6–12 Jul",        enq: 1, app: 3, full: true  },
-  { week: "13–19 Jul",       enq: 2, app: 0, full: true  },
-  { week: "20–26 Jul",       enq: 1, app: 0, full: true  },
-  { week: "27 Jul–2 Aug",    enq: 3, app: 0, full: true  },
-  { week: "3–9 Aug",         enq: 1, app: 0, full: true  },
-  { week: "10–16 Aug",       enq: 6, app: 1, full: true  },
-  { week: "17–23 Aug",       enq: 0, app: 1, full: true  },
-  { week: "24–30 Aug ⚡",    enq: 4, app: 0, full: false },
+  { week: "13–19 Jul",       enq: 2, app: 0, full: true },
+  { week: "20–26 Jul",       enq: 1, app: 0, full: true },
+  { week: "27 Jul–2 Aug",    enq: 3, app: 0, full: true },
+  { week: "3–9 Aug",         enq: 1, app: 0, full: true },
+  { week: "10–16 Aug",       enq: 6, app: 1, full: true },
+  { week: "17–23 Aug",       enq: 0, app: 1, full: true },
+  { week: "24–30 Aug",       enq: 4, app: 0, full: true },
+  { week: "31 Aug–6 Sep",    enq: 3, app: 0, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -92,7 +91,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          29 Jun – 30 Aug 2026 · Unique contacts · last form only per contact
+          13 Jul – 6 Sep 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -100,10 +99,10 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        SNA OA (CTID490 + CTID423) shows a <strong style={{ color:"#f1f5f9" }}>low-conversion enquiry-led funnel</strong> —
-        enquiry volume is consistent (avg 2.4/wk W1–W8) but applications are sparse ({overallApp}% overall app rate).
-        W2 (6–12 Jul) is the standout week with 3 applications against just 1 enquiry 🔥.
-        1 cross-CTID enquiry duplicate (Rema Burwise, submitted to both CTID490 + CTID423 within minutes) deduped to 1 contact.
+        SNA OA (CTID490 + CTID423) shows an <strong style={{ color:"#f1f5f9" }}>enquiry-heavy, low-conversion pattern</strong> —
+        20 enquiries against just 2 applications across 8 weeks ({overallApp}% overall app rate).
+        W5 (10–16 Aug) was the peak enquiry week (6 enq, 1 app). W6 (17–23 Aug) had 1 application with no enquiry (100% 🔥).
+        1 cross-CTID enquiry dup (Rema Burwise, ENQ_423 + ENQ_490) was deduped.
       </div>
 
       {/* KPIs */}
@@ -111,7 +110,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W8 + W9 ⚡",     color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           // Last KPI card: partial week if full:false, otherwise show W8 total
           ...(data[data.length-1].full

@@ -6,22 +6,22 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Window: W1 = Mon 29 Jun 2026 · W9 = Sun 30 Aug 2026 · all 9 weeks full
-// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 31 Aug 2026)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__1_.csv
-//   40 in-window regs · 58 pre-window regs (before 29 Jun, €41,637.70) excluded
-//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 1 App form o/st + 2 blank excluded
+// Rolling window: last 8 completed Mon–Sun weeks · no W9 (run on Mon 7 Sep)
+// W1 = Mon 13 Jul 2026 · W8 = Sun 6 Sep 2026
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 7 Sep 2026)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered.csv
+//   29 in-window regs · 77 pre-window regs (1 Apr–12 Jul, €55,358.00) excluded
+//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 1 App form o/st excluded
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "29 Jun–5 Jul",  forms: 46, regs: 13, revenue: 9361.55, full: true },
-  { week: "6–12 Jul",      forms: 33, regs: 5,  revenue: 3624.80, full: true },
-  { week: "13–19 Jul",     forms: 23, regs: 3,  revenue: 2177.39, full: true },
-  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true },
-  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true },
-  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true },
-  { week: "10–16 Aug",     forms: 22, regs: 2,  revenue: 1378.00, full: true },
-  { week: "17–23 Aug",     forms: 23, regs: 5,  revenue: 3600.34, full: true },
-  { week: "24–30 Aug",     forms: 34, regs: 3,  revenue: 2111.95, full: true },
+  { week: "13–19 Jul",     forms: 23, regs: 3,  revenue: 2177.39, full: true  },
+  { week: "20–26 Jul",     forms: 18, regs: 3,  revenue: 2156.90, full: true  },
+  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true  },
+  { week: "10–16 Aug",     forms: 22, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "17–23 Aug",     forms: 23, regs: 5,  revenue: 3600.34, full: true  },
+  { week: "24–30 Aug",     forms: 33, regs: 6,  revenue: 4268.85, full: true  },
+  { week: "31 Aug–6 Sep",  forms: 44, regs: 4,  revenue: 2800.95, full: true  },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -101,7 +101,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          29 Jun – 30 Aug 2026 · 9 full weeks · 58 pre-window regs (€41,637.70) excluded
+          13 Jul – 6 Sep 2026 · 8 full weeks · 77 pre-window regs (€55,358.00) excluded
         </p>
       </div>
 
@@ -111,10 +111,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W1 (29 Jun–5 Jul) is the standout week — <strong style={{ color: "#f1f5f9" }}>46 forms and 13 registrations</strong> generating
-        €9,361.55 (33% of in-window revenue). Overall CR is {overallCR}% across 9 full weeks.
-        W9 (24–30 Aug) closed strongly with 34 forms but only 3 registrations — suggesting
-        a registration lag that may convert in coming weeks.
+        W7 (24–30 Aug) is the peak revenue week at <strong style={{ color: "#f1f5f9" }}>€4,268.85 and 6 registrations</strong>,
+        while W8 (31 Aug–6 Sep) saw the highest form volume (44) with 4 registrations — suggesting
+        a lag between enquiry/application activity and Paythen payment conversion.
+        Overall CR is {overallCR}% across 8 full weeks.
       </div>
 
       {/* KPI cards */}
@@ -251,7 +251,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 31 Aug 2026 · 40 in-window registrations · 58 pre-window regs (€41,637.70) excluded · no duplicate emails detected
+        Updated 7 Sep 2026 · 29 in-window registrations · 77 pre-window regs (€55,358.00) excluded · no duplicate emails detected
       </p>
 
     </div>

@@ -5,19 +5,18 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 31 Aug 2026 | W1 29 Jun → W9 24–30 Aug 2026 (all 9 full)
-// ENQ: 75 unique | APP: 12 unique | No duplicates removed
+// Generated: 7 Sep 2026 | W1 13 Jul → W8 6 Sep 2026 (full weeks only)
+// ENQ: 63 raw → 63 unique | APP: 9 raw → 9 unique | No dups removed
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "29 Jun–5 Jul",  enq: 18, app: 3, full: true },
-  { week: "6 Jul–12 Jul",  enq: 8,  app: 1, full: true },
   { week: "13 Jul–19 Jul", enq: 9,  app: 2, full: true },
   { week: "20 Jul–26 Jul", enq: 2,  app: 0, full: true },
-  { week: "27 Jul–2 Aug",  enq: 14, app: 4, full: true },
+  { week: "27 Jul–2 Aug",  enq: 13, app: 4, full: true },
   { week: "3 Aug–9 Aug",   enq: 11, app: 0, full: true },
   { week: "10 Aug–16 Aug", enq: 6,  app: 2, full: true },
   { week: "17 Aug–23 Aug", enq: 3,  app: 0, full: true },
   { week: "24 Aug–30 Aug", enq: 4,  app: 0, full: true },
+  { week: "31 Aug–6 Sep",  enq: 15, app: 1, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -88,7 +87,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          29 Jun – 30 Aug 2026 · Unique contacts · last form only per contact · W1–W9 all full
+          13 Jul – 6 Sep 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -107,9 +106,9 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"W1–W9 all full",    color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"W9 (24–30 Aug)",     value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" },
+          { label:"W8 (full week)", value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -221,7 +220,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 31 Aug 2026 · ENQ 75 unique · APP 12 unique · No duplicates removed · W1–W9 all full weeks
+        CTID379 · SNA L6 LO · Generated 7 Sep 2026 · ENQ 63 raw → 63 unique · APP 9 raw → 9 unique · No duplicates removed · W1–W8 full weeks only
       </p>
     </div>
   );

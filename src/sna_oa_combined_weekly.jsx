@@ -5,15 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "29 Jun–5 Jul",  forms: 5,  regs: 1, revenue: 295.00,   full: true  },
-  { week: "6–12 Jul",      forms: 4,  regs: 1, revenue: 440.00,   full: true  },
-  { week: "13–19 Jul",     forms: 2,  regs: 0, revenue: 0.00,     full: true  },
-  { week: "20–26 Jul",     forms: 1,  regs: 2, revenue: 604.75,   full: true  },
-  { week: "27 Jul–2 Aug",  forms: 3,  regs: 1, revenue: 462.00,   full: true  },
-  { week: "3–9 Aug",       forms: 1,  regs: 1, revenue: 295.00,   full: true  },
-  { week: "10–16 Aug",     forms: 7,  regs: 9, revenue: 3188.50,  full: true  },
-  { week: "17–23 Aug",     forms: 1,  regs: 2, revenue: 590.00,   full: true  },
-  { week: "24–30 Aug ⚡",  forms: 4,  regs: 1, revenue: 309.75,   full: false },
+  { week: "13–19 Jul",    forms: 2,  regs: 0, revenue: 0.00,     full: true },
+  { week: "20–26 Jul",    forms: 1,  regs: 2, revenue: 604.75,   full: true },
+  { week: "27 Jul–2 Aug", forms: 3,  regs: 1, revenue: 462.00,   full: true },
+  { week: "3–9 Aug",      forms: 1,  regs: 1, revenue: 295.00,   full: true },
+  { week: "10–16 Aug",    forms: 7,  regs: 9, revenue: 3188.50,  full: true },
+  { week: "17–23 Aug",    forms: 1,  regs: 2, revenue: 590.00,   full: true },
+  { week: "24–30 Aug",    forms: 4,  regs: 1, revenue: 309.75,   full: true },
+  { week: "31 Aug–6 Sep", forms: 3,  regs: 6, revenue: 1966.50,  full: true },
 ];
 
 const fullWeeks    = data.filter(d => d.full);
@@ -95,7 +94,7 @@ export default function App() {
           Weekly Combined Revenue Report
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          29 Jun – 30 Aug 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
+          13 Jul – 6 Sep 2026 · 8 completed weeks · Unique contacts
         </p>
       </div>
 
@@ -104,9 +103,10 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Note: </strong>
         CTID490 (SNA L5 OA) and CTID423 (SNA L6 OA) share combined reporting.
-        W7 (10–16 Aug) was the standout week with <strong style={{ color:"#f1f5f9" }}>9 registrations and €3,188.50 revenue</strong>.
+        W5 (10–16 Aug) was the standout week with <strong style={{ color:"#f1f5f9" }}>9 registrations and €3,188.50 revenue</strong>.
+        W8 (31 Aug–6 Sep) closed strongly with 6 registrations and €1,966.50.
         CR% &gt; 100% in some weeks (†) reflects Paythen payments landing in a later week than the originating form submission — expected, not an error.
-        17 pre-window registrations (before 29 Jun) excluded from weekly counts.
+        19 pre-window registrations (before 13 Jul) excluded from weekly counts.
       </div>
 
       {/* KPIs */}
@@ -235,7 +235,7 @@ export default function App() {
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
         † CR% &gt; 100% where Paythen payment date falls in a later week than the originating form submission — expected behaviour, not an error. ·
-        17 pre-window Paythen registrations (before 29 Jun) excluded · Paythen fetched 31 Aug 2026
+        19 pre-window Paythen registrations (before 13 Jul) excluded · Paythen fetched 7 Sep 2026
       </p>
     </div>
   );
