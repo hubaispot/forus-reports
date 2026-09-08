@@ -5,15 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "29 Jun–5 Jul",  enq: 3,  app: 7,  full: true  },
-  { week: "6–12 Jul",      enq: 6,  app: 5,  full: true  },
-  { week: "13–19 Jul",     enq: 5,  app: 6,  full: true  },
-  { week: "20–26 Jul",     enq: 4,  app: 1,  full: true  },
-  { week: "27 Jul–2 Aug",  enq: 2,  app: 5,  full: true  },
-  { week: "3–9 Aug",       enq: 5,  app: 4,  full: true  },
-  { week: "10–16 Aug",     enq: 6,  app: 10, full: true  },
-  { week: "17–23 Aug",     enq: 7,  app: 10, full: true  },
-  { week: "24–30 Aug ⚡",  enq: 6,  app: 7,  full: false },
+  { week: "13–19 Jul",    enq: 5,  app: 6,  full: true },
+  { week: "20–26 Jul",    enq: 4,  app: 1,  full: true },
+  { week: "27 Jul–2 Aug", enq: 2,  app: 5,  full: true },
+  { week: "3–9 Aug",      enq: 5,  app: 5,  full: true },
+  { week: "10–16 Aug",    enq: 6,  app: 10, full: true },
+  { week: "17–23 Aug",    enq: 7,  app: 10, full: true },
+  { week: "24–30 Aug",    enq: 6,  app: 8,  full: true },
+  { week: "31 Aug–6 Sep", enq: 9,  app: 11, full: true },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -88,7 +87,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          29 Jun – 30 Aug 2026 · IST boundaries · Unique contacts · last form only per contact
+          13 Jul – 6 Sep 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -97,11 +96,12 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Applications lead overall with a <strong style={{ color: "#f1f5f9" }}>56% app rate across 9 weeks</strong>.
-        W7 (10–16 Aug) and W8 (17–23 Aug) were the busiest weeks — 16 and 17 total submissions respectively,
-        both with 10 applications. W4 (20–26 Jul) was the quietest week (5 total) with a sharp dip to 1 application
-        (20% app rate), suggesting a brief pause in conversion mid-summer. W9 (24–30 Aug ⚡) is closing
-        strongly with 13 submissions already.
+        Applications lead overall with a <strong style={{ color: "#f1f5f9" }}>56% app rate across 8 weeks</strong>.
+        W8 (31 Aug–6 Sep) is the standout with 20 total submissions — the highest weekly total in the period —
+        suggesting strong back-to-autumn demand. W3 (27 Jul–2 Aug) had the highest app rate at 71% 🔥 despite
+        low volume (7 total), indicating strong intent from a smaller pool. W2 (20–26 Jul) was the quietest
+        week at just 5 total submissions. Enquiries have grown steadily since W2, peaking at 9 in W8,
+        while applications have been consistently strong throughout July and August.
       </div>
 
       {/* KPIs */}
@@ -109,9 +109,9 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
           { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,   color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "8 full + 1 partial ⚡", color: "#f1f5f9"  },
-          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",          color: "#34d399"  },
-          { label: "Best Week",          value: "W8",             sub: "17 total · 17–23 Aug",  color: "#fbbf24"  },
+          { label: "Total Submissions",  value: total,            sub: "8 full weeks",         color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",         color: "#34d399"  },
+          { label: "Best Week",          value: "W8",             sub: "20 total · 31 Aug–6 Sep", color: "#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -156,7 +156,7 @@ export default function App() {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                domain={[0, 14]}/>
+                domain={[0, 22]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
@@ -241,8 +241,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 29 Jun – 30 Aug 2026 · IST boundaries ·
-        Unique contacts (last submission per contact) · 44 ENQ / 55 APP · No test records excluded
+        CTID786 · CS &amp; COOP LO L5 · 13 Jul – 6 Sep 2026 · IST boundaries ·
+        Unique contacts (last submission per contact) · 44 ENQ / 56 APP · No test records excluded
       </p>
     </div>
   );
