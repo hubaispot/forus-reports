@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13 Jul–19 Jul",  enq: 4,  app: 10, full: true  },
-  { week: "20 Jul–26 Jul",  enq: 4,  app: 9,  full: true  },
-  { week: "27 Jul–2 Aug",   enq: 4,  app: 5,  full: true  },
-  { week: "3 Aug–9 Aug",    enq: 3,  app: 4,  full: true  },
-  { week: "10 Aug–16 Aug",  enq: 4,  app: 7,  full: true  },
-  { week: "17 Aug–23 Aug",  enq: 4,  app: 7,  full: true  },
-  { week: "24 Aug–30 Aug",  enq: 5,  app: 8,  full: true  },
-  { week: "31 Aug–6 Sep",   enq: 1,  app: 6,  full: true  },
+  { week: "20–26 Jul",     enq: 4, app: 9, full: true },
+  { week: "27 Jul–2 Aug", enq: 4, app: 5, full: true },
+  { week: "3–9 Aug",      enq: 3, app: 4, full: true },
+  { week: "10–16 Aug",    enq: 4, app: 6, full: true },
+  { week: "17–23 Aug",    enq: 4, app: 7, full: true },
+  { week: "24–30 Aug",    enq: 5, app: 8, full: true },
+  { week: "31 Aug–6 Sep", enq: 1, app: 6, full: true },
+  { week: "7–13 Sep",     enq: 4, app: 8, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -83,19 +83,19 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Jul – 6 Sep 2026 · 8 completed weeks · Unique contacts · last form only per contact
+          20 Jul – 13 Sep 2026 · 8 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
+      {/* Asymmetry notice banner */}
       {/* Notable insight banner */}
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        6 of 8 full weeks exceeded 60% app rate 🔥. Applications were lower in W3–W4 (5 and 4)
-        before recovering strongly in W5–W7 (7–8/week). W8 saw a dip in enquiries to 1
-        while applications held at 6. Enquiries steady at 3–5/week across W1–W7.
+        6 of 8 weeks exceeded 60% app rate 🔥. Strong finish with W8 at 8 apps and W6 peaking at 8.
+        Enquiry dip in W7 (1 only) recovered in W8 (4). Applications have held steady at 5–9/week throughout.
       </div>
 
       {/* KPIs */}
@@ -103,9 +103,9 @@ export default function App() {
         {[
           { label:"Total Enquiries (LO only)",  value:totalEnq,       sub:`avg ${avgEnq}/wk`,   color:COLORS.enq  },
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
-          { label:"Total Submissions",           value:total,          sub:"8 weeks",            color:"#f1f5f9"   },
+          { label:"Total Submissions",           value:total,          sub:"8 completed weeks",  color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W8 (31 Aug–6 Sep)",           value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
+          { label:"W8 (7–13 Sep)",               value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -224,8 +224,8 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks freshly processed from 8 Sep 2026 CSV exports. App rate % is not a standard funnel conversion rate.
-        W3 APP revised to 5 (was 6 in previous run). Source: HubSpot CSV exports, 8 Sep 2026.
+        All weeks freshly processed from 15 Sep 2026 CSV exports. App rate % is not a standard funnel conversion rate.
+        Source: HubSpot CSV exports, 15 Sep 2026.
       </p>
     </div>
   );

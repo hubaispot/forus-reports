@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Jul",    forms: 11, regs: 4,  revenue: 1971.25, full: true },
   { week: "20–26 Jul",    forms:  5, regs: 0,  revenue:    0.00, full: true },
   { week: "27 Jul–2 Aug", forms:  7, regs: 3,  revenue: 1472.50, full: true },
   { week: "3–9 Aug",      forms: 10, regs: 5,  revenue: 2446.25, full: true },
-  { week: "10–16 Aug",    forms: 16, regs: 6,  revenue: 2992.50, full: true },
+  { week: "10–16 Aug",    forms: 16, regs: 5,  revenue: 2493.75, full: true },
   { week: "17–23 Aug",    forms: 17, regs: 8,  revenue: 3990.00, full: true },
-  { week: "24–30 Aug",    forms: 14, regs: 3,  revenue: 1496.25, full: true },
+  { week: "24–30 Aug",    forms: 12, regs: 3,  revenue: 1496.25, full: true },
   { week: "31 Aug–6 Sep", forms: 20, regs: 5,  revenue: 2446.25, full: true },
+  { week: "7–13 Sep",     forms: 20, regs: 2,  revenue:  997.50, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -87,7 +87,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Jul – 6 Sep 2026 · 8 full weeks · IST boundaries · Unique contacts
+          20 Jul – 13 Sep 2026 · 8 full weeks · IST boundaries · Unique contacts
         </p>
       </div>
 
@@ -96,10 +96,11 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W6 (17–23 Aug) was the standout week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
-        the highest for both metrics in the window. W8 (31 Aug–6 Sep) recorded the highest form volume (20) but only 5 registrations,
-        suggesting a conversion lag that may resolve in coming weeks. W2 (20–26 Jul) recorded zero registrations despite 5 forms.
-        Overall CR of 34.0% reflects a healthy late-summer pipeline with €16,815 expected revenue across 8 weeks.
+        W5 (17–23 Aug) was the peak registration week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
+        the highest revenue in the period. W1 (20–26 Jul) recorded zero registrations despite 5 forms, suggesting a lag
+        before payment converts. W7–W8 (31 Aug–13 Sep) saw the highest form volume (20 each) but registrations tailed
+        off — 5 and 2 respectively — indicating a growing unconverted pipeline heading into mid-September.
+        Overall CR of 29.0% across 8 weeks with €15,343 expected revenue.
       </div>
 
       {/* KPI cards */}
@@ -245,8 +246,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 13 Jul – 6 Sep 2026 · IST boundaries ·
-        HubSpot: 100 unique form contacts · Paythen: 34 registered (72 pre-window excluded) · No test records excluded
+        CTID786 · CS &amp; COOP LO L5 · 20 Jul – 13 Sep 2026 · IST boundaries ·
+        HubSpot: 107 unique form contacts · Paythen: 31 registered (76 pre-window excluded) · Revenue tiers: €475.00 / €498.75
       </p>
     </div>
   );
