@@ -75,6 +75,30 @@ const L6_BASE = [
   { n: 20, rev: 8800, base: 1048.89 },
 ];
 
+// CS COOP Live & Online Level 5 — advertising €0, flat €475/learner
+const CSCOOP_BASE = [
+  { n: 1,  rev: 475,  base: 162.89  },
+  { n: 2,  rev: 950,  base: 325.78  },
+  { n: 3,  rev: 1425, base: 488.67  },
+  { n: 4,  rev: 1900, base: 651.56  },
+  { n: 5,  rev: 2375, base: 814.45  },
+  { n: 6,  rev: 2850, base: 977.34  },
+  { n: 7,  rev: 3325, base: 1140.23 },
+  { n: 8,  rev: 3800, base: 1303.12 },
+  { n: 9,  rev: 4275, base: 1466.01 },
+  { n: 10, rev: 4750, base: 1628.90 },
+  { n: 11, rev: 5225, base: 1791.79 },
+  { n: 12, rev: 5700, base: 1954.68 },
+  { n: 13, rev: 6175, base: 2117.57 },
+  { n: 14, rev: 6650, base: 2280.46 },
+  { n: 15, rev: 7125, base: 2443.35 },
+  { n: 16, rev: 7600, base: 2606.24 },
+  { n: 17, rev: 8075, base: 2769.13 },
+  { n: 18, rev: 8550, base: 2932.02 },
+  { n: 19, rev: 9025, base: 3094.91 },
+  { n: 20, rev: 9500, base: 3257.80 },
+];
+
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 const fmt  = n => "€" + Math.abs(n).toLocaleString("en-IE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtI = n => "€" + Math.round(Math.abs(n)).toLocaleString("en-IE");
@@ -232,6 +256,12 @@ export default function SNAProfitabilityCalculator() {
       tableData:     L6_BASE,
       defaultBudget: 0,
       footerNote:    "€440/learner · Min 4 learners · Ad spend added to base cost",
+    },
+    {
+      label:         "CS-COOP Live & Online Level 5",
+      tableData:     CSCOOP_BASE,
+      defaultBudget: 0,
+      footerNote:    "€475/learner · Ad spend added to base cost",
     },
   ];
 
