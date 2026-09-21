@@ -6,13 +6,12 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: last 8 completed Mon–Sun weeks · no W9 (run on Mon 7 Sep)
-// W1 = Mon 13 Jul 2026 · W8 = Sun 6 Sep 2026
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
+// W1 = Mon 20 Jul 2026 · W8 = Sun 13 Sep 2026 · W9 = 14–18 Sep 2026 ⚡ partial
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
-// Freshly processed 7 Sep 2026 · 96 unique enquiries · 98 unique apps · no dupes detected
+// Freshly processed 18 Sep 2026 · 107 unique enquiries · 109 unique apps · no dupes detected
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Jul",      enq: 11, app: 12, full: true  },
   { week: "20–26 Jul",      enq: 8,  app: 10, full: true  },
   { week: "27 Jul–2 Aug",   enq: 5,  app: 6,  full: true  },
   { week: "3–9 Aug",        enq: 12, app: 8,  full: true  },
@@ -20,6 +19,8 @@ export const data = [
   { week: "17–23 Aug",      enq: 14, app: 9,  full: true  },
   { week: "24–30 Aug",      enq: 16, app: 17, full: true  },
   { week: "31 Aug–6 Sep",   enq: 17, app: 27, full: true  },
+  { week: "7–13 Sep",       enq: 11, app: 12, full: true  },
+  { week: "14–18 Sep ⚡",   enq: 11, app: 11, full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -82,7 +83,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
 
   return (
     <div style={{
@@ -102,7 +103,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          13 Jul – 6 Sep 2026 · 8 full weeks · Unique contacts · global dedup per form
+          20 Jul – 18 Sep 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -112,10 +113,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>{overallApp}% overall application rate</strong> across
-        8 full weeks. Strong W8 finish (31 Aug–6 Sep) at 44 submissions — highest in the window —
-        with applications (27) outpacing enquiries (17) for the first time, suggesting strong
-        late-season intent. Volume dipped mid-window (W3: 11 total) before recovering steadily.
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>steady {overallApp}% overall application rate</strong> across
+        8 full weeks plus a partial W9. Peak volume was W7 (31 Aug–6 Sep) at 44 submissions, driven by
+        a surge in applications (27). W6–W7 saw a strong upswing in both enquiries and applications after
+        a quieter July–early August. W9 (14–18 Sep ⚡) is tracking at 22 submissions through Friday.
       </div>
 
       {/* KPIs */}
@@ -123,7 +124,7 @@ export default function App() {
         {[
           { label: "Total Enquiries",    value: totalEnq,       sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
           { label: "Total Applications", value: totalApp,       sub: `avg ${avgApp}/wk`,   color: COLORS.app },
-          { label: "Total Submissions",  value: total,          sub: "8 full weeks",        color: "#f1f5f9"  },
+          { label: "Total Submissions",  value: total,          sub: "8 wks + W9 ⚡",        color: "#f1f5f9"  },
           { label: "Overall App Rate",   value: overallApp+"%", sub: "apps ÷ total",        color: "#34d399"  },
         ].map(k => (
           <div key={k.label} style={{
@@ -139,8 +140,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view === "stacked"} onClick={setView}>Stacked</Tab>
+        <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view === "rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
@@ -247,7 +248,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 7 Sep 2026 · W1–W8 fully processed from fresh exports · no duplicates detected
+        Updated 18 Sep 2026 · W1–W8 fully processed from fresh exports · W9 partial (Mon–Fri) · no duplicates detected
       </p>
 
     </div>
