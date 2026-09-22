@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "20–26 Jul",      enq: 4,  app: 1,  full: true  },
   { week: "27 Jul–2 Aug",   enq: 2,  app: 5,  full: true  },
-  { week: "3–9 Aug",        enq: 5,  app: 5,  full: true  },
+  { week: "3–9 Aug",        enq: 5,  app: 4,  full: true  },
   { week: "10–16 Aug",      enq: 6,  app: 10, full: true  },
   { week: "17–23 Aug",      enq: 7,  app: 10, full: true  },
   { week: "24–30 Aug",      enq: 5,  app: 7,  full: true  },
   { week: "31 Aug–6 Sep",   enq: 9,  app: 11, full: true  },
   { week: "7–13 Sep",       enq: 12, app: 8,  full: true  },
+  { week: "14–20 Sep",      enq: 2,  app: 4,  full: true  },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -71,7 +71,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
 
   return (
     <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
@@ -87,7 +87,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          20 Jul – 13 Sep 2026 · IST boundaries · Unique contacts · last form only per contact
+          27 Jul – 20 Sep 2026 · IST boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -96,22 +96,21 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        Strong late-summer momentum with <strong style={{ color: "#f1f5f9" }}>53% overall app rate across 8 weeks</strong>.
-        W7 (31 Aug–6 Sep) and W8 (7–13 Sep) were the busiest weeks — 20 submissions each. 
-        W8 marks a notable shift: enquiries hit their peak (12) while applications pulled back (8), 
-        suggesting a wave of new exploratory interest heading into September. W4–W5 (10–23 Aug) 
-        showed high conversion — 16–17 total per week at 59–62% 🔥 app rates. W1 (20–26 Jul) 
-        was the quietest week but volume built steadily through August and September.
+        Solid late-summer pipeline with <strong style={{ color: "#f1f5f9" }}>55% overall app rate across 8 full weeks</strong>.
+        W6 (31 Aug–6 Sep) and W7 (7–13 Sep) were the peak weeks — 20 submissions each.
+        W7 marks a notable enquiry surge (12 ENQ, 8 APP) suggesting fresh exploratory interest into September, 
+        while W3–W5 (10–30 Aug) held strong app rates of 58–62% 🔥. W8 (14–20 Sep) pulled back 
+        sharply to just 6 total — typical post-peak dip. W9 (21–22 Sep ⚡) is still building.
       </div>
 
       {/* KPIs */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,   color: COLORS.enq },
-          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,   color: COLORS.app },
-          { label: "Total Submissions",  value: total,            sub: "8 full weeks",         color: "#f1f5f9"  },
-          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",         color: "#34d399"  },
-          { label: "Best Weeks",         value: "W7 & W8",        sub: "20 total each",        color: "#fbbf24" },
+          { label: "Total Enquiries",    value: totalEnq,         sub: `avg ${avgEnq}/wk`,  color: COLORS.enq },
+          { label: "Total Applications", value: totalApp,         sub: `avg ${avgApp}/wk`,  color: COLORS.app },
+          { label: "Total Submissions",  value: total,            sub: "8 full weeks",        color: "#f1f5f9"  },
+          { label: "Overall App Rate",   value: overallApp + "%", sub: "apps ÷ total",        color: "#34d399"  },
+          { label: "W8 (14–20 Sep)",      value: 6,               sub: "2e / 4a",              color: "#cbd5e1"  },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 110px", border: "1px solid #334155" }}>
@@ -126,8 +125,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view === "stacked"} onClick={setView}>Stacked</Tab>
+        <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view === "rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
@@ -193,7 +192,9 @@ export default function App() {
                 <tr key={i} style={{ borderBottom: i < data.length - 1 ? "1px solid #1e2d3d" : "none",
                   background: i % 2 === 0 ? "#1e293b" : "#162032" }}>
                   <td style={{ padding: "11px 14px", color: "#64748b", fontWeight: 700 }}>W{i + 1}</td>
-                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>{row.week}</td>
+                  <td style={{ padding: "11px 14px", color: "#cbd5e1" }}>
+                    {row.week}{!row.full && <span style={{ marginLeft: 5, color: "#fbbf24", fontSize: 10 }}>⚡</span>}
+                  </td>
                   <td style={{ padding: "11px 14px", textAlign: "center", fontWeight: 700,
                     color: COLORS.enq, fontSize: 15 }}>
                     {row.enq}
@@ -241,8 +242,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 20 Jul – 13 Sep 2026 · IST boundaries ·
-        Unique contacts (last submission per contact) · 50 ENQ / 57 APP · No test records excluded
+        CTID786 · CS &amp; COOP LO L5 · 27 Jul – 20 Sep 2026 · IST boundaries ·
+        Unique contacts (last submission per contact) · 48 ENQ / 59 APP raw · No test records excluded
       </p>
     </div>
   );

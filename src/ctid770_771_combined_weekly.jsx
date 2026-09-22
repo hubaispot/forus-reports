@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "20–26 Jul",     forms: 13, regs: 5, revenue: 4287.15,  full: true },
   { week: "27 Jul–2 Aug",  forms:  9, regs: 1, revenue: 1155.00,  full: true },
   { week: "3–9 Aug",       forms:  7, regs: 3, revenue: 3147.90,  full: true },
   { week: "10–16 Aug",     forms: 10, regs: 5, revenue: 4930.00,  full: true },
-  { week: "17–23 Aug",     forms: 11, regs: 4, revenue: 3183.50,  full: true },
+  { week: "17–23 Aug",     forms: 11, regs: 5, revenue: 4128.50,  full: true },
   { week: "24–30 Aug",     forms: 13, regs: 6, revenue: 5804.40,  full: true },
-  { week: "31 Aug–6 Sep",  forms:  7, regs: 5, revenue: 4366.25,  full: true },
-  { week: "7–13 Sep",      forms: 12, regs: 4, revenue: 3963.75,  full: true },
+  { week: "31 Aug–6 Sep",  forms:  7, regs: 8, revenue: 7282.63,  full: true },
+  { week: "7–13 Sep",      forms: 11, regs: 5, revenue: 4908.75,  full: true },
+  { week: "14–20 Sep",     forms: 18, regs: 4, revenue: 3722.25,  full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -74,7 +74,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("bars");
+  const [view, setView] = useState("revenue");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -89,7 +89,7 @@ export default function App() {
           Combined Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          20 Jul – 13 Sep 2026 · 8 completed weeks · Unique contacts
+          27 Jul – 20 Sep 2026 · 8 completed weeks · Unique contacts
         </p>
       </div>
 
@@ -97,20 +97,21 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W6 (24–30 Aug)</strong> with 6 registrations and
-        <strong style={{ color:"#f1f5f9" }}> €5,804</strong> revenue. W2 (27 Jul–2 Aug) was a notable dip — only 1 registration (€1,155).
+        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W6 (31 Aug–6 Sep)</strong> with 8 registrations and
+        <strong style={{ color:"#f1f5f9" }}> €7,283</strong> revenue. W6 CR% exceeds 100% — OA payment dates lag form submissions across weeks (expected †).
+        W8 (14–20 Sep) saw the highest form volume (18) but only 4 Paythen registrations to date — likely to grow.
         Overall conversion rate is <strong style={{ color:"#f1f5f9" }}>{overallCR}%</strong> across {totalForms} form submissions,
         yielding <strong style={{ color:"#f1f5f9" }}>{fmt(totalRev)}</strong> expected revenue.
-        64 pre-window registrations excluded per standing instruction.
+        69 pre-window registrations (€58,876.43) excluded per standing instruction.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
+          { label:"Total Expected Revenue", value:fmt(totalRev), sub:"W1–W8 combined",              color:COLORS.rev   },
           { label:"Total Forms",            value:totalForms,    sub:`avg ${avgForms}/wk (W1–W8)`,  color:COLORS.forms },
           { label:"Total Registrations",    value:totalRegs,     sub:`avg ${avgRegs}/wk (W1–W8)`,   color:COLORS.regs  },
           { label:"Overall Conv. Rate",     value:overallCR+"%", sub:"regs ÷ forms",                color:COLORS.cr    },
-          { label:"Total Expected Revenue", value:fmt(totalRev), sub:"W1–W8 combined",              color:COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 140px", border:"1px solid #334155" }}>
@@ -123,9 +124,9 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
         <Tab id="bars"    active={view==="bars"}    onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"      active={view==="cr"}      onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="revenue" active={view==="revenue"} onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
@@ -137,7 +138,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
               <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v+"%"} domain={[0, 80]}/>
+                tickFormatter={v => v+"%"} domain={[0, 130]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={parseFloat(overallCR)} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value:`Avg ${overallCR}%`, fill:"#64748b", fontSize:11, position:"insideTopRight" }}/>
@@ -150,7 +151,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
               <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€"+Math.round(v/1000)+"k"} domain={[0, 7000]}/>
+                tickFormatter={v => "€"+Math.round(v/1000)+"k"} domain={[0, 8000]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
             </ComposedChart>
@@ -158,7 +159,7 @@ export default function App() {
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }} barCategoryGap="22%" barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0, 16]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0, 20]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="forms" ? "Forms (enq+app)" : "Registrations (Paythen)"}/>
@@ -234,8 +235,10 @@ export default function App() {
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) + CTID771 (LO) applications combined.
         Registrations = CTID770 (OA) Paythen rows only (CTID771 has no Paythen registrations in this file).
-        64 pre-window registrations (before 20 Jul 2026, €54,589.28) excluded per standing instruction.
-        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 15 Sep 2026.
+        † CR% &gt;100% in W6 is expected — OA (CTID770) Paythen payment dates lag HubSpot form submission dates across weeks.
+        69 pre-window registrations (before 27 Jul 2026, €58,876.43) excluded per standing instruction.
+        8 non-Registered rows excluded (6 blank status, 2 Refunded Not Registered). 0 email duplicates.
+        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 22 Sep 2026.
       </p>
     </div>
   );

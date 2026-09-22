@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "20–26 Jul",     enq: 4, app: 9, full: true },
-  { week: "27 Jul–2 Aug", enq: 4, app: 5, full: true },
-  { week: "3–9 Aug",      enq: 3, app: 4, full: true },
-  { week: "10–16 Aug",    enq: 4, app: 6, full: true },
-  { week: "17–23 Aug",    enq: 4, app: 7, full: true },
-  { week: "24–30 Aug",    enq: 5, app: 8, full: true },
-  { week: "31 Aug–6 Sep", enq: 1, app: 6, full: true },
-  { week: "7–13 Sep",     enq: 4, app: 8, full: true },
+  { week: "27 Jul–2 Aug",  enq: 4, app: 5,  full: true },
+  { week: "3–9 Aug",       enq: 3, app: 4,  full: true },
+  { week: "10–16 Aug",     enq: 4, app: 6,  full: true },
+  { week: "17–23 Aug",     enq: 4, app: 7,  full: true },
+  { week: "24–30 Aug",     enq: 5, app: 8,  full: true },
+  { week: "31 Aug–6 Sep",  enq: 1, app: 6,  full: true },
+  { week: "7–13 Sep",      enq: 4, app: 7,  full: true },
+  { week: "14–20 Sep",     enq: 5, app: 13, full: true },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -68,7 +68,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -83,7 +83,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          20 Jul – 13 Sep 2026 · 8 completed weeks · Unique contacts · last form only per contact
+          27 Jul – 20 Sep 2026 · 8 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -94,8 +94,8 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        6 of 8 weeks exceeded 60% app rate 🔥. Strong finish with W8 at 8 apps and W6 peaking at 8.
-        Enquiry dip in W7 (1 only) recovered in W8 (4). Applications have held steady at 5–9/week throughout.
+        All 8 weeks exceeded 60% app rate 🔥. W8 (14–20 Sep) is the strongest week on record with 13 applications.
+        Enquiry dip in W6 (1 only) recovered strongly to 4–5/week. Applications have accelerated to 13 in the final week.
       </div>
 
       {/* KPIs */}
@@ -105,7 +105,7 @@ export default function App() {
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
           { label:"Total Submissions",           value:total,          sub:"8 completed weeks",  color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W8 (7–13 Sep)",               value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
+          { label:"W8 (14–20 Sep)",              value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -118,8 +118,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
+        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
@@ -223,9 +223,9 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
-        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks freshly processed from 15 Sep 2026 CSV exports. App rate % is not a standard funnel conversion rate.
-        Source: HubSpot CSV exports, 15 Sep 2026.
+        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = combined CTID770 (OA) + CTID771 (LO) application forms.
+        All 8 weeks freshly processed from 22 Sep 2026 CSV exports. W7 apps revised from 8 → 7 vs previous run. App rate % is not a standard funnel conversion rate.
+        Source: HubSpot CSV exports, 22 Sep 2026.
       </p>
     </div>
   );

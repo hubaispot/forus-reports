@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "20–26 Jul",    forms:  5, regs: 0,  revenue:    0.00, full: true },
   { week: "27 Jul–2 Aug", forms:  7, regs: 3,  revenue: 1472.50, full: true },
-  { week: "3–9 Aug",      forms: 10, regs: 5,  revenue: 2446.25, full: true },
-  { week: "10–16 Aug",    forms: 16, regs: 5,  revenue: 2493.75, full: true },
+  { week: "3–9 Aug",      forms:  9, regs: 5,  revenue: 2446.25, full: true },
+  { week: "10–16 Aug",    forms: 16, regs: 6,  revenue: 2992.50, full: true },
   { week: "17–23 Aug",    forms: 17, regs: 8,  revenue: 3990.00, full: true },
   { week: "24–30 Aug",    forms: 12, regs: 3,  revenue: 1496.25, full: true },
-  { week: "31 Aug–6 Sep", forms: 20, regs: 5,  revenue: 2446.25, full: true },
+  { week: "31 Aug–6 Sep", forms: 20, regs: 7,  revenue: 3443.75, full: true },
   { week: "7–13 Sep",     forms: 20, regs: 2,  revenue:  997.50, full: true },
+  { week: "14–20 Sep",    forms:  6, regs: 4,  revenue: 1995.00, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -71,7 +71,7 @@ const Tab = ({ id, active, onClick, children }) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("bars");
+  const [view, setView] = useState("rev");
 
   return (
     <div style={{ background: "#0f172a", minHeight: "100vh", padding: "32px 24px",
@@ -87,7 +87,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          20 Jul – 13 Sep 2026 · 8 full weeks · IST boundaries · Unique contacts
+          27 Jul – 20 Sep 2026 · 8 full weeks · IST boundaries · Unique contacts
         </p>
       </div>
 
@@ -96,20 +96,20 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W5 (17–23 Aug) was the peak registration week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
-        the highest revenue in the period. W1 (20–26 Jul) recorded zero registrations despite 5 forms, suggesting a lag
-        before payment converts. W7–W8 (31 Aug–13 Sep) saw the highest form volume (20 each) but registrations tailed
-        off — 5 and 2 respectively — indicating a growing unconverted pipeline heading into mid-September.
-        Overall CR of 29.0% across 8 weeks with €15,343 expected revenue.
+        W4 (17–23 Aug) was the peak registration week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
+        the highest revenue in the window. W6 (31 Aug–6 Sep) was close behind with 7 registrations and €3,444 on peak
+        form volume of 20. W7 (7–13 Sep) saw the same 20 forms but only 2 registrations — the largest lag in the window,
+        suggesting a significant unconverted pipeline. W8 (14–20 Sep) partially recovered with 4 registrations at 66.7% CR
+        despite low form volume, indicating strong late-converting intent. Overall CR of 35.5% across 8 weeks.
       </div>
 
       {/* KPI cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
+          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks",        color: COLORS.rev   },
           { label: "Total Registrations", value: totalRegs,         sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%",   sub: "regs ÷ forms",        color: COLORS.cr    },
-          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks",        color: COLORS.rev   },
+          { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -124,9 +124,9 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <Tab id="rev"  active={view === "rev"}  onClick={setView}>Expected Revenue</Tab>
         <Tab id="bars" active={view === "bars"} onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"   active={view === "cr"}   onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="rev"  active={view === "rev"}  onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
@@ -246,8 +246,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 20 Jul – 13 Sep 2026 · IST boundaries ·
-        HubSpot: 107 unique form contacts · Paythen: 31 registered (76 pre-window excluded) · Revenue tiers: €475.00 / €498.75
+        CTID786 · CS &amp; COOP LO L5 · 27 Jul – 20 Sep 2026 · IST boundaries ·
+        HubSpot: 107 unique form contacts · Paythen: 38 registered (75 pre-window excluded, 1 email dup merged) · Revenue tiers: €475.00 / €498.75
       </p>
     </div>
   );
