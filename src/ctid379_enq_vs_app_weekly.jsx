@@ -5,18 +5,19 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 7 Sep 2026 | W1 13 Jul → W8 6 Sep 2026 (full weeks only)
-// ENQ: 63 raw → 63 unique | APP: 9 raw → 9 unique | No dups removed
+// Generated: 24 Sep 2026 | W1 27 Jul → W9 21–24 Sep 2026 (W9 partial ⚡)
+// ENQ: 91 raw → 91 unique | APP: 10 raw → 10 unique · No dupes
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13 Jul–19 Jul", enq: 9,  app: 2, full: true },
-  { week: "20 Jul–26 Jul", enq: 2,  app: 0, full: true },
-  { week: "27 Jul–2 Aug",  enq: 13, app: 4, full: true },
-  { week: "3 Aug–9 Aug",   enq: 11, app: 0, full: true },
-  { week: "10 Aug–16 Aug", enq: 6,  app: 2, full: true },
-  { week: "17 Aug–23 Aug", enq: 3,  app: 0, full: true },
-  { week: "24 Aug–30 Aug", enq: 4,  app: 0, full: true },
-  { week: "31 Aug–6 Sep",  enq: 15, app: 1, full: true },
+  { week: "27 Jul–2 Aug",  enq: 13, app: 4, full: true  },
+  { week: "3–9 Aug",       enq: 11, app: 0, full: true  },
+  { week: "10–16 Aug",     enq:  6, app: 2, full: true  },
+  { week: "17–23 Aug",     enq:  3, app: 0, full: true  },
+  { week: "24–30 Aug",     enq:  4, app: 0, full: true  },
+  { week: "31 Aug–6 Sep",  enq: 14, app: 1, full: true  },
+  { week: "7–13 Sep",      enq: 17, app: 3, full: true  },
+  { week: "14–20 Sep",     enq: 10, app: 0, full: true  },
+  { week: "21–24 Sep ⚡",  enq: 13, app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -72,7 +73,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -87,7 +88,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Jul – 6 Sep 2026 · Unique contacts · last form only per contact
+          27 Jul – 24 Sep 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
@@ -104,11 +105,11 @@ export default function App() {
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
-          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
-          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
-          { label:"W8 (full week)", value:data[data.length-1].total, sub:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, color:"#cbd5e1" },
+          { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk (W1–W8)`,  color:COLORS.enq  },
+          { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
+          { label:"Total Submissions",  value:total,           sub:"W1–W9",                      color:"#f1f5f9"   },
+          { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",               color:"#34d399"   },
+          { label:"This week (Mon–Thu)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -121,8 +122,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
+        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 
@@ -220,7 +221,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 7 Sep 2026 · ENQ 63 raw → 63 unique · APP 9 raw → 9 unique · No duplicates removed · W1–W8 full weeks only
+        CTID379 · SNA L6 LO · Generated 24 Sep 2026 · ENQ 91 raw → 91 unique · APP 10 raw → 10 unique · No dupes · W9 partial ⚡ Mon–Thu
       </p>
     </div>
   );
