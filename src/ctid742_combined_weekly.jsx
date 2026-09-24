@@ -6,23 +6,23 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
-// W1 = Mon 20 Jul 2026 · W8 = Sun 13 Sep 2026 · W9 = 14–18 Sep 2026 ⚡ partial
-// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 18 Sep 2026)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered.csv
-//   38 in-window regs · 80 pre-window regs (1 Apr–19 Jul, €57,535.39) excluded
-//   0 email dupes · 0 jean rows
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial included
+// W1 = Mon 27 Jul 2026 · W8 = Sun 20 Sep 2026 · W9 = 21–24 Sep 2026 ⚡ partial
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 24 Sep 2026)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__5_.csv
+//   46 in-window regs · 83 pre-window regs (1 Apr–21 Jul) excluded
+//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 2 App form o/st + 2 blank excluded
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "20–26 Jul",      forms: 18, regs: 3,  revenue: 2156.90, full: true  },
-  { week: "27 Jul–2 Aug",   forms: 11, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "3–9 Aug",        forms: 20, regs: 4,  revenue: 2890.85, full: true  },
-  { week: "10–16 Aug",      forms: 22, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "17–23 Aug",      forms: 23, regs: 5,  revenue: 3600.34, full: true  },
-  { week: "24–30 Aug",      forms: 33, regs: 6,  revenue: 4268.85, full: true  },
-  { week: "31 Aug–6 Sep",   forms: 44, regs: 11, revenue: 7848.70, full: true  },
-  { week: "7–13 Sep",       forms: 23, regs: 3,  revenue: 2156.90, full: true  },
-  { week: "14–18 Sep ⚡",   forms: 22, regs: 2,  revenue: 1422.95, full: false },
+  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true  },
+  { week: "10–16 Aug",     forms: 22, regs: 2,  revenue: 1378.00, full: true  },
+  { week: "17–23 Aug",     forms: 23, regs: 5,  revenue: 3600.34, full: true  },
+  { week: "24–30 Aug",     forms: 33, regs: 6,  revenue: 4268.85, full: true  },
+  { week: "31 Aug–6 Sep",  forms: 44, regs: 11, revenue: 7848.70, full: true  },
+  { week: "7–13 Sep",      forms: 23, regs: 3,  revenue: 2156.90, full: true  },
+  { week: "14–20 Sep",     forms: 40, regs: 8,  revenue: 5736.75, full: true  },
+  { week: "21–24 Sep ⚡",  forms: 11, regs: 5,  revenue: 3534.90, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -102,7 +102,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          20 Jul – 18 Sep 2026 · 8 full weeks + W9 partial ⚡ · 80 pre-window regs (€57,535.39) excluded
+          27 Jul – 24 Sep 2026 · 8 full weeks + W9 partial ⚡ · 83 pre-window regs excluded
         </p>
       </div>
 
@@ -112,10 +112,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W7 (31 Aug–6 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>44 forms and 11 registrations</strong> generating
-        €7,848.70 (29% of in-window revenue). Overall CR is {overallCR}% across 8 full weeks.
-        Volume and revenue both trended strongly upward from W6 onward. W9 (14–18 Sep ⚡) is tracking
-        at 2 registrations through Friday with €1,422.95 confirmed.
+        W6 (31 Aug–6 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>44 forms and 11 registrations</strong> generating
+        €7,848.70 (26% of in-window revenue). Overall CR is {overallCR}% across 8 full weeks.
+        W8 (14–20 Sep) delivered 8 registrations and €5,736.75 — the second-strongest revenue week.
+        W9 (21–24 Sep ⚡) is already at 5 registrations and €3,534.90 with the week still running.
       </div>
 
       {/* KPI cards */}
@@ -150,16 +150,14 @@ export default function App() {
         border: "1px solid #334155", marginBottom: 20
       }}>
         <ResponsiveContainer width="100%" height={300}>
-          {view === "forms" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>
+          {view === "revenue" ? (
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 50]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
+                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 10000]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
-                formatter={v => v === "forms" ? "Forms (enq + app)" : "Registrations"}/>
-              <Bar dataKey="forms" name="forms" fill={COLORS.forms} radius={[5, 5, 0, 0]}/>
-              <Bar dataKey="regs"  name="regs"  fill={COLORS.regs}  radius={[5, 5, 0, 0]}/>
+              <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
             </ComposedChart>
           ) : view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
@@ -175,13 +173,15 @@ export default function App() {
                 dot={{ r: 6, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
           ) : (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 12000]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 50]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
+              <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
+                formatter={v => v === "forms" ? "Forms (enq + app)" : "Registrations"}/>
+              <Bar dataKey="forms" name="forms" fill={COLORS.forms} radius={[5, 5, 0, 0]}/>
+              <Bar dataKey="regs"  name="regs"  fill={COLORS.regs}  radius={[5, 5, 0, 0]}/>
             </ComposedChart>
           )}
         </ResponsiveContainer>
@@ -252,7 +252,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 18 Sep 2026 · 38 in-window registrations · 80 pre-window regs (€57,535.39) excluded · no duplicate emails detected
+        Updated 24 Sep 2026 · 46 in-window registrations · 83 pre-window regs excluded · no duplicate emails detected
       </p>
 
     </div>
