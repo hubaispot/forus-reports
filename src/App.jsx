@@ -26,6 +26,8 @@ import SNAProfitabilityCalculator from "./sna_profitability_calculator";
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
 
+import GreenCertReport from "./green_cert_report";
+
 // ── NORMALISE — ensure every row has the fields the combined merge needs ───────
 // enq/app files: add total + appRate if not already present
 const normaliseEnq = rows => rows.map(d => ({
@@ -145,6 +147,10 @@ const NAV = {
       get combined() { return mergeEnqApp([elc785Data, elc5mData]); },
     },
     revenue: { placeholder: true },
+  },
+  GreenCert: {
+    label: "Green Cert", color: "#a3e635",
+    standalone: GreenCertReport,
   },
   Business: {
     label: "Business", color: "#a78bfa",
