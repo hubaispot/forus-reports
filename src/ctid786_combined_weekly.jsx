@@ -1,10 +1,3 @@
-// CTID786 · CS & COOP LO L5 · Combined weekly (Forms + Paythen registrations/revenue)
-// Window: W1 3 Aug – W8 27 Sep 2026 (8 full weeks, no W9) · refreshed 29 Sep 2026
-// Forms: ctid786_enq_vs_app_weekly.jsx (52 ENQ / 59 APP) · Paythen: Courses Expected Revenue CTID (Filtered) export
-// Paythen: 35 Registered in window · 78 pre-window excluded after dedup (€38,133.75)
-// Claire Condon (clairecondon7@hotmail.com) Registered 21 Apr + 14 Aug — deduped, latest (14 Aug, W2) kept
-// Excluded by status: G-J Bayona 25 Aug "App form o/st" (already Registered 7 Aug, W1);
-//   blank status: Grainne Gill 4 Sep (€475), Lisa Harvey 25 Sep (€498.75)
 import { useState } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
@@ -12,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "3–9 Aug",      forms:  9, regs: 5,  revenue: 2446.25, full: true },
-  { week: "10–16 Aug",    forms: 16, regs: 6,  revenue: 2992.50, full: true },
-  { week: "17–23 Aug",    forms: 17, regs: 8,  revenue: 3990.00, full: true },
-  { week: "24–30 Aug",    forms: 12, regs: 3,  revenue: 1496.25, full: true },
-  { week: "31 Aug–6 Sep", forms: 20, regs: 7,  revenue: 3443.75, full: true },
-  { week: "7–13 Sep",     forms: 20, regs: 2,  revenue:  997.50, full: true },
-  { week: "14–20 Sep",    forms:  6, regs: 4,  revenue: 1995.00, full: true },
-  { week: "21–27 Sep",    forms: 11, regs: 0,  revenue:    0.00, full: true },
+  { week: "10–16 Aug",     forms: 16, regs: 6,  revenue: 2992.50, full: true  },
+  { week: "17–23 Aug",     forms: 16, regs: 8,  revenue: 3990.00, full: true  },
+  { week: "24–30 Aug",     forms: 13, regs: 3,  revenue: 1496.25, full: true  },
+  { week: "31 Aug–6 Sep",  forms: 20, regs: 7,  revenue: 3443.75, full: true  },
+  { week: "7–13 Sep",      forms: 19, regs: 2,  revenue:  997.50, full: true  },
+  { week: "14–20 Sep",     forms:  6, regs: 4,  revenue: 1995.00, full: true  },
+  { week: "21–27 Sep",     forms:  9, regs: 1,  revenue:  498.75, full: true  },
+  { week: "28 Sep–4 Oct",  forms: 10, regs: 3,  revenue: 1472.50, full: true  },
+  { week: "5–6 Oct ⚡",     forms:  2, regs: 0,  revenue:    0.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -63,6 +57,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
+      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon 5 – Tue 6 Oct)</p>}
     </div>
   );
 };
@@ -94,7 +89,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          3 Aug – 27 Sep 2026 · 8 full weeks · IST boundaries · Unique contacts
+          10 Aug – 6 Oct 2026 · 8 full weeks + W9 ⚡ partial · Irish time boundaries · Unique contacts
         </p>
       </div>
 
@@ -103,20 +98,20 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W3 (17–23 Aug) was the peak registration week — <strong style={{ color: "#f1f5f9" }}>8 registrations and €3,990</strong>,
-        the highest revenue in the period, with W5 (31 Aug–6 Sep) close behind at 7 and €3,444. W6 (7–13 Sep) had
-        20 forms but only 2 registrations (10.0% CR), and W8 (21–27 Sep) has none yet — one W8 payment (Lisa Harvey,
-        25 Sep) has a blank Paythen status and is excluded until marked Registered. W7 shows the highest CR (66.7%)
-        on low form volume. Overall CR of 31.5% across 8 weeks with €17,361 expected revenue.
+        August carried the period — <strong style={{ color: "#f1f5f9" }}>W1–W4 (10 Aug–6 Sep) delivered 24 of 34 registrations and €11,922.50</strong>,
+        about 71% of expected revenue. W2 (17–23 Aug) was the peak registration week with 8 registrations and €3,990 at a 50% CR.
+        From W5 registrations fell to 1–4 a week: W5 (7–13 Sep) converted just 10.5% despite 19 forms, and W7 only 11.1%.
+        W6's 66.7% CR is on low volume (4 regs from 6 forms). W9 has 2 forms and no registrations so far.
+        Overall CR {overallCR}% with {fmt(totalRev)} expected revenue.
       </div>
 
       {/* KPI cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
-          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks",        color: COLORS.rev   },
           { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,         sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%",   sub: "regs ÷ forms",        color: COLORS.cr    },
+          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks + W9 ⚡",  color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -140,17 +135,7 @@ export default function App() {
       <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
         border: "1px solid #334155", marginBottom: 20 }}>
         <ResponsiveContainer width="100%" height={300}>
-          {view === "rev" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
-                axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 5000]}/>
-              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
-            </ComposedChart>
-          ) : view === "cr" ? (
+          {view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
@@ -164,6 +149,16 @@ export default function App() {
                 stroke={COLORS.cr} strokeWidth={2.5}
                 dot={{ r: 6, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
+          ) : view === "rev" ? (
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
+              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
+                axisLine={{ stroke: "#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
+                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 6000]}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
+            </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
               barCategoryGap="22%" barGap={4}>
@@ -171,7 +166,7 @@ export default function App() {
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
                 axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                domain={[0, 22]}/>
+                domain={[0, 20]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "forms" ? "Forms" : "Registrations"}/>
@@ -253,10 +248,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 3 Aug – 27 Sep 2026 · IST boundaries ·
-        HubSpot: 111 form submissions (52 ENQ / 59 APP) · Paythen: 35 registered (78 pre-window excluded, €38,133.75) ·
-        Revenue tiers: €475.00 / €498.75 · Claire Condon deduped (Registered 21 Apr + 14 Aug; latest kept in W2) ·
-        Excluded by status: G-J Bayona 25 Aug (App form o/st), Grainne Gill 4 Sep and Lisa Harvey 25 Sep (blank) · Refreshed 29 Sep 2026
+        CTID786 · CS &amp; COOP LO L5 · 10 Aug – 6 Oct 2026 (W9 partial) · Irish time boundaries ·
+        HubSpot: 52 ENQ / 59 APP (111 forms) · Paythen: 34 registered (84 pre-window, 3 non-registered excluded) · Revenue tiers: €475.00 / €498.75
       </p>
     </div>
   );
