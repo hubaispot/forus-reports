@@ -26,8 +26,6 @@ import SNAProfitabilityCalculator from "./sna_profitability_calculator";
 import CTID785enq,  { data as elc785Raw   } from "./ctid785_enq_vs_app_weekly";
 import M5M22413enq, { data as elc5mRaw    } from "./5m22413_enq_vs_app_weekly";
 
-import GreenCertReport from "./green_cert_report";
-
 // ── NORMALISE — ensure every row has the fields the combined merge needs ───────
 // enq/app files: add total + appRate if not already present
 const normaliseEnq = rows => rows.map(d => ({
@@ -148,10 +146,6 @@ const NAV = {
     },
     revenue: { placeholder: true },
   },
-  GreenCert: {
-    label: "Green Cert", color: "#a3e635",
-    standalone: GreenCertReport,
-  },
   Business: {
     label: "Business", color: "#a78bfa",
     placeholder: true,
@@ -228,7 +222,7 @@ const RevTooltip = ({ active, payload }) => {
 
 // ── ENQ VS APP COMBINED VIEW ──────────────────────────────────────────────────
 function EnqAppCombined({ data, title, subtitle }) {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
   const fullWeeks  = data.filter(d => d.full);
   const totalEnq   = data.reduce((s, d) => s + d.enq, 0);
   const totalApp   = data.reduce((s, d) => s + d.app, 0);
@@ -260,8 +254,8 @@ function EnqAppCombined({ data, title, subtitle }) {
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        <ToggleBtn active={view==="grouped"} onClick={() => setView("grouped")}>Side by side</ToggleBtn>
         <ToggleBtn active={view==="stacked"} onClick={() => setView("stacked")}>Stacked</ToggleBtn>
+        <ToggleBtn active={view==="grouped"} onClick={() => setView("grouped")}>Side by side</ToggleBtn>
         <ToggleBtn active={view==="rate"}    onClick={() => setView("rate")}>App Rate %</ToggleBtn>
       </div>
       <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px", border: "1px solid #334155", marginBottom: 20 }}>
@@ -334,7 +328,7 @@ function EnqAppCombined({ data, title, subtitle }) {
 
 // ── REVENUE COMBINED VIEW ─────────────────────────────────────────────────────
 function RevenueCombined({ data, title, subtitle }) {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("revenue");
   const fullWeeks  = data.filter(d => d.full);
   const totalForms = data.reduce((s, d) => s + d.forms, 0);
   const totalRegs  = data.reduce((s, d) => s + d.regs, 0);
@@ -366,13 +360,21 @@ function RevenueCombined({ data, title, subtitle }) {
         ))}
       </div>
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <ToggleBtn active={view==="revenue"} onClick={() => setView("revenue")}>Expected Revenue</ToggleBtn>
         <ToggleBtn active={view==="grouped"} onClick={() => setView("grouped")}>Forms vs Registrations</ToggleBtn>
         <ToggleBtn active={view==="cr"}      onClick={() => setView("cr")}>Conv Rate %</ToggleBtn>
-        <ToggleBtn active={view==="revenue"} onClick={() => setView("revenue")}>Expected Revenue</ToggleBtn>
       </div>
       <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px", border: "1px solid #334155", marginBottom: 20 }}>
         <ResponsiveContainer width="100%" height={280}>
-          {view === "cr" ? (
+          {view === "revenue" ? (
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
+              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => "€"+(v/1000).toFixed(0)+"k"} domain={[0, maxRev]}/>
+              <Tooltip content={<RevTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Bar dataKey="revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
+            </ComposedChart>
+          ) : view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
@@ -381,14 +383,6 @@ function RevenueCombined({ data, title, subtitle }) {
               <ReferenceLine y={overallCR} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }}/>
               <Line dataKey="cr" type="monotone" stroke={COLORS.cr} strokeWidth={2.5} dot={{ r: 5, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
-            </ComposedChart>
-          ) : view === "revenue" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 10, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => "€"+(v/1000).toFixed(0)+"k"} domain={[0, maxRev]}/>
-              <Tooltip content={<RevTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>
