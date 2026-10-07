@@ -6,23 +6,24 @@ import {
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: last 8 completed Mon–Sun weeks · W9 partial included
-// W1 = Mon 27 Jul 2026 · W8 = Sun 20 Sep 2026 · W9 = 21–24 Sep 2026 ⚡ partial
-// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 24 Sep 2026)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__5_.csv
-//   46 in-window regs · 83 pre-window regs (1 Apr–21 Jul) excluded
-//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 2 App form o/st + 2 blank excluded
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
+// W1 = Mon 10 Aug 2026 · W8 = Sun 4 Oct 2026 · W9 = 5–7 Oct 2026 ⚡ partial
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 7 Oct 2026)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__10_.csv
+//   58 in-window regs · 89 pre-window regs (1 Apr–9 Aug, €63,961.14) excluded
+//   0 email dupes · 0 jean rows · 4 Refunded Not Registered + 2 App form o/st + 1 blank status excluded
+//   Price tiers: €733.95 ×31 · €689.00 ×26 · €709.49 ×1
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Jul–2 Aug",  forms: 11, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "3–9 Aug",       forms: 20, regs: 4,  revenue: 2890.85, full: true  },
-  { week: "10–16 Aug",     forms: 22, regs: 2,  revenue: 1378.00, full: true  },
-  { week: "17–23 Aug",     forms: 23, regs: 5,  revenue: 3600.34, full: true  },
-  { week: "24–30 Aug",     forms: 33, regs: 6,  revenue: 4268.85, full: true  },
-  { week: "31 Aug–6 Sep",  forms: 44, regs: 11, revenue: 7848.70, full: true  },
-  { week: "7–13 Sep",      forms: 23, regs: 3,  revenue: 2156.90, full: true  },
-  { week: "14–20 Sep",     forms: 40, regs: 8,  revenue: 5736.75, full: true  },
-  { week: "21–24 Sep ⚡",  forms: 11, regs: 5,  revenue: 3534.90, full: false },
+  { week: "10–16 Aug",     forms: 22, regs: 2,  revenue: 1378.00,  full: true  },
+  { week: "17–23 Aug",     forms: 21, regs: 5,  revenue: 3600.34,  full: true  },
+  { week: "24–30 Aug",     forms: 33, regs: 6,  revenue: 4268.85,  full: true  },
+  { week: "31 Aug–6 Sep",  forms: 44, regs: 11, revenue: 7848.70,  full: true  },
+  { week: "7–13 Sep",      forms: 23, regs: 3,  revenue: 2156.90,  full: true  },
+  { week: "14–20 Sep",     forms: 38, regs: 8,  revenue: 5736.75,  full: true  },
+  { week: "21–27 Sep",     forms: 26, regs: 15, revenue: 10559.75, full: true  },
+  { week: "28 Sep–4 Oct",  forms: 30, regs: 7,  revenue: 5092.70,  full: true  },
+  { week: "5–7 Oct ⚡",    forms: 17, regs: 1,  revenue: 733.95,   full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -102,7 +103,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Jul – 24 Sep 2026 · 8 full weeks + W9 partial ⚡ · 83 pre-window regs excluded
+          10 Aug – 7 Oct 2026 · 8 full weeks + W9 partial ⚡ · 89 pre-window regs (€63,961.14) excluded
         </p>
       </div>
 
@@ -112,19 +113,19 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W6 (31 Aug–6 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>44 forms and 11 registrations</strong> generating
-        €7,848.70 (26% of in-window revenue). Overall CR is {overallCR}% across 8 full weeks.
-        W8 (14–20 Sep) delivered 8 registrations and €5,736.75 — the second-strongest revenue week.
-        W9 (21–24 Sep ⚡) is already at 5 registrations and €3,534.90 with the week still running.
+        W7 (21–27 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>15 registrations from 26 forms (57.7% CR)</strong> generating
+        €10,559.75 (26% of in-window revenue). W4 (31 Aug–6 Sep) was the peak forms week (44) and converted 11 registrations.
+        Overall CR is {overallCR}% across 8 full weeks plus W9. W9 (5–7 Oct ⚡) has 1 registration (€733.95) so far,
+        with 17 forms already in.
       </div>
 
       {/* KPI cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
+          { label: "Total Revenue",       value: fmt(totalRev),   sub: "in-window only",     color: COLORS.rev   },
           { label: "Total Forms",         value: totalForms,      sub: `avg ${avgForms}/wk`, color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,       sub: `avg ${avgRegs}/wk`,  color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%", sub: "regs ÷ forms",       color: COLORS.cr    },
-          { label: "Total Revenue",       value: fmt(totalRev),   sub: "in-window only",     color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{
             background: "#1e293b", borderRadius: 10, padding: "12px 18px",
@@ -155,7 +156,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 10000]}/>
+                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 12000]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Bar dataKey="revenue" name="revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
             </ComposedChart>
@@ -164,7 +165,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 50]}/>
+                tickFormatter={v => v + "%"} domain={[0, 70]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <ReferenceLine y={parseFloat(overallCR)} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }}/>
@@ -176,7 +177,7 @@ export default function App() {
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }} barCategoryGap="22%" barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 50]}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 52]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
                 formatter={v => v === "forms" ? "Forms (enq + app)" : "Registrations"}/>
@@ -252,7 +253,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 24 Sep 2026 · 46 in-window registrations · 83 pre-window regs excluded · no duplicate emails detected
+        Updated 7 Oct 2026 · 58 in-window registrations · 89 pre-window regs (€63,961.14) excluded · no duplicate emails detected
       </p>
 
     </div>

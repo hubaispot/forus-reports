@@ -1,23 +1,26 @@
 import { useState } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend, ReferenceLine
+  Tooltip, ResponsiveContainer, Legend, ReferenceLine,
+  PieChart, Pie, Cell
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 24 Sep 2026 | W1 27 Jul → W9 21–24 Sep 2026 (W9 partial ⚡)
-// ENQ: 91 raw → 91 unique | APP: 10 raw → 10 unique · No dupes
+// Generated: 7 Oct 2026 | W1 10 Aug → W9 5–7 Oct 2026 (W9 partial ⚡)
+// ENQ: 81 raw → 81 unique | APP: 7 raw → 7 unique (0 dups)
+// 0 rows outside window | CSV exports (local Irish time) | latest ENQ 1 Oct, latest APP 30 Sep
+// Traffic source tab added 7 Oct 2026 — UTM categories below
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Jul–2 Aug",  enq: 13, app: 4, full: true  },
-  { week: "3–9 Aug",       enq: 11, app: 0, full: true  },
-  { week: "10–16 Aug",     enq:  6, app: 2, full: true  },
-  { week: "17–23 Aug",     enq:  3, app: 0, full: true  },
-  { week: "24–30 Aug",     enq:  4, app: 0, full: true  },
-  { week: "31 Aug–6 Sep",  enq: 14, app: 1, full: true  },
-  { week: "7–13 Sep",      enq: 17, app: 3, full: true  },
-  { week: "14–20 Sep",     enq: 10, app: 0, full: true  },
-  { week: "21–24 Sep ⚡",  enq: 13, app: 0, full: false },
+  { week: "10 Aug–16 Aug",    enq: 6,  app: 2, full: true  },
+  { week: "17 Aug–23 Aug",    enq: 3,  app: 0, full: true  },
+  { week: "24 Aug–30 Aug",    enq: 4,  app: 0, full: true  },
+  { week: "31 Aug–6 Sep",     enq: 14, app: 1, full: true  },
+  { week: "7 Sep–13 Sep",     enq: 18, app: 3, full: true  },
+  { week: "14 Sep–20 Sep",    enq: 9,  app: 0, full: true  },
+  { week: "21 Sep–27 Sep",    enq: 21, app: 0, full: true  },
+  { week: "28 Sep–4 Oct",     enq: 6,  app: 1, full: true  },
+  { week: "5 Oct–7 Oct ⚡",   enq: 0,  app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -29,6 +32,113 @@ const avgApp     = (fullWeeks.reduce((s,d) => s + d.app, 0) / fullWeeks.length).
 const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
+
+// ── UTM TRAFFIC SOURCE (W1–W9, deduped contacts) ─────────────────────────────
+// Mapping (UTM Source / Medium): adwords/ppc → Google Ads
+// fb or ig / placement (e.g. Facebook_Mobile_Reels) → Meta Ads
+// {{utm_source}} / Facebook_Mobile_Reels → Meta Ads · {{utm_source}} / blank → Unknown
+// {{site_source_name}} / {{placement}} (unfilled Meta placeholders) → Unknown
+// hs_automation → Workflow Email · hs_email/email → Marketing Email
+// website → Website · chatgpt.com → AI / ChatGPT · blank/blank → Unknown
+export const utmData = [
+  { name: "Google Ads",       enq:   0, app:   0, color: "#4f8ef7" },
+  { name: "Meta Ads",         enq:  42, app:   1, color: "#818cf8" },
+  { name: "Workflow Email",   enq:   0, app:   0, color: "#f472b6" },
+  { name: "Marketing Email",  enq:   1, app:   0, color: "#fbbf24" },
+  { name: "Website",          enq:  16, app:   0, color: "#34d399" },
+  { name: "AI / ChatGPT",     enq:   1, app:   0, color: "#2dd4bf" },
+  { name: "Unknown",          enq:  21, app:   6, color: "#475569" },
+].map(d => ({ ...d, combined: d.enq + d.app }));
+
+const UTM_FORMS = [
+  { id: "combined", label: "Combined" },
+  { id: "enq",      label: "Enquiry" },
+  { id: "app",      label: "Application" },
+];
+
+const UtmTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  return (
+    <div style={{
+      background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
+      padding: "8px 12px", fontSize: 13, color: "#f1f5f9"
+    }}>
+      <span style={{ color: p.payload.color }}>● </span>{p.name}: <strong>{p.value}</strong>
+      <span style={{ color: "#94a3b8" }}> ({p.payload.pct}%)</span>
+    </div>
+  );
+};
+
+const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.04) return null;
+  const RAD = Math.PI / 180;
+  const r = innerRadius + (outerRadius - innerRadius) * 0.55;
+  const x = cx + r * Math.cos(-midAngle * RAD);
+  const y = cy + r * Math.sin(-midAngle * RAD);
+  return (
+    <text x={x} y={y} fill="#0f172a" textAnchor="middle" dominantBaseline="central"
+      fontSize={12} fontWeight={700}>{Math.round(percent * 100)}%</text>
+  );
+};
+
+const UtmPanel = ({ form, setForm }) => {
+  const totalForm = utmData.reduce((s, d) => s + d[form], 0);
+  // Categories with no submissions across both forms are hidden entirely
+  const rows = utmData.filter(d => d.combined > 0).map(d => ({
+    name: d.name, color: d.color, value: d[form],
+    pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
+  }));
+  const pieRows = rows.filter(r => r.value > 0);
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center" }}>
+        {UTM_FORMS.map(f => (
+          <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
+        ))}
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+        <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={pieRows} dataKey="value" nameKey="name" cx="50%" cy="50%"
+                innerRadius={55} outerRadius={120} paddingAngle={1}
+                labelLine={false} label={renderPieLabel} stroke="#1e293b" isAnimationActive={false}>
+                {pieRows.map(r => <Cell key={r.name} fill={r.color}/>)}
+              </Pie>
+              <Tooltip content={<UtmTooltip/>}/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+          {rows.map(r => (
+            <div key={r.name} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "6px 4px", borderBottom: "1px solid #334155", fontSize: 13,
+              opacity: r.value > 0 ? 1 : 0.4
+            }}>
+              <span style={{ color: "#cbd5e1" }}>
+                <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: r.color, marginRight: 8 }}/>
+                {r.name}
+              </span>
+              <span>
+                <strong style={{ color: "#f1f5f9" }}>{r.value}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8, display: "inline-block", minWidth: 34, textAlign: "right" }}>{r.pct}%</span>
+              </span>
+            </div>
+          ))}
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 4px", fontSize: 13, fontWeight: 700 }}>
+            <span style={{ color: "#94a3b8" }}>Total</span>
+            <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
+          </div>
+          <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
+            UTM source/medium captured on the form submission · W1–W9 · deduped contacts. Unknown = no UTMs recorded or unfilled ad placeholders.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -57,7 +167,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
     </div>
   );
 };
@@ -74,6 +184,7 @@ const Tab = ({id, active, onClick, children}) => (
 
 export default function App() {
   const [view, setView] = useState("stacked");
+  const [utmForm, setUtmForm] = useState("combined");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -88,7 +199,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          27 Jul – 24 Sep 2026 · Unique contacts · last form only per contact · W9 partial ⚡
+          10 Aug – 7 Oct 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
@@ -109,7 +220,7 @@ export default function App() {
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
           { label:"Total Submissions",  value:total,           sub:"W1–W9",                      color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",               color:"#34d399"   },
-          { label:"This week (Mon–Thu)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
+          { label:"This week (Mon–Wed)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -125,11 +236,13 @@ export default function App() {
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
+        <Tab id="utm"     active={view==="utm"}     onClick={setView}>Traffic source</Tab>
       </div>
 
       {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}/> : (
         <ResponsiveContainer width="100%" height={300}>
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}>
@@ -162,6 +275,7 @@ export default function App() {
             </ComposedChart>
           )}
         </ResponsiveContainer>
+        )}
       </div>
 
       {/* Table */}
@@ -221,7 +335,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 24 Sep 2026 · ENQ 91 raw → 91 unique · APP 10 raw → 10 unique · No dupes · W9 partial ⚡ Mon–Thu
+        CTID379 · SNA L6 LO · Generated 7 Oct 2026 · ENQ 81 raw → 81 unique · APP 7 raw → 7 unique (0 dups) · Latest ENQ 1 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Wed
       </p>
     </div>
   );

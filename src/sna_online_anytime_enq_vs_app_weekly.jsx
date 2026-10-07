@@ -13,14 +13,15 @@ import {
 // If include_current_week = false, all 8 rows have full: true — no ⚡ row.
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "13–19 Jul",       enq: 2, app: 0, full: true },
-  { week: "20–26 Jul",       enq: 1, app: 0, full: true },
-  { week: "27 Jul–2 Aug",    enq: 3, app: 0, full: true },
-  { week: "3–9 Aug",         enq: 1, app: 0, full: true },
-  { week: "10–16 Aug",       enq: 6, app: 1, full: true },
-  { week: "17–23 Aug",       enq: 0, app: 1, full: true },
-  { week: "24–30 Aug",       enq: 4, app: 0, full: true },
-  { week: "31 Aug–6 Sep",    enq: 3, app: 0, full: true },
+  { week: "10–16 Aug",       enq: 6, app: 1, full: true  },
+  { week: "17–23 Aug",       enq: 0, app: 0, full: true  },
+  { week: "24–30 Aug",       enq: 4, app: 0, full: true  },
+  { week: "31 Aug–6 Sep",    enq: 3, app: 0, full: true  },
+  { week: "7–13 Sep",        enq: 9, app: 3, full: true  },
+  { week: "14–20 Sep",       enq: 3, app: 0, full: true  },
+  { week: "21–27 Sep",       enq: 3, app: 0, full: true  },
+  { week: "28 Sep–4 Oct",    enq: 4, app: 1, full: true  },
+  { week: "5–7 Oct ⚡",      enq: 2, app: 1, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -60,7 +61,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
     </div>
   );
 };
@@ -76,7 +77,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("grouped");
+  const [view, setView] = useState("stacked");
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -91,7 +92,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Jul – 6 Sep 2026 · Unique contacts · last form only per contact
+          10 Aug – 7 Oct 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -99,10 +100,10 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        SNA OA (CTID490 + CTID423) shows an <strong style={{ color:"#f1f5f9" }}>enquiry-heavy, low-conversion pattern</strong> —
-        20 enquiries against just 2 applications across 8 weeks ({overallApp}% overall app rate).
-        W5 (10–16 Aug) was the peak enquiry week (6 enq, 1 app). W6 (17–23 Aug) had 1 application with no enquiry (100% 🔥).
-        1 cross-CTID enquiry dup (Rema Burwise, ENQ_423 + ENQ_490) was deduped.
+        SNA OA (CTID490 + CTID423) shows a <strong style={{ color:"#f1f5f9" }}>healthy enquiry flow but low application conversion</strong> —
+        enquiries average {avgEnq}/wk against {avgApp} applications/wk, an overall app rate of {overallApp}%.
+        W5 (7–13 Sep) is the standout week with 9 enquiries and 3 of the 6 applications; 5 of the 8 full weeks had no applications.
+        Both CTIDs have matched enquiry and application forms; 1 cross-CTID enquiry overlap (Rema Burwise) was deduped.
       </div>
 
       {/* KPIs */}
@@ -110,7 +111,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 weeks",           color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"8 wks + W9 ⚡",     color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           // Last KPI card: partial week if full:false, otherwise show W8 total
           ...(data[data.length-1].full
@@ -129,8 +130,8 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
+        <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
       </div>
 

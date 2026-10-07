@@ -1,26 +1,28 @@
 import { useState } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend, ReferenceLine
+  Tooltip, ResponsiveContainer, Legend, ReferenceLine,
+  PieChart, Pie, Cell
 } from "recharts";
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
-// Rolling window: last 8 completed Mon–Sun weeks · W9 partial included
-// W1 = Mon 27 Jul 2026 · W8 = Sun 20 Sep 2026 · W9 = 21–24 Sep 2026 ⚡ partial
+// Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
+// W1 = Mon 10 Aug 2026 · W8 = Sun 4 Oct 2026 · W9 = 5–7 Oct 2026 ⚡ partial
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
-// Freshly processed 24 Sep 2026 · 112 unique enquiries · 115 unique apps · no dupes detected
+// Freshly processed 7 Oct 2026 (CSV, local Irish time) · 123 unique enquiries · 131 unique apps · no dupes detected
+// Traffic source tab added 7 Oct 2026 — UTM categories below
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "27 Jul–2 Aug",  enq: 5,  app: 6,  full: true  },
-  { week: "3–9 Aug",       enq: 12, app: 8,  full: true  },
   { week: "10–16 Aug",     enq: 13, app: 9,  full: true  },
-  { week: "17–23 Aug",     enq: 14, app: 9,  full: true  },
+  { week: "17–23 Aug",     enq: 13, app: 8,  full: true  },
   { week: "24–30 Aug",     enq: 16, app: 17, full: true  },
   { week: "31 Aug–6 Sep",  enq: 17, app: 27, full: true  },
-  { week: "7–13 Sep",      enq: 11, app: 12, full: true  },
-  { week: "14–20 Sep",     enq: 21, app: 19, full: true  },
-  { week: "21–24 Sep ⚡",  enq: 3,  app: 8,  full: false },
+  { week: "7–13 Sep",      enq: 12, app: 11, full: true  },
+  { week: "14–20 Sep",     enq: 19, app: 19, full: true  },
+  { week: "21–27 Sep",     enq: 8,  app: 18, full: true  },
+  { week: "28 Sep–4 Oct",  enq: 16, app: 14, full: true  },
+  { week: "5–7 Oct ⚡",    enq: 9,  app: 8,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -36,6 +38,109 @@ const avgApp     = (fullWeeks.reduce((s, d) => s + d.app, 0) / fullWeeks.length)
 const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq: "#fb923c", app: "#38bdf8", rate: "#a78bfa" };
+
+// ── UTM TRAFFIC SOURCE (W1–W9, deduped contacts) ─────────────────────────────
+// Mapping (UTM Source / Medium): adwords/ppc → Google Ads · facebook/paid_social → Meta Ads
+// hs_automation/email → Workflow Email · hs_email/email → Marketing Email
+// website/(blank or email) → Website · chatgpt.com → AI / ChatGPT · blank/blank → Unknown
+export const utmData = [
+  { name: "Google Ads",       enq:  41, app:  37, color: "#4f8ef7" },
+  { name: "Meta Ads",         enq:  13, app:   9, color: "#818cf8" },
+  { name: "Workflow Email",   enq:   0, app:   4, color: "#f472b6" },
+  { name: "Marketing Email",  enq:   1, app:   4, color: "#fbbf24" },
+  { name: "Website",          enq:  22, app:  24, color: "#34d399" },
+  { name: "AI / ChatGPT",     enq:   1, app:   0, color: "#2dd4bf" },
+  { name: "Unknown",          enq:  45, app:  53, color: "#475569" },
+].map(d => ({ ...d, combined: d.enq + d.app }));
+
+const UTM_FORMS = [
+  { id: "combined", label: "Combined" },
+  { id: "enq",      label: "Enquiry" },
+  { id: "app",      label: "Application" },
+];
+
+const UtmTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  return (
+    <div style={{
+      background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
+      padding: "8px 12px", fontSize: 13, color: "#f1f5f9"
+    }}>
+      <span style={{ color: p.payload.color }}>● </span>{p.name}: <strong>{p.value}</strong>
+      <span style={{ color: "#94a3b8" }}> ({p.payload.pct}%)</span>
+    </div>
+  );
+};
+
+const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.04) return null;
+  const RAD = Math.PI / 180;
+  const r = innerRadius + (outerRadius - innerRadius) * 0.55;
+  const x = cx + r * Math.cos(-midAngle * RAD);
+  const y = cy + r * Math.sin(-midAngle * RAD);
+  return (
+    <text x={x} y={y} fill="#0f172a" textAnchor="middle" dominantBaseline="central"
+      fontSize={12} fontWeight={700}>{Math.round(percent * 100)}%</text>
+  );
+};
+
+const UtmPanel = ({ form, setForm }) => {
+  const totalForm = utmData.reduce((s, d) => s + d[form], 0);
+  const rows = utmData.map(d => ({
+    name: d.name, color: d.color, value: d[form],
+    pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
+  }));
+  const pieRows = rows.filter(r => r.value > 0);
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center" }}>
+        {UTM_FORMS.map(f => (
+          <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
+        ))}
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+        <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={pieRows} dataKey="value" nameKey="name" cx="50%" cy="50%"
+                innerRadius={55} outerRadius={120} paddingAngle={1}
+                labelLine={false} label={renderPieLabel} stroke="#1e293b" isAnimationActive={false}>
+                {pieRows.map(r => <Cell key={r.name} fill={r.color}/>)}
+              </Pie>
+              <Tooltip content={<UtmTooltip/>}/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+          {rows.map(r => (
+            <div key={r.name} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "6px 4px", borderBottom: "1px solid #334155", fontSize: 13,
+              opacity: r.value > 0 ? 1 : 0.4
+            }}>
+              <span style={{ color: "#cbd5e1" }}>
+                <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: r.color, marginRight: 8 }}/>
+                {r.name}
+              </span>
+              <span>
+                <strong style={{ color: "#f1f5f9" }}>{r.value}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8, display: "inline-block", minWidth: 34, textAlign: "right" }}>{r.pct}%</span>
+              </span>
+            </div>
+          ))}
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 4px", fontSize: 13, fontWeight: 700 }}>
+            <span style={{ color: "#94a3b8" }}>Total</span>
+            <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
+          </div>
+          <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
+            UTM source/medium captured on the form submission · W1–W9 · deduped contacts. Unknown = no UTMs recorded.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -84,6 +189,7 @@ const Tab = ({ id, active, onClick, children }) => (
 
 export default function App() {
   const [view, setView] = useState("stacked");
+  const [utmForm, setUtmForm] = useState("combined");
 
   return (
     <div style={{
@@ -103,7 +209,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          27 Jul – 24 Sep 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
+          10 Aug – 7 Oct 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -113,10 +219,11 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>strong {overallApp}% overall application rate</strong> across
-        8 full weeks plus a partial W9. Peak week was W6 (31 Aug–6 Sep) at 44 submissions with 27 applications (61% 🔥).
-        Applications overtook enquiries in W6 and W9, suggesting strong direct-to-apply intent.
-        W8 (14–20 Sep) rebounded to 40 submissions after a quieter W7.
+        CTID742 shows a <strong style={{ color: "#f1f5f9" }}>{overallApp}% overall application rate</strong> across
+        8 full weeks plus a partial W9, with applications overtaking enquiries from late August.
+        Peak volume was W4 (31 Aug–6 Sep) at 44 submissions with a 61% app rate; W7 (21–27 Sep)
+        hit the highest app rate at 69% despite the lowest enquiry week (8). W9 (5–7 Oct ⚡) already has
+        17 submissions after under 3 days — well ahead of the 29.6/wk average.
       </div>
 
       {/* KPIs */}
@@ -143,6 +250,7 @@ export default function App() {
         <Tab id="stacked" active={view === "stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="grouped" active={view === "grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view === "rate"}    onClick={setView}>Application rate %</Tab>
+        <Tab id="utm"     active={view === "utm"}     onClick={setView}>Traffic source</Tab>
       </div>
 
       {/* Chart */}
@@ -150,8 +258,25 @@ export default function App() {
         background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
         border: "1px solid #334155", marginBottom: 20
       }}>
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}/> : (
         <ResponsiveContainer width="100%" height={300}>
-          {view === "rate" ? (
+          {view !== "rate" ? (
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
+              barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
+              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 50]}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
+                formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
+              <Bar dataKey="enq" name="enq" fill={COLORS.enq}
+                radius={view === "stacked" ? [0, 0, 0, 0] : [5, 5, 0, 0]}
+                stackId={view === "stacked" ? "a" : undefined}/>
+              <Bar dataKey="app" name="app" fill={COLORS.app}
+                radius={[5, 5, 0, 0]}
+                stackId={view === "stacked" ? "a" : undefined}/>
+            </ComposedChart>
+          ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
@@ -164,24 +289,9 @@ export default function App() {
                 stroke="#34d399" strokeWidth={2.5}
                 dot={{ r: 6, fill: "#34d399", strokeWidth: 0 }} connectNulls/>
             </ComposedChart>
-          ) : (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
-              barCategoryGap={view === "stacked" ? "30%" : "22%"} barGap={4}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 30]}/>
-              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Legend wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
-                formatter={v => v === "enq" ? "Enquiry form" : "Application form"}/>
-              <Bar dataKey="enq" name="enq" fill={COLORS.enq}
-                radius={view === "stacked" ? [0, 0, 0, 0] : [5, 5, 0, 0]}
-                stackId={view === "stacked" ? "a" : undefined}/>
-              <Bar dataKey="app" name="app" fill={COLORS.app}
-                radius={[5, 5, 0, 0]}
-                stackId={view === "stacked" ? "a" : undefined}/>
-            </ComposedChart>
           )}
         </ResponsiveContainer>
+        )}
       </div>
 
       {/* Table */}
@@ -248,7 +358,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 21 Aug 2026 · W1–W8 fully processed from fresh exports · W9 partial (Mon–Fri) · no duplicates detected
+        Updated 7 Oct 2026 · W1–W9 processed from fresh CSV exports (Irish local time) · W9 partial (Mon 5 – Wed 7 Oct, to 10:00) · no duplicates detected
       </p>
 
     </div>

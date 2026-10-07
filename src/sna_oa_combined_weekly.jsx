@@ -5,14 +5,15 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "13–19 Jul",    forms: 2,  regs: 0, revenue: 0.00,     full: true },
-  { week: "20–26 Jul",    forms: 1,  regs: 2, revenue: 604.75,   full: true },
-  { week: "27 Jul–2 Aug", forms: 3,  regs: 1, revenue: 462.00,   full: true },
-  { week: "3–9 Aug",      forms: 1,  regs: 1, revenue: 295.00,   full: true },
-  { week: "10–16 Aug",    forms: 7,  regs: 9, revenue: 3188.50,  full: true },
-  { week: "17–23 Aug",    forms: 1,  regs: 2, revenue: 590.00,   full: true },
-  { week: "24–30 Aug",    forms: 4,  regs: 1, revenue: 309.75,   full: true },
-  { week: "31 Aug–6 Sep", forms: 3,  regs: 6, revenue: 1966.50,  full: true },
+  { week: "10–16 Aug",    forms: 7,  regs: 9, revenue: 3188.50,  full: true  },
+  { week: "17–23 Aug",    forms: 0,  regs: 2, revenue: 590.00,   full: true  },
+  { week: "24–30 Aug",    forms: 4,  regs: 1, revenue: 309.75,   full: true  },
+  { week: "31 Aug–6 Sep", forms: 3,  regs: 6, revenue: 1966.50,  full: true  },
+  { week: "7–13 Sep",     forms: 12, regs: 7, revenue: 2536.75,  full: true  },
+  { week: "14–20 Sep",    forms: 3,  regs: 3, revenue: 1233.75,  full: true  },
+  { week: "21–27 Sep",    forms: 3,  regs: 3, revenue: 1364.00,  full: true  },
+  { week: "28 Sep–4 Oct", forms: 5,  regs: 2, revenue: 604.75,   full: true  },
+  { week: "5–7 Oct ⚡",   forms: 3,  regs: 0, revenue: 0.00,     full: false },
 ];
 
 const fullWeeks    = data.filter(d => d.full);
@@ -57,7 +58,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Fri)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
     </div>
   );
 };
@@ -73,7 +74,7 @@ const Tab = ({id, active, onClick, children}) => (
 );
 
 export default function App() {
-  const [view, setView] = useState("bars");
+  const [view, setView] = useState("rev");
 
   const crData = data.map(d => ({
     ...d,
@@ -94,7 +95,7 @@ export default function App() {
           Weekly Combined Revenue Report
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          13 Jul – 6 Sep 2026 · 8 completed weeks · Unique contacts
+          10 Aug – 7 Oct 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
         </p>
       </div>
 
@@ -103,19 +104,19 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Note: </strong>
         CTID490 (SNA L5 OA) and CTID423 (SNA L6 OA) share combined reporting.
-        W5 (10–16 Aug) was the standout week with <strong style={{ color:"#f1f5f9" }}>9 registrations and €3,188.50 revenue</strong>.
-        W8 (31 Aug–6 Sep) closed strongly with 6 registrations and €1,966.50.
+        W1 (10–16 Aug) was the standout week with <strong style={{ color:"#f1f5f9" }}>9 registrations and €3,188.50 revenue</strong>; W5 (7–13 Sep) followed with 7 registrations and €2,536.75.
+        CTID423 (L6) contributed €6,046.00 from 14 registrations; CTID490 (L5) €5,748.00 from 19.
         CR% &gt; 100% in some weeks (†) reflects Paythen payments landing in a later week than the originating form submission — expected, not an error.
-        19 pre-window registrations (before 13 Jul) excluded from weekly counts.
+        23 pre-window registrations (before 10 Aug, €8,953.15) excluded from weekly counts.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
+          { label:"Expected Revenue",    value:fmtEur(totalRev),  sub:"CTID490 + CTID423",         color:COLORS.rev   },
           { label:"Total Forms",         value:totalForms,        sub:`avg ${avgForms}/wk`,        color:COLORS.forms },
           { label:"Total Registrations", value:totalRegs,         sub:`avg ${avgRegs}/wk`,         color:COLORS.regs  },
           { label:"Overall Conv. Rate",  value:overallCR+"%",     sub:"regs ÷ forms",              color:COLORS.cr    },
-          { label:"Expected Revenue",    value:fmtEur(totalRev),  sub:"CTID490 + CTID423",         color:COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 130px", border:"1px solid #334155" }}>
@@ -128,16 +129,25 @@ export default function App() {
 
       {/* Toggle */}
       <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+        <Tab id="rev"  active={view==="rev"}  onClick={setView}>Expected Revenue</Tab>
         <Tab id="bars" active={view==="bars"} onClick={setView}>Forms vs Registrations</Tab>
         <Tab id="cr"   active={view==="cr"}   onClick={setView}>Conversion Rate %</Tab>
-        <Tab id="rev"  active={view==="rev"}  onClick={setView}>Expected Revenue</Tab>
       </div>
 
       {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
         <ResponsiveContainer width="100%" height={300}>
-          {view === "cr" ? (
+          {view === "rev" ? (
+            <ComposedChart data={data} margin={{ top:8, right:20, left:10, bottom:8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
+              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
+                tickFormatter={v => "€"+v.toLocaleString("en-IE")}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
+              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
+            </ComposedChart>
+          ) : view === "cr" ? (
             <ComposedChart data={crData} margin={{ top:8, right:20, left:-8, bottom:8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
@@ -149,15 +159,6 @@ export default function App() {
               <Line dataKey="cr" name="Conv. Rate" type="monotone"
                 stroke={COLORS.cr} strokeWidth={2.5}
                 dot={{ r:6, fill:COLORS.cr, strokeWidth:0 }} connectNulls/>
-            </ComposedChart>
-          ) : view === "rev" ? (
-            <ComposedChart data={data} margin={{ top:8, right:20, left:10, bottom:8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€"+v.toLocaleString("en-IE")}/>
-              <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5,5,0,0]}/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }} barCategoryGap="22%" barGap={4}>
@@ -235,7 +236,7 @@ export default function App() {
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
         † CR% &gt; 100% where Paythen payment date falls in a later week than the originating form submission — expected behaviour, not an error. ·
-        19 pre-window Paythen registrations (before 13 Jul) excluded · Paythen fetched 7 Sep 2026
+        23 pre-window Paythen registrations (before 10 Aug, €8,953.15) excluded · Paythen fetched 7 Oct 2026
       </p>
     </div>
   );
