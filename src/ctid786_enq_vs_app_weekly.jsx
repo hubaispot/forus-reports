@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend, ReferenceLine
+  Tooltip, ResponsiveContainer, Legend, ReferenceLine,
+  PieChart, Pie, Cell
 } from "recharts";
 
 export const data = [
@@ -25,6 +26,122 @@ const avgApp     = (fullWeeks.reduce((s,d) => s + d.app, 0) / fullWeeks.length).
 const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
+
+// ── UTM TRAFFIC SOURCE (W1–W9, 111 forms · 100 contacts) — added 7 Oct 2026 ────
+// Source: HubSpot contact utm_source / utm_medium (ENQ786 + APP_786 exports have no UTM columns)
+// Counted per form: the 11 contacts who submitted both ENQ and APP appear in both
+// Mapping: fb / facebook → Facebook · ig → Instagram · website → Website
+// hs_automation / hs_email → HubSpot email · chatgpt.com / copilot.com → AI search
+// {{utm_source}} (unresolved macro, no medium) / blank → Unknown
+export const utmData = [
+  { name: "Facebook",         enq:  24, app:   6, color: "#60a5fa" },
+  { name: "Website",          enq:   4, app:  17, color: "#34d399" },
+  { name: "HubSpot email",    enq:   3, app:   5, color: "#fb923c" },
+  { name: "Instagram",        enq:   1, app:   2, color: "#f472b6" },
+  { name: "AI search",        enq:   1, app:   1, color: "#a78bfa" },
+  { name: "Unknown",          enq:  19, app:  28, color: "#475569" },
+].map(d => ({ ...d, combined: d.enq + d.app }));
+
+const UTM_FORMS = [
+  { id: "combined", label: "Combined" },
+  { id: "enq",      label: "Enquiry" },
+  { id: "app",      label: "Application" },
+];
+
+const UtmTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  return (
+    <div style={{
+      background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
+      padding: "8px 12px", fontSize: 13, color: "#f1f5f9"
+    }}>
+      <span style={{ color: p.payload.color }}>● </span>{p.name}: <strong>{p.value}</strong>
+      <span style={{ color: "#94a3b8" }}> ({p.payload.pct}%)</span>
+    </div>
+  );
+};
+
+const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.04) return null;
+  const RAD = Math.PI / 180;
+  const r = innerRadius + (outerRadius - innerRadius) * 0.55;
+  const x = cx + r * Math.cos(-midAngle * RAD);
+  const y = cy + r * Math.sin(-midAngle * RAD);
+  return (
+    <text x={x} y={y} fill="#0f172a" textAnchor="middle" dominantBaseline="central"
+      fontSize={12} fontWeight={700}>{Math.round(percent * 100)}%</text>
+  );
+};
+
+const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
+  const unknownCount = utmData.find(d => d.name === "Unknown")?.[form] ?? 0;
+  // Categories with no submissions across both forms are hidden entirely
+  const base = utmData.filter(d => d.combined > 0 && (showUnknown || d.name !== "Unknown"));
+  const totalForm = base.reduce((s, d) => s + d[form], 0);
+  const rows = base.map(d => ({
+    name: d.name, color: d.color, value: d[form],
+    pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
+  }));
+  const pieRows = rows.filter(r => r.value > 0);
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center", flexWrap: "wrap" }}>
+        {UTM_FORMS.map(f => (
+          <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
+        ))}
+        <span style={{ width: 1, background: "#334155", margin: "0 6px" }}/>
+        <Tab id="incl" active={showUnknown}  onClick={() => setShowUnknown(true)}>Include Unknown</Tab>
+        <Tab id="excl" active={!showUnknown} onClick={() => setShowUnknown(false)}>Exclude Unknown</Tab>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+        <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={pieRows} dataKey="value" nameKey="name" cx="50%" cy="50%"
+                innerRadius={55} outerRadius={120} paddingAngle={1}
+                labelLine={false} label={renderPieLabel} stroke="#1e293b" isAnimationActive={false}>
+                {pieRows.map(r => <Cell key={r.name} fill={r.color}/>)}
+              </Pie>
+              <Tooltip content={<UtmTooltip/>}/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+          {rows.map(r => (
+            <div key={r.name} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "6px 4px", borderBottom: "1px solid #334155", fontSize: 13,
+              opacity: r.value > 0 ? 1 : 0.4
+            }}>
+              <span style={{ color: "#cbd5e1" }}>
+                <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: r.color, marginRight: 8 }}/>
+                {r.name}
+              </span>
+              <span>
+                <strong style={{ color: "#f1f5f9" }}>{r.value}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8, display: "inline-block", minWidth: 34, textAlign: "right" }}>{r.pct}%</span>
+              </span>
+            </div>
+          ))}
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 4px", fontSize: 13, fontWeight: 700 }}>
+            <span style={{ color: "#94a3b8" }}>Total</span>
+            <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
+          </div>
+          {!showUnknown && (
+            <p style={{ margin: "2px 4px 0", fontSize: 11, color: "#94a3b8" }}>
+              Excluded: {unknownCount} Unknown forms (no UTM source recorded).
+            </p>
+          )}
+          <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
+            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Unknown = no UTMs recorded or unresolved {"{{utm_source}}"} placeholder.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -70,6 +187,8 @@ const Tab = ({id, active, onClick, children}) => (
 
 export default function App() {
   const [view, setView] = useState("stacked");
+  const [utmForm, setUtmForm] = useState("combined");
+  const [showUnknown, setShowUnknown] = useState(true);
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -126,11 +245,14 @@ export default function App() {
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
+        <Tab id="utm"     active={view==="utm"}     onClick={setView}>Traffic source</Tab>
       </div>
 
       {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}
+          showUnknown={showUnknown} setShowUnknown={setShowUnknown}/> : (
         <ResponsiveContainer width="100%" height={300}>
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}>
@@ -163,6 +285,7 @@ export default function App() {
             </ComposedChart>
           )}
         </ResponsiveContainer>
+        )}
       </div>
 
       {/* Table */}
