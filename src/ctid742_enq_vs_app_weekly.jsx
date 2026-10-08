@@ -11,7 +11,7 @@ import {
 // W1 = Mon 10 Aug 2026 · W8 = Sun 4 Oct 2026 · W9 = 5–7 Oct 2026 ⚡ partial
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
 // Freshly processed 7 Oct 2026 (CSV, local Irish time) · 123 unique enquiries · 131 unique apps · no dupes detected
-// Traffic source tab added 7 Oct 2026 — UTM categories below
+// Traffic source tab added 7 Oct 2026, aligned to CTID786 / CTID770+771 template 8 Oct 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
   { week: "10–16 Aug",     enq: 13, app: 9,  full: true  },
@@ -39,18 +39,20 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq: "#fb923c", app: "#38bdf8", rate: "#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, deduped contacts) ─────────────────────────────
-// Mapping (UTM Source / Medium): adwords/ppc → Google Ads · facebook/paid_social → Meta Ads
-// hs_automation/email → Workflow Email · hs_email/email → Marketing Email
-// website/(blank or email) → Website · chatgpt.com → AI / ChatGPT · blank/blank → Unknown
+// ── UTM TRAFFIC SOURCE (W1–W9, 254 forms · 226 contacts) — CTID786 / CTID770+771 template, 8 Oct 2026 ─
+// Source: HubSpot contact utm_source / utm_medium (pulled 8 Oct 2026), not the form-submission UTMs
+// Counted per form: the 28 contacts who submitted both ENQ and APP appear in both
+// Mapping: adwords or medium ppc → Google Ads · fb / facebook, or medium paid-social → Facebook · ig → Instagram
+// hs_automation / hs_email / any email medium → HubSpot email · website (no medium clue) → Website
+// chatgpt.com / copilot.com → AI search · blank → Unknown · order: largest first, Unknown last
 export const utmData = [
-  { name: "Google Ads",       enq:  41, app:  37, color: "#4f8ef7" },
-  { name: "Meta Ads",         enq:  13, app:   9, color: "#818cf8" },
-  { name: "Workflow Email",   enq:   0, app:   4, color: "#f472b6" },
-  { name: "Marketing Email",  enq:   1, app:   4, color: "#fbbf24" },
+  { name: "Google Ads",       enq:  40, app:  42, color: "#facc15" },
   { name: "Website",          enq:  22, app:  24, color: "#34d399" },
-  { name: "AI / ChatGPT",     enq:   1, app:   0, color: "#2dd4bf" },
-  { name: "Unknown",          enq:  45, app:  53, color: "#475569" },
+  { name: "Facebook",         enq:  21, app:  11, color: "#60a5fa" },
+  { name: "HubSpot email",    enq:   9, app:  10, color: "#fb923c" },
+  { name: "Instagram",        enq:   2, app:   1, color: "#f472b6" },
+  { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
+  { name: "Unknown",          enq:  28, app:  43, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -85,19 +87,25 @@ const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent })
   );
 };
 
-const UtmPanel = ({ form, setForm }) => {
-  const totalForm = utmData.reduce((s, d) => s + d[form], 0);
-  const rows = utmData.map(d => ({
+const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
+  const unknownCount = utmData.find(d => d.name === "Unknown")?.[form] ?? 0;
+  // Categories with no submissions across both forms are hidden entirely
+  const base = utmData.filter(d => d.combined > 0 && (showUnknown || d.name !== "Unknown"));
+  const totalForm = base.reduce((s, d) => s + d[form], 0);
+  const rows = base.map(d => ({
     name: d.name, color: d.color, value: d[form],
     pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
   }));
   const pieRows = rows.filter(r => r.value > 0);
   return (
     <div>
-      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center" }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center", flexWrap: "wrap" }}>
         {UTM_FORMS.map(f => (
           <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
         ))}
+        <span style={{ width: 1, background: "#334155", margin: "0 6px" }}/>
+        <Tab id="incl" active={showUnknown}  onClick={() => setShowUnknown(true)}>Include Unknown</Tab>
+        <Tab id="excl" active={!showUnknown} onClick={() => setShowUnknown(false)}>Exclude Unknown</Tab>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
         <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
@@ -133,8 +141,14 @@ const UtmPanel = ({ form, setForm }) => {
             <span style={{ color: "#94a3b8" }}>Total</span>
             <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
           </div>
+          {!showUnknown && (
+            <p style={{ margin: "2px 4px 0", fontSize: 11, color: "#94a3b8" }}>
+              Excluded: {unknownCount} Unknown forms (no UTM source recorded).
+            </p>
+          )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            UTM source/medium captured on the form submission · W1–W9 · deduped contacts. Unknown = no UTMs recorded.
+            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Unknown = no UTMs recorded on the contact.
           </p>
         </div>
       </div>
@@ -190,6 +204,7 @@ const Tab = ({ id, active, onClick, children }) => (
 export default function App() {
   const [view, setView] = useState("stacked");
   const [utmForm, setUtmForm] = useState("combined");
+  const [showUnknown, setShowUnknown] = useState(true);
 
   return (
     <div style={{
@@ -258,7 +273,8 @@ export default function App() {
         background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
         border: "1px solid #334155", marginBottom: 20
       }}>
-        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}/> : (
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}
+          showUnknown={showUnknown} setShowUnknown={setShowUnknown}/> : (
         <ResponsiveContainer width="100%" height={300}>
           {view !== "rate" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
@@ -358,7 +374,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 7 Oct 2026 · W1–W9 processed from fresh CSV exports (Irish local time) · W9 partial (Mon 5 – Wed 7 Oct, to 10:00) · no duplicates detected
+        Updated 7 Oct 2026 · W1–W9 processed from fresh CSV exports (Irish local time) · W9 partial (Mon 5 – Wed 7 Oct, to 10:00) · no duplicates detected · traffic source from HubSpot contact UTMs, 8 Oct 2026
       </p>
 
     </div>
