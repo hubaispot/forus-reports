@@ -9,7 +9,7 @@ import {
 // Generated: 7 Oct 2026 | W1 10 Aug → W9 5–7 Oct 2026 (W9 partial ⚡)
 // ENQ: 81 raw → 81 unique | APP: 7 raw → 7 unique (0 dups)
 // 0 rows outside window | CSV exports (local Irish time) | latest ENQ 1 Oct, latest APP 30 Sep
-// Traffic source tab added 7 Oct 2026 — UTM categories below
+// Traffic source tab added 7 Oct 2026, aligned to CTID786 / CTID742 template 8 Oct 2026 (contact UTMs)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
   { week: "10 Aug–16 Aug",    enq: 6,  app: 2, full: true  },
@@ -33,21 +33,25 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, deduped contacts) ─────────────────────────────
-// Mapping (UTM Source / Medium): adwords/ppc → Google Ads
-// fb or ig / placement (e.g. Facebook_Mobile_Reels) → Meta Ads
-// {{utm_source}} / Facebook_Mobile_Reels → Meta Ads · {{utm_source}} / blank → Unknown
-// {{site_source_name}} / {{placement}} (unfilled Meta placeholders) → Unknown
-// hs_automation → Workflow Email · hs_email/email → Marketing Email
-// website → Website · chatgpt.com → AI / ChatGPT · blank/blank → Unknown
+// ── UTM TRAFFIC SOURCE (W1–W9, 88 forms) — CTID786 / CTID742 template, 8 Oct 2026 ─
+// Source: HubSpot contact utm_source / utm_medium (85 contacts, pulled 8 Oct 2026)
+// Priority rule: if the contact shows HubSpot email but the form submission captured a known
+// source (Facebook, Instagram, Website, AI search, Google Ads), the form source is used.
+// Applied to 8 forms: Marie O'Carroll ×2, Sharon Ryan, Stephanie Moynihan → Facebook ·
+// Stephen Hegarty → Instagram · Carol Matthews, Caroline Conlon → Website · Maria Trench → AI search
+// Mapping: adwords / ppc → Google Ads · fb / facebook → Facebook · ig → Instagram · website → Website
+// website or {{utm_source}} + Facebook_* / paid-social medium → Facebook (Annette Kenny, Casilda Laird)
+// hs_automation / hs_email / any email medium → HubSpot email · chatgpt.com / copilot.com → AI search
+// blank, {{utm_source}} (no medium), {{site_source_name}} → Unknown · order: largest first, Unknown last
+// Counted per form: contacts who submitted both ENQ and APP appear in both
 export const utmData = [
-  { name: "Google Ads",       enq:   0, app:   0, color: "#4f8ef7" },
-  { name: "Meta Ads",         enq:  42, app:   1, color: "#818cf8" },
-  { name: "Workflow Email",   enq:   0, app:   0, color: "#f472b6" },
-  { name: "Marketing Email",  enq:   1, app:   0, color: "#fbbf24" },
-  { name: "Website",          enq:  16, app:   0, color: "#34d399" },
-  { name: "AI / ChatGPT",     enq:   1, app:   0, color: "#2dd4bf" },
-  { name: "Unknown",          enq:  21, app:   6, color: "#475569" },
+  { name: "Facebook",         enq:  37, app:   2, color: "#60a5fa" },
+  { name: "Website",          enq:  14, app:   2, color: "#34d399" },
+  { name: "Instagram",        enq:  10, app:   0, color: "#f472b6" },
+  { name: "HubSpot email",    enq:   2, app:   0, color: "#fb923c" },
+  { name: "Google Ads",       enq:   2, app:   0, color: "#facc15" },
+  { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
+  { name: "Unknown",          enq:  15, app:   3, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -82,20 +86,25 @@ const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent })
   );
 };
 
-const UtmPanel = ({ form, setForm }) => {
-  const totalForm = utmData.reduce((s, d) => s + d[form], 0);
+const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
+  const unknownCount = utmData.find(d => d.name === "Unknown")?.[form] ?? 0;
   // Categories with no submissions across both forms are hidden entirely
-  const rows = utmData.filter(d => d.combined > 0).map(d => ({
+  const base = utmData.filter(d => d.combined > 0 && (showUnknown || d.name !== "Unknown"));
+  const totalForm = base.reduce((s, d) => s + d[form], 0);
+  const rows = base.map(d => ({
     name: d.name, color: d.color, value: d[form],
     pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
   }));
   const pieRows = rows.filter(r => r.value > 0);
   return (
     <div>
-      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center" }}>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center", flexWrap: "wrap" }}>
         {UTM_FORMS.map(f => (
           <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
         ))}
+        <span style={{ width: 1, background: "#334155", margin: "0 6px" }}/>
+        <Tab id="incl" active={showUnknown}  onClick={() => setShowUnknown(true)}>Include Unknown</Tab>
+        <Tab id="excl" active={!showUnknown} onClick={() => setShowUnknown(false)}>Exclude Unknown</Tab>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
         <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
@@ -131,8 +140,14 @@ const UtmPanel = ({ form, setForm }) => {
             <span style={{ color: "#94a3b8" }}>Total</span>
             <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
           </div>
+          {!showUnknown && (
+            <p style={{ margin: "2px 4px 0", fontSize: 11, color: "#94a3b8" }}>
+              Excluded: {unknownCount} Unknown forms (no UTM source recorded).
+            </p>
+          )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            UTM source/medium captured on the form submission · W1–W9 · deduped contacts. Unknown = no UTMs recorded or unfilled ad placeholders.
+            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
+            HubSpot email never overrides a known source captured on the form. Unknown = no UTMs recorded or unfilled ad placeholders.
           </p>
         </div>
       </div>
@@ -185,6 +200,7 @@ const Tab = ({id, active, onClick, children}) => (
 export default function App() {
   const [view, setView] = useState("stacked");
   const [utmForm, setUtmForm] = useState("combined");
+  const [showUnknown, setShowUnknown] = useState(true);
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -242,7 +258,8 @@ export default function App() {
       {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
-        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}/> : (
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}
+          showUnknown={showUnknown} setShowUnknown={setShowUnknown}/> : (
         <ResponsiveContainer width="100%" height={300}>
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}>
@@ -335,7 +352,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 7 Oct 2026 · ENQ 81 raw → 81 unique · APP 7 raw → 7 unique (0 dups) · Latest ENQ 1 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Wed
+        CTID379 · SNA L6 LO · Generated 7 Oct 2026 · ENQ 81 raw → 81 unique · APP 7 raw → 7 unique (0 dups) · Latest ENQ 1 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Wed · Traffic source from HubSpot contact UTMs, 8 Oct 2026
       </p>
     </div>
   );
