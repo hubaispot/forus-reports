@@ -6,7 +6,6 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "10–16 Aug",     enq: 4, app: 6,  full: true  },
   { week: "17–23 Aug",     enq: 4, app: 6,  full: true  },
   { week: "24–30 Aug",     enq: 5, app: 8,  full: true  },
   { week: "31 Aug–6 Sep",  enq: 1, app: 6,  full: true  },
@@ -14,7 +13,7 @@ export const data = [
   { week: "14–20 Sep",     enq: 5, app: 13, full: true  },
   { week: "21–27 Sep",     enq: 0, app: 8,  full: true  },
   { week: "28 Sep–4 Oct",  enq: 3, app: 10, full: true  },
-  { week: "5–6 Oct ⚡",    enq: 2, app: 0,  full: false },
+  { week: "5–11 Oct",      enq: 5, app: 7,  full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -27,19 +26,19 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, 92 forms · 87 contacts) — added 8 Oct 2026 ─────
+// ── UTM TRAFFIC SOURCE (17 Aug–11 Oct, 92 forms · 86 contacts) — refreshed 12 Oct 2026 ─────
 // Source: HubSpot contact utm_source / utm_medium (ENQhs + AppHS exports have no UTM columns)
-// Counted per form: the 5 contacts who submitted both ENQ and APP appear in both
+// Counted per form: the 6 contacts who submitted both ENQ and APP appear in both
 // Mapping (CTID786 convention): fb / facebook → Facebook · ig → Instagram · website → Website
 // hs_automation / hs_email / any email medium → HubSpot email (e.g. website + medium email → HubSpot email)
 // chatgpt.com / copilot.com → AI search · {{utm_source}} (unresolved macro, no medium) / blank → Unknown
 export const utmData = [
-  { name: "Website",          enq:   6, app:  11, color: "#34d399" },
+  { name: "Website",          enq:   8, app:  13, color: "#34d399" },
   { name: "HubSpot email",    enq:   3, app:   8, color: "#fb923c" },
   { name: "Facebook",         enq:   5, app:   5, color: "#60a5fa" },
   { name: "Instagram",        enq:   1, app:   2, color: "#f472b6" },
-  { name: "AI search",        enq:   2, app:   1, color: "#a78bfa" },
-  { name: "Unknown",          enq:  11, app:  37, color: "#475569" },
+  { name: "AI search",        enq:   2, app:   0, color: "#a78bfa" },
+  { name: "Unknown",          enq:   8, app:  37, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -134,7 +133,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
+            HubSpot contact UTM source/medium · W1–W8 (17 Aug–11 Oct) · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded or unresolved {"{{utm_source}}"} placeholder.
           </p>
         </div>
@@ -204,7 +203,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 6 Oct 2026 · 8 completed weeks + W9 partial ⚡ · Unique contacts · last form only per contact
+          17 Aug – 11 Oct 2026 · 8 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -215,9 +214,9 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        All 8 completed weeks exceeded 60% app rate 🔥. Applications stepped up in the second half — W5–W8 averaged 9.5/week vs 6.5 in W1–W4 —
-        peaking at 13 in W6 (14–20 Sep). W7 had zero enquiries but still 8 applications; W8 followed with 10 apps.
-        Enquiries remain low and flat (0–5/week). W9 ⚡ (Mon–Tue so far): 2 enquiries, no applications yet.
+        7 of 8 weeks exceeded 60% app rate 🔥. Applications stepped up in the second half — W5–W8 averaged 9.5/week vs 6.8 in W1–W4 —
+        peaking at 13 in W5 (14–20 Sep). W6 had zero enquiries but still 8 applications.
+        W8 (5–11 Oct): 5 enquiries (joint-highest in the window) and 7 applications — 58% app rate, the first week below 60%.
       </div>
 
       {/* KPIs */}
@@ -225,9 +224,9 @@ export default function App() {
         {[
           { label:"Total Enquiries (LO only)",  value:totalEnq,       sub:`avg ${avgEnq}/wk`,   color:COLORS.enq  },
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
-          { label:"Total Submissions",           value:total,          sub:"8 weeks + W9 partial", color:"#f1f5f9"   },
+          { label:"Total Submissions",           value:total,          sub:"8 completed weeks", color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W8 (28 Sep–4 Oct)",               value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
+          { label:"W8 (5–11 Oct)",               value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -350,8 +349,8 @@ export default function App() {
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks (W1–W9) freshly processed from 6 Oct 2026 CSV exports; W9 is a partial week (5–6 Oct) and is excluded from weekly averages.
-        App rate % is not a standard funnel conversion rate. Source: HubSpot CSV exports, 6 Oct 2026; traffic source from HubSpot contact UTMs, 8 Oct 2026.
+        All weeks (W1–W8) freshly processed from 12 Oct 2026 CSV exports; W1–W7 match the previous run. No partial week included.
+        App rate % is not a standard funnel conversion rate. Source: HubSpot CSV exports, 12 Oct 2026; traffic source from HubSpot contact UTMs, 12 Oct 2026.
       </p>
     </div>
   );

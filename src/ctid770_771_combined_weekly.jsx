@@ -5,15 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "10–16 Aug",     forms: 10, regs: 5, revenue: 4930.00, full: true  },
   { week: "17–23 Aug",     forms: 10, regs: 5, revenue: 4128.50, full: true  },
   { week: "24–30 Aug",     forms: 13, regs: 6, revenue: 5804.40, full: true  },
   { week: "31 Aug–6 Sep",  forms:  7, regs: 8, revenue: 7282.63, full: true  },
   { week: "7–13 Sep",      forms: 11, regs: 5, revenue: 4908.75, full: true  },
   { week: "14–20 Sep",     forms: 18, regs: 5, revenue: 4197.25, full: true  },
   { week: "21–27 Sep",     forms:  8, regs: 4, revenue: 3460.93, full: true  },
-  { week: "28 Sep–4 Oct",  forms: 13, regs: 3, revenue: 3060.00, full: true  },
-  { week: "5–6 Oct ⚡",    forms:  2, regs: 0, revenue: 0,       full: false },
+  { week: "28 Sep–4 Oct",  forms: 13, regs: 4, revenue: 4215.00, full: true  },
+  { week: "5–11 Oct",      forms: 12, regs: 0, revenue: 0,       full: true  },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -90,7 +89,7 @@ export default function App() {
           Combined Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 6 Oct 2026 · 8 completed weeks + W9 partial ⚡ · Unique contacts
+          17 Aug – 11 Oct 2026 · 8 completed weeks · Unique contacts
         </p>
       </div>
 
@@ -98,18 +97,18 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W4 (31 Aug–6 Sep)</strong> with 8 registrations and
-        <strong style={{ color:"#f1f5f9" }}> €7,283</strong> revenue. Since then registrations and revenue have eased each week —
-        down to 3 registrations (€3,060) in W8 — even though forms peaked at 18 in W6, so recent applicants have yet to convert to payment.
+        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W3 (31 Aug–6 Sep)</strong> with 8 registrations and
+        <strong style={{ color:"#f1f5f9" }}> €7,283</strong> revenue. Since then registrations have held at 4–5 a week, even though forms peaked at 18 in W5 (14–20 Sep).
+        W8 (5–11 Oct) shows 0 registrations because its 5 CTID770 payments (€4,460) are still blank-status in Paythen, not because no one paid.
         Overall conversion rate is <strong style={{ color:"#f1f5f9" }}>{overallCR}%</strong> across {totalForms} form submissions,
         yielding <strong style={{ color:"#f1f5f9" }}>{fmt(totalRev)}</strong> expected revenue.
-        73 pre-window registrations excluded per standing instruction.
+        78 pre-window registrations excluded per standing instruction.
       </div>
 
       {/* KPIs */}
       <div style={{ display:"flex", gap:10, marginBottom:24, flexWrap:"wrap" }}>
         {[
-          { label:"Total Expected Revenue", value:fmt(totalRev), sub:"W1–W9 combined",              color:COLORS.rev   },
+          { label:"Total Expected Revenue", value:fmt(totalRev), sub:"W1–W8 combined",              color:COLORS.rev   },
           { label:"Total Forms",            value:totalForms,    sub:`avg ${avgForms}/wk (W1–W8)`,  color:COLORS.forms },
           { label:"Total Registrations",    value:totalRegs,     sub:`avg ${avgRegs}/wk (W1–W8)`,   color:COLORS.regs  },
           { label:"Overall Conv. Rate",     value:overallCR+"%", sub:"regs ÷ forms",                color:COLORS.cr    },
@@ -236,10 +235,9 @@ export default function App() {
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) + CTID771 (LO) applications combined.
         Registrations = Paythen rows tagged CTID770 (OA + LO are the same course; no rows are tagged CTID771). Status = Registered only;
-        3 in-window rows with blank status (€3,465.00) excluded. 73 pre-window registrations (before 10 Aug 2026, €63,179.33) excluded per standing instruction.
+        7 in-window rows with blank status (€6,770.41) excluded, incl. all 5 W8 payments (€4,460.41). 78 pre-window registrations (before 17 Aug 2026, €68,109.33) excluded per standing instruction.
         † CR% {'>'}100% is expected — Paythen payment dates lag form-submission weeks; not a data error.
-        W9 (5–6 Oct) is a partial week, excluded from weekly averages.
-        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 6 Oct 2026.
+        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 12 Oct 2026.
       </p>
     </div>
   );

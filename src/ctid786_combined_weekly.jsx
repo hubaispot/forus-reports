@@ -5,15 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "10–16 Aug",     forms: 16, regs: 6,  revenue: 2992.50, full: true  },
-  { week: "17–23 Aug",     forms: 16, regs: 8,  revenue: 3990.00, full: true  },
-  { week: "24–30 Aug",     forms: 13, regs: 3,  revenue: 1496.25, full: true  },
-  { week: "31 Aug–6 Sep",  forms: 20, regs: 7,  revenue: 3443.75, full: true  },
-  { week: "7–13 Sep",      forms: 19, regs: 2,  revenue:  997.50, full: true  },
-  { week: "14–20 Sep",     forms:  6, regs: 4,  revenue: 1995.00, full: true  },
-  { week: "21–27 Sep",     forms:  9, regs: 1,  revenue:  498.75, full: true  },
-  { week: "28 Sep–4 Oct",  forms: 10, regs: 3,  revenue: 1472.50, full: true  },
-  { week: "5–6 Oct ⚡",     forms:  2, regs: 0,  revenue:    0.00, full: false },
+  { week: "17–23 Aug",    forms: 16, regs: 8,  revenue: 3990.00, full: true },
+  { week: "24–30 Aug",    forms: 13, regs: 3,  revenue: 1496.25, full: true },
+  { week: "31 Aug–6 Sep", forms: 20, regs: 8,  revenue: 3918.75, full: true },
+  { week: "7–13 Sep",     forms: 19, regs: 2,  revenue:  997.50, full: true },
+  { week: "14–20 Sep",    forms:  6, regs: 4,  revenue: 1995.00, full: true },
+  { week: "21–27 Sep",    forms:  9, regs: 1,  revenue:  498.75, full: true },
+  { week: "28 Sep–4 Oct", forms:  9, regs: 4,  revenue: 1971.25, full: true },
+  { week: "5–11 Oct",     forms:  7, regs: 1,  revenue:  475.00, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -57,7 +56,6 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin: "6px 0 0", color: "#fbbf24", fontSize: 11 }}>⚡ Partial week (Mon 5 – Tue 6 Oct)</p>}
     </div>
   );
 };
@@ -89,7 +87,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          10 Aug – 6 Oct 2026 · 8 full weeks + W9 ⚡ partial · Irish time boundaries · Unique contacts
+          17 Aug – 11 Oct 2026 · 8 full weeks · IST boundaries · Unique contacts
         </p>
       </div>
 
@@ -98,20 +96,20 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        August carried the period — <strong style={{ color: "#f1f5f9" }}>W1–W4 (10 Aug–6 Sep) delivered 24 of 34 registrations and €11,922.50</strong>,
-        about 71% of expected revenue. W2 (17–23 Aug) was the peak registration week with 8 registrations and €3,990 at a 50% CR.
-        From W5 registrations fell to 1–4 a week: W5 (7–13 Sep) converted just 10.5% despite 19 forms, and W7 only 11.1%.
-        W6's 66.7% CR is on low volume (4 regs from 6 forms). W9 has 2 forms and no registrations so far.
-        Overall CR {overallCR}% with {fmt(totalRev)} expected revenue.
+        W1 (17–23 Aug) and W3 (31 Aug–6 Sep) were the peak registration weeks — <strong style={{ color: "#f1f5f9" }}>8 registrations each,
+        €3,990 and €3,919</strong>. W4 (7–13 Sep) had 19 forms but only 2 registrations (10.5% CR), while W5's 66.7% CR is on low
+        volume (4 of 6). The second half of the window slowed on both sides — W5–W8 brought <strong style={{ color: "#f1f5f9" }}>10 registrations
+        and €4,940</strong> vs 21 and €10,403 in W1–W4, with W8 (5–11 Oct) at 1 registration from 7 forms.
+        Overall CR of 31.3% across 8 weeks with €15,343 expected revenue.
       </div>
 
       {/* KPI cards */}
       <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
         {[
+          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks",        color: COLORS.rev   },
           { label: "Total Forms",         value: totalForms,        sub: `avg ${avgForms}/wk`,  color: COLORS.forms },
           { label: "Total Registrations", value: totalRegs,         sub: `avg ${avgRegs}/wk`,   color: COLORS.regs  },
           { label: "Overall Conv. Rate",  value: overallCR + "%",   sub: "regs ÷ forms",        color: COLORS.cr    },
-          { label: "Expected Revenue",    value: fmt(totalRev),     sub: "8 full weeks + W9 ⚡",  color: COLORS.rev   },
         ].map(k => (
           <div key={k.label} style={{ background: "#1e293b", borderRadius: 10,
             padding: "12px 18px", flex: "1 1 130px", border: "1px solid #334155" }}>
@@ -135,7 +133,17 @@ export default function App() {
       <div style={{ background: "#1e293b", borderRadius: 12, padding: "24px 16px 16px",
         border: "1px solid #334155", marginBottom: 20 }}>
         <ResponsiveContainer width="100%" height={300}>
-          {view === "cr" ? (
+          {view === "rev" ? (
+            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 8 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
+              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
+                axisLine={{ stroke: "#334155" }} tickLine={false}/>
+              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
+                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 6000]}/>
+              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
+              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
+            </ComposedChart>
+          ) : view === "cr" ? (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
@@ -148,16 +156,6 @@ export default function App() {
               <Line dataKey="cr" name="Conv. Rate %" type="monotone"
                 stroke={COLORS.cr} strokeWidth={2.5}
                 dot={{ r: 6, fill: COLORS.cr, strokeWidth: 0 }} connectNulls/>
-            </ComposedChart>
-          ) : view === "rev" ? (
-            <ComposedChart data={data} margin={{ top: 8, right: 20, left: 20, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
-              <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }}
-                axisLine={{ stroke: "#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => "€" + (v / 1000).toFixed(0) + "k"} domain={[0, 6000]}/>
-              <Tooltip content={<CustomTooltip/>} cursor={{ fill: "rgba(148,163,184,.06)" }}/>
-              <Bar dataKey="revenue" name="Expected Revenue" fill={COLORS.rev} radius={[5, 5, 0, 0]}/>
             </ComposedChart>
           ) : (
             <ComposedChart data={data} margin={{ top: 8, right: 20, left: -8, bottom: 8 }}
@@ -248,8 +246,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 10 Aug – 6 Oct 2026 (W9 partial) · Irish time boundaries ·
-        HubSpot: 52 ENQ / 59 APP (111 forms) · Paythen: 34 registered (84 pre-window, 3 non-registered excluded) · Revenue tiers: €475.00 / €498.75
+        CTID786 · CS &amp; COOP LO L5 · 17 Aug – 11 Oct 2026 · IST boundaries ·
+        HubSpot: 99 form contacts (47 ENQ / 52 APP) · Paythen: 31 registered (89 pre-window excluded, €43,572.50) · Revenue tiers: €475.00 / €498.75
       </p>
     </div>
   );

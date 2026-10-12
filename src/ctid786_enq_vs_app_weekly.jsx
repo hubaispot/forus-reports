@@ -6,15 +6,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "10–16 Aug",      enq: 6,  app: 10, full: true  },
   { week: "17–23 Aug",      enq: 6,  app: 10, full: true  },
   { week: "24–30 Aug",      enq: 5,  app: 8,  full: true  },
   { week: "31 Aug–6 Sep",   enq: 9,  app: 11, full: true  },
   { week: "7–13 Sep",       enq: 12, app: 7,  full: true  },
   { week: "14–20 Sep",      enq: 2,  app: 4,  full: true  },
   { week: "21–27 Sep",      enq: 5,  app: 4,  full: true  },
-  { week: "28 Sep–4 Oct",   enq: 6,  app: 4,  full: true  },
-  { week: "5–6 Oct ⚡",      enq: 1,  app: 1,  full: false },
+  { week: "28 Sep–4 Oct",   enq: 5,  app: 4,  full: true  },
+  { week: "5–11 Oct",       enq: 3,  app: 4,  full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -27,19 +26,20 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, 111 forms · 100 contacts) — added 7 Oct 2026 ────
-// Source: HubSpot contact utm_source / utm_medium (ENQ786 + APP_786 exports have no UTM columns)
-// Counted per form: the 11 contacts who submitted both ENQ and APP appear in both
+// ── UTM TRAFFIC SOURCE (W1–W8, 17 Aug – 11 Oct 2026 · 99 forms · 89 contacts) — refreshed 12 Oct 2026 ────
+// Source: form-submission UTM (ENQ786 / APP786 exports) + HubSpot contact utm_source / utm_medium
+// Priority: known form source > known contact source/medium > "website" (treated as near-unknown) > Unknown
+// Counted per form: the 10 contacts who submitted both ENQ and APP appear in both
 // Mapping: fb / facebook → Facebook · ig → Instagram · website → Website
 // hs_automation / hs_email → HubSpot email · chatgpt.com / copilot.com → AI search
 // {{utm_source}} (unresolved macro, no medium) / blank → Unknown
 export const utmData = [
-  { name: "Facebook",         enq:  24, app:   6, color: "#60a5fa" },
-  { name: "Website",          enq:   4, app:  17, color: "#34d399" },
-  { name: "HubSpot email",    enq:   3, app:   5, color: "#fb923c" },
+  { name: "Facebook",         enq:  25, app:   9, color: "#60a5fa" },
+  { name: "Website",          enq:   3, app:  15, color: "#34d399" },
+  { name: "HubSpot email",    enq:   2, app:   3, color: "#fb923c" },
   { name: "Instagram",        enq:   1, app:   2, color: "#f472b6" },
   { name: "AI search",        enq:   1, app:   1, color: "#a78bfa" },
-  { name: "Unknown",          enq:  19, app:  28, color: "#475569" },
+  { name: "Unknown",          enq:  15, app:  22, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -134,7 +134,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Form + HubSpot contact UTM source/medium · 17 Aug – 11 Oct 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded or unresolved {"{{utm_source}}"} placeholder.
           </p>
         </div>
@@ -203,7 +203,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 6 Oct 2026 · Irish time boundaries · Unique contacts · last form only per contact
+          17 Aug – 11 Oct 2026 · Irish time boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -211,11 +211,11 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        August was the strong month: <strong style={{ color:"#f1f5f9" }}>W1–W3 (10–30 Aug) ran at 62% 🔥 app rate</strong> on
-        13–16 submissions a week, and W4 (31 Aug–6 Sep) was the busiest week at 20. W5 (7–13 Sep) saw enquiries
-        peak at 12 while applications eased to 7. Volume then <strong style={{ color:"#f1f5f9" }}>dropped sharply from W6</strong> —
-        the last three full weeks totalled 25 submissions vs 45 in the first three, with applications flat at 4/wk
-        (down from 10/wk in August). W6's 67% app rate is on low volume (6 total). Overall app rate {overallApp}%.
+        Late August was the strong period: <strong style={{ color:"#f1f5f9" }}>W1–W2 (17–30 Aug) ran at 62–63% 🔥 app rate</strong>,
+        W3 (31 Aug–6 Sep) was the busiest week at 20, and W4 (7–13 Sep) saw enquiries peak at 12. Volume then
+        <strong style={{ color:"#f1f5f9" }}> dropped sharply from W5</strong> — the last four weeks totalled 31 submissions vs 68 in the
+        first four, with applications flat at 4/wk (down from 9/wk avg in W1–W4). W5's 67% app rate is on low volume (6 total).
+        W8 (5–11 Oct) held steady at 7 submissions, 57% app rate, with no submissions after Wed 7 Oct. Overall app rate {overallApp}%.
       </div>
 
       {/* KPIs */}
@@ -223,7 +223,7 @@ export default function App() {
         {[
           { label:"Total Enquiries",    value:totalEnq,        sub:`avg ${avgEnq}/wk`,  color:COLORS.enq  },
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk`,  color:COLORS.app  },
-          { label:"Total Submissions",  value:total,           sub:"8 full weeks + W9 ⚡",           color:"#f1f5f9"   },
+          { label:"Total Submissions",  value:total,           sub:"8 full weeks",           color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",      color:"#34d399"   },
           // Last KPI card: partial week if full:false, otherwise show W8 total
           ...(data[data.length-1].full
@@ -345,8 +345,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:16, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 10 Aug – 6 Oct 2026 (W9 to 09:36) · Irish time boundaries ·
-        Unique contacts (last submission per contact) · 52 ENQ / 59 APP · No test records excluded · No duplicates merged
+        CTID786 · CS &amp; COOP LO L5 · 17 Aug – 11 Oct 2026 · Irish time boundaries ·
+        Unique contacts (last submission per contact) · 47 ENQ / 52 APP · No test records excluded · No duplicates merged
       </p>
     </div>
   );
