@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "17–23 Aug",     forms: 10, regs: 5, revenue: 4128.50, full: true  },
   { week: "24–30 Aug",     forms: 13, regs: 6, revenue: 5804.40, full: true  },
   { week: "31 Aug–6 Sep",  forms:  7, regs: 8, revenue: 7282.63, full: true  },
-  { week: "7–13 Sep",      forms: 11, regs: 5, revenue: 4908.75, full: true  },
+  { week: "7–13 Sep",      forms: 10, regs: 5, revenue: 4908.75, full: true  },
   { week: "14–20 Sep",     forms: 18, regs: 5, revenue: 4197.25, full: true  },
   { week: "21–27 Sep",     forms:  8, regs: 4, revenue: 3460.93, full: true  },
-  { week: "28 Sep–4 Oct",  forms: 13, regs: 4, revenue: 4215.00, full: true  },
-  { week: "5–11 Oct",      forms: 12, regs: 0, revenue: 0,       full: true  },
+  { week: "28 Sep–4 Oct",  forms: 11, regs: 5, revenue: 5002.50, full: true  },
+  { week: "5–11 Oct",      forms: 13, regs: 4, revenue: 3774.76, full: true  },
+  { week: "12–18 Oct",     forms:  9, regs: 4, revenue: 3042.25, full: true  },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0,
@@ -89,7 +89,7 @@ export default function App() {
           Combined Revenue Report — Forms vs Registrations
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          17 Aug – 11 Oct 2026 · 8 completed weeks · Unique contacts
+          24 Aug – 18 Oct 2026 · 8 completed weeks · Unique contacts
         </p>
       </div>
 
@@ -97,12 +97,12 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key insight: </strong>
-        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W3 (31 Aug–6 Sep)</strong> with 8 registrations and
-        <strong style={{ color:"#f1f5f9" }}> €7,283</strong> revenue. Since then registrations have held at 4–5 a week, even though forms peaked at 18 in W5 (14–20 Sep).
-        W8 (5–11 Oct) shows 0 registrations because its 5 CTID770 payments (€4,460) are still blank-status in Paythen, not because no one paid.
+        Peak revenue week was <strong style={{ color:"#f1f5f9" }}>W2 (31 Aug–6 Sep)</strong> with 8 registrations and
+        <strong style={{ color:"#f1f5f9" }}> €7,283</strong> revenue. Since then registrations have held at 4–5 a week, even though forms peaked at 18 in W4 (14–20 Sep).
+        W8 (12–18 Oct) shows 4 registrations (€3,042); a further 6 W8 payments (€6,660) are still "In progress" in Paythen and not yet counted.
         Overall conversion rate is <strong style={{ color:"#f1f5f9" }}>{overallCR}%</strong> across {totalForms} form submissions,
         yielding <strong style={{ color:"#f1f5f9" }}>{fmt(totalRev)}</strong> expected revenue.
-        78 pre-window registrations excluded per standing instruction.
+        84 pre-window registrations excluded per standing instruction.
       </div>
 
       {/* KPIs */}
@@ -235,9 +235,9 @@ export default function App() {
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
         ⚠️ Forms = CTID771 (LO) enquiries + CTID770 (OA) + CTID771 (LO) applications combined.
         Registrations = Paythen rows tagged CTID770 (OA + LO are the same course; no rows are tagged CTID771). Status = Registered only;
-        7 in-window rows with blank status (€6,770.41) excluded, incl. all 5 W8 payments (€4,460.41). 78 pre-window registrations (before 17 Aug 2026, €68,109.33) excluded per standing instruction.
+        8 in-window rows with status "In progress" (€8,500.80) excluded, incl. 6 in W8 (€6,660.15). 84 pre-window registrations (before 24 Aug 2026, €73,392.83) excluded per standing instruction.
         † CR% {'>'}100% is expected — Paythen payment dates lag form-submission weeks; not a data error.
-        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 12 Oct 2026.
+        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 19 Oct 2026.
       </p>
     </div>
   );
