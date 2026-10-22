@@ -6,21 +6,21 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 7 Oct 2026 | W1 10 Aug → W9 5–7 Oct 2026 (W9 partial ⚡)
-// ENQ: 81 raw → 81 unique | APP: 7 raw → 7 unique (0 dups)
-// 0 rows outside window | CSV exports (local Irish time) | latest ENQ 1 Oct, latest APP 30 Sep
-// Traffic source tab added 7 Oct 2026, aligned to CTID786 / CTID742 template 8 Oct 2026 (contact UTMs)
+// Generated: 22 Oct 2026 | W1 24 Aug → W8 18 Oct · W9 19–22 Oct 2026 (partial ⚡)
+// ENQ: 97 raw → 97 unique | APP: 5 raw → 5 unique (0 dups, 0 phone merges)
+// 0 rows outside window | CSV exports (local Irish time) | latest ENQ 15 Oct 10:27 (confirmed — none since), latest APP 30 Sep
+// Traffic source tab added 7 Oct 2026, CTID742 template · form + contact UTMs re-pulled 22 Oct 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "10 Aug–16 Aug",    enq: 6,  app: 2, full: true  },
-  { week: "17 Aug–23 Aug",    enq: 3,  app: 0, full: true  },
   { week: "24 Aug–30 Aug",    enq: 4,  app: 0, full: true  },
   { week: "31 Aug–6 Sep",     enq: 14, app: 1, full: true  },
-  { week: "7 Sep–13 Sep",     enq: 18, app: 3, full: true  },
-  { week: "14 Sep–20 Sep",    enq: 9,  app: 0, full: true  },
-  { week: "21 Sep–27 Sep",    enq: 21, app: 0, full: true  },
+  { week: "7 Sep–13 Sep",     enq: 17, app: 3, full: true  },
+  { week: "14 Sep–20 Sep",    enq: 10, app: 0, full: true  },
+  { week: "21 Sep–27 Sep",    enq: 20, app: 0, full: true  },
   { week: "28 Sep–4 Oct",     enq: 6,  app: 1, full: true  },
-  { week: "5 Oct–7 Oct ⚡",   enq: 0,  app: 0, full: false },
+  { week: "5 Oct–11 Oct",     enq: 14, app: 0, full: true  },
+  { week: "12 Oct–18 Oct",    enq: 12, app: 0, full: true  },
+  { week: "19 Oct–22 Oct ⚡", enq: 0,  app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -33,25 +33,24 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, 88 forms) — CTID786 / CTID742 template, 8 Oct 2026 ─
-// Source: HubSpot contact utm_source / utm_medium (85 contacts, pulled 8 Oct 2026)
-// Priority rule: if the contact shows HubSpot email but the form submission captured a known
-// source (Facebook, Instagram, Website, AI search, Google Ads), the form source is used.
-// Applied to 8 forms: Marie O'Carroll ×2, Sharon Ryan, Stephanie Moynihan → Facebook ·
-// Stephen Hegarty → Instagram · Carol Matthews, Caroline Conlon → Website · Maria Trench → AI search
-// Mapping: adwords / ppc → Google Ads · fb / facebook → Facebook · ig → Instagram · website → Website
-// website or {{utm_source}} + Facebook_* / paid-social medium → Facebook (Annette Kenny, Casilda Laird)
-// hs_automation / hs_email / any email medium → HubSpot email · chatgpt.com / copilot.com → AI search
-// blank, {{utm_source}} (no medium), {{site_source_name}} → Unknown · order: largest first, Unknown last
-// Counted per form: contacts who submitted both ENQ and APP appear in both
+// ── UTM TRAFFIC SOURCE (W1–W9, 24 Aug–22 Oct · 102 forms · 99 contacts) — CTID742 template, refreshed 22 Oct 2026 ──────
+// Source: form-submission UTMs + HubSpot contact utm_source / utm_medium (pulled 22 Oct 2026)
+// Priority when form and contact differ: Facebook / Instagram / Google Ads / AI search → HubSpot email → Website → Unknown
+// (a known form source is never overwritten by contact email; website only counts when nothing better exists)
+// Counted per form: the 3 contacts who submitted both ENQ and APP appear in both
+// Facebook-first: Rose Harty ENQ form fb/Facebook_Mobile_Feed vs contact adwords/ppc → Facebook
+// Mapping: fb / facebook or Facebook_* medium, or medium paid-social → Facebook · ig or Instagram_* medium → Instagram
+// adwords or medium ppc → Google Ads · hs_automation / hs_email / any email medium → HubSpot email
+// website (no medium clue) → Website · chatgpt.com → AI search · blank / unfilled placeholders → Unknown
+// Order: largest first, Unknown last
 export const utmData = [
-  { name: "Facebook",         enq:  37, app:   2, color: "#60a5fa" },
-  { name: "Website",          enq:  14, app:   2, color: "#34d399" },
-  { name: "Instagram",        enq:  10, app:   0, color: "#f472b6" },
-  { name: "HubSpot email",    enq:   2, app:   0, color: "#fb923c" },
-  { name: "Google Ads",       enq:   2, app:   0, color: "#facc15" },
+  { name: "Facebook",         enq:  54, app:   2, color: "#60a5fa" },
+  { name: "Instagram",        enq:  14, app:   0, color: "#f472b6" },
+  { name: "Website",          enq:  12, app:   1, color: "#34d399" },
+  { name: "HubSpot email",    enq:   3, app:   0, color: "#fb923c" },
+  { name: "Google Ads",       enq:   3, app:   0, color: "#facc15" },
   { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
-  { name: "Unknown",          enq:  15, app:   3, color: "#475569" },
+  { name: "Unknown",          enq:  10, app:   2, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -146,8 +145,8 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            HubSpot contact UTM source/medium · W1–W9 · counted per form (contacts who submitted both ENQ and APP count in each).
-            HubSpot email never overrides a known source captured on the form. Unknown = no UTMs recorded or unfilled ad placeholders.
+            Form + HubSpot contact UTM source/medium · priority Facebook / Instagram / Google Ads → HubSpot email → Website · 24 Aug – 22 Oct 2026 · counted per form.
+            Unknown = no UTMs recorded on form or contact, or unfilled ad placeholders.
           </p>
         </div>
       </div>
@@ -182,7 +181,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -215,7 +214,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 7 Oct 2026 · Unique contacts · last form only per contact · W9 partial ⚡
+          24 Aug – 22 Oct 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
@@ -226,7 +225,8 @@ export default function App() {
         CTID379 application counts are likely <strong style={{ color:"#f1f5f9" }}>understated</strong> —
         applications may be routing to the B2C Single Modules pipeline rather than the CTID379 application form.
         Cross-reference the B2C Single Modules report for a fuller picture of CTID379 applications.
-        Overall app rate from this form: <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>.
+        Overall app rate from this form: <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>; no applications since 30 Sep.
+        No enquiries have been recorded since Wed 15 Oct, so W8 reflects 12–15 Oct only and W9 is 0 to date.
       </div>
 
       {/* KPIs */}
@@ -236,7 +236,7 @@ export default function App() {
           { label:"Total Applications", value:totalApp,        sub:`avg ${avgApp}/wk (W1–W8)`,  color:COLORS.app  },
           { label:"Total Submissions",  value:total,           sub:"W1–W9",                      color:"#f1f5f9"   },
           { label:"Overall App Rate",   value:overallApp+"%",  sub:"apps ÷ total",               color:"#34d399"   },
-          { label:"This week (Mon–Wed)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
+          { label:"This week (Mon–Thu)", value:`${data[data.length-1].enq}e / ${data[data.length-1].app}a`, sub:"⚡ W9 partial", color:"#fbbf24" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -352,7 +352,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 7 Oct 2026 · ENQ 81 raw → 81 unique · APP 7 raw → 7 unique (0 dups) · Latest ENQ 1 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Wed · Traffic source from HubSpot contact UTMs, 8 Oct 2026
+        CTID379 · SNA L6 LO · Generated 22 Oct 2026 · ENQ 97 raw → 97 unique · APP 5 raw → 5 unique (0 dups) · Latest ENQ 15 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Thu · traffic source: form + HubSpot contact UTMs, 22 Oct 2026
       </p>
     </div>
   );

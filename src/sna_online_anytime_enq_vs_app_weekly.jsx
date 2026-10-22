@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend, ReferenceLine
+  Tooltip, ResponsiveContainer, Legend, ReferenceLine,
+  PieChart, Pie, Cell
 } from "recharts";
 
 // ── SUBSTITUTION GUIDE ───────────────────────────────────────────────────────
@@ -12,16 +13,20 @@ import {
 //                 append " ⚡" to the week label e.g. "9–11 Jun ⚡"
 // If include_current_week = false, all 8 rows have full: true — no ⚡ row.
 // ─────────────────────────────────────────────────────────────────────────────
+// CTID490 + CTID423 — SNA Online Anytime · Generated 22 Oct 2026
+// W1 24 Aug → W8 18 Oct · W9 19–22 Oct ⚡ partial · CSV exports (local Irish time)
+// ENQ 490 + 423: 33 raw → 30 unique (repeats: Aideen Cullen ×2, Lauren Grant ×3) · APP: 5 raw → 5 unique
+// 0 cross-CTID overlaps · 0 phone dupes · 0 rows outside window
 export const data = [
-  { week: "10–16 Aug",       enq: 6, app: 1, full: true  },
-  { week: "17–23 Aug",       enq: 0, app: 0, full: true  },
   { week: "24–30 Aug",       enq: 4, app: 0, full: true  },
   { week: "31 Aug–6 Sep",    enq: 3, app: 0, full: true  },
   { week: "7–13 Sep",        enq: 9, app: 3, full: true  },
   { week: "14–20 Sep",       enq: 3, app: 0, full: true  },
   { week: "21–27 Sep",       enq: 3, app: 0, full: true  },
   { week: "28 Sep–4 Oct",    enq: 4, app: 1, full: true  },
-  { week: "5–7 Oct ⚡",      enq: 2, app: 1, full: false },
+  { week: "5–11 Oct",        enq: 3, app: 1, full: true  },
+  { week: "12–18 Oct",       enq: 0, app: 0, full: true  },
+  { week: "19–22 Oct ⚡",    enq: 1, app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -33,6 +38,125 @@ const avgApp     = (fullWeeks.reduce((s,d) => s + d.app, 0) / fullWeeks.length).
 const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
+
+// ── UTM TRAFFIC SOURCE (W1–W9, 24 Aug–22 Oct · 35 forms · 35 contacts) — CTID742 template, added 22 Oct 2026 ──────
+// Source: form-submission UTMs (only the CTID423 ENQ export carries UTM columns) + HubSpot contact utm_source / utm_medium (pulled 22 Oct 2026)
+// CTID490 ENQ, CTID490 APP and CTID423 APP exports have no UTM columns → contact UTMs only for those 16 forms
+// Priority: Facebook → other known platform (Google Ads, Instagram, AI search) → HubSpot email → Website → Unknown
+// Known form source beats HubSpot email on the contact · website + medium clue (email / paid-social / ppc / Facebook_*) → classified by medium
+// Website upgraded from contact: Mary Kelly, Natasha Boyd → Google Ads · Eileen Gregan, Amy Floody, Mary Condon, Annette Kenny → Facebook
+// Counted per form: no contacts submitted both ENQ and APP · zero-count categories hidden from the pie · order: largest first, Unknown last
+export const utmData = [
+  { name: "Website",          enq:  21, app:   1, color: "#34d399" },
+  { name: "Facebook",         enq:   6, app:   0, color: "#60a5fa" },
+  { name: "Google Ads",       enq:   3, app:   0, color: "#facc15" },
+  { name: "HubSpot email",    enq:   0, app:   0, color: "#fb923c" },
+  { name: "Instagram",        enq:   0, app:   0, color: "#f472b6" },
+  { name: "AI search",        enq:   0, app:   0, color: "#a78bfa" },
+  { name: "Unknown",          enq:   0, app:   4, color: "#475569" },
+].map(d => ({ ...d, combined: d.enq + d.app }));
+
+const UTM_FORMS = [
+  { id: "combined", label: "Combined" },
+  { id: "enq",      label: "Enquiry" },
+  { id: "app",      label: "Application" },
+];
+
+const UtmTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const p = payload[0];
+  return (
+    <div style={{
+      background: "#1e293b", border: "1px solid #334155", borderRadius: 8,
+      padding: "8px 12px", fontSize: 13, color: "#f1f5f9"
+    }}>
+      <span style={{ color: p.payload.color }}>● </span>{p.name}: <strong>{p.value}</strong>
+      <span style={{ color: "#94a3b8" }}> ({p.payload.pct}%)</span>
+    </div>
+  );
+};
+
+const renderPieLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+  if (percent < 0.04) return null;
+  const RAD = Math.PI / 180;
+  const r = innerRadius + (outerRadius - innerRadius) * 0.55;
+  const x = cx + r * Math.cos(-midAngle * RAD);
+  const y = cy + r * Math.sin(-midAngle * RAD);
+  return (
+    <text x={x} y={y} fill="#0f172a" textAnchor="middle" dominantBaseline="central"
+      fontSize={12} fontWeight={700}>{Math.round(percent * 100)}%</text>
+  );
+};
+
+const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
+  const unknownCount = utmData.find(d => d.name === "Unknown")?.[form] ?? 0;
+  // Categories with no submissions across both forms are hidden entirely
+  const base = utmData.filter(d => d.combined > 0 && (showUnknown || d.name !== "Unknown"));
+  const totalForm = base.reduce((s, d) => s + d[form], 0);
+  const rows = base.map(d => ({
+    name: d.name, color: d.color, value: d[form],
+    pct: totalForm > 0 ? Math.round(d[form] / totalForm * 100) : 0
+  }));
+  const pieRows = rows.filter(r => r.value > 0);
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 6, marginBottom: 12, justifyContent: "center", flexWrap: "wrap" }}>
+        {UTM_FORMS.map(f => (
+          <Tab key={f.id} id={f.id} active={form === f.id} onClick={setForm}>{f.label}</Tab>
+        ))}
+        <span style={{ width: 1, background: "#334155", margin: "0 6px" }}/>
+        <Tab id="incl" active={showUnknown}  onClick={() => setShowUnknown(true)}>Include Unknown</Tab>
+        <Tab id="excl" active={!showUnknown} onClick={() => setShowUnknown(false)}>Exclude Unknown</Tab>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+        <div style={{ flex: "1 1 260px", minWidth: 240, height: 280 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={pieRows} dataKey="value" nameKey="name" cx="50%" cy="50%"
+                innerRadius={55} outerRadius={120} paddingAngle={1}
+                labelLine={false} label={renderPieLabel} stroke="#1e293b" isAnimationActive={false}>
+                {pieRows.map(r => <Cell key={r.name} fill={r.color}/>)}
+              </Pie>
+              <Tooltip content={<UtmTooltip/>}/>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: "1 1 220px", minWidth: 200 }}>
+          {rows.map(r => (
+            <div key={r.name} style={{
+              display: "flex", justifyContent: "space-between", alignItems: "center",
+              padding: "6px 4px", borderBottom: "1px solid #334155", fontSize: 13,
+              opacity: r.value > 0 ? 1 : 0.4
+            }}>
+              <span style={{ color: "#cbd5e1" }}>
+                <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 2, background: r.color, marginRight: 8 }}/>
+                {r.name}
+              </span>
+              <span>
+                <strong style={{ color: "#f1f5f9" }}>{r.value}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8, display: "inline-block", minWidth: 34, textAlign: "right" }}>{r.pct}%</span>
+              </span>
+            </div>
+          ))}
+          <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 4px", fontSize: 13, fontWeight: 700 }}>
+            <span style={{ color: "#94a3b8" }}>Total</span>
+            <span style={{ color: "#f1f5f9" }}>{totalForm}</span>
+          </div>
+          {!showUnknown && (
+            <p style={{ margin: "2px 4px 0", fontSize: 11, color: "#94a3b8" }}>
+              Excluded: {unknownCount} Unknown forms (no UTM source recorded).
+            </p>
+          )}
+          <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
+            Form + HubSpot contact UTM source/medium · 24 Aug – 22 Oct 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Unknown = no UTMs recorded on the contact.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -61,7 +185,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -78,6 +202,8 @@ const Tab = ({id, active, onClick, children}) => (
 
 export default function App() {
   const [view, setView] = useState("stacked");
+  const [utmForm, setUtmForm] = useState("combined");
+  const [showUnknown, setShowUnknown] = useState(true);
 
   return (
     <div style={{ background:"#0f172a", minHeight:"100vh", padding:"32px 24px",
@@ -92,7 +218,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 7 Oct 2026 · Unique contacts · last form only per contact
+          24 Aug – 22 Oct 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -102,8 +228,9 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         SNA OA (CTID490 + CTID423) shows a <strong style={{ color:"#f1f5f9" }}>healthy enquiry flow but low application conversion</strong> —
         enquiries average {avgEnq}/wk against {avgApp} applications/wk, an overall app rate of {overallApp}%.
-        W5 (7–13 Sep) is the standout week with 9 enquiries and 3 of the 6 applications; 5 of the 8 full weeks had no applications.
-        Both CTIDs have matched enquiry and application forms; 1 cross-CTID enquiry overlap (Rema Burwise) was deduped.
+        W3 (7–13 Sep) is the standout week with 9 enquiries and 3 of the 5 applications; 5 of the 8 full weeks had no applications,
+        and W8 (12–18 Oct) had no submissions on either form. Both CTIDs have matched enquiry and application forms;
+        no cross-CTID overlaps this window (2 same-form repeat enquiries deduped).
       </div>
 
       {/* KPIs */}
@@ -133,11 +260,14 @@ export default function App() {
         <Tab id="stacked" active={view==="stacked"} onClick={setView}>Stacked</Tab>
         <Tab id="grouped" active={view==="grouped"} onClick={setView}>Side by side</Tab>
         <Tab id="rate"    active={view==="rate"}    onClick={setView}>Application rate %</Tab>
+        <Tab id="utm"     active={view==="utm"}     onClick={setView}>Traffic source</Tab>
       </div>
 
       {/* Chart */}
       <div style={{ background:"#1e293b", borderRadius:12, padding:"24px 16px 16px",
         border:"1px solid #334155", marginBottom:20 }}>
+        {view === "utm" ? <UtmPanel form={utmForm} setForm={setUtmForm}
+          showUnknown={showUnknown} setShowUnknown={setShowUnknown}/> : (
         <ResponsiveContainer width="100%" height={300}>
           {view === "rate" ? (
             <ComposedChart data={data} margin={{ top:8, right:20, left:-8, bottom:8 }}>
@@ -157,7 +287,7 @@ export default function App() {
               barCategoryGap={view==="stacked"?"30%":"22%"} barGap={4}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false}/>
               <XAxis dataKey="week" tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={{ stroke:"#334155" }} tickLine={false}/>
-              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,10]}/>
+              <YAxis tick={{ fill:"#94a3b8", fontSize:11 }} axisLine={false} tickLine={false} domain={[0,14]}/>
               <Tooltip content={<CustomTooltip/>} cursor={{ fill:"rgba(148,163,184,.06)" }}/>
               <Legend wrapperStyle={{ paddingTop:16, fontSize:12 }}
                 formatter={v => v==="enq" ? "Enquiry form" : "Application form"}/>
@@ -170,6 +300,7 @@ export default function App() {
             </ComposedChart>
           )}
         </ResponsiveContainer>
+        )}
       </div>
 
       {/* Table */}

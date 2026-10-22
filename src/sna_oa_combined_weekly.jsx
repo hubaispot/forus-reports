@@ -4,16 +4,23 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
+// ── CTID490 + CTID423 — SNA Online Anytime · Generated 22 Oct 2026 ────────────
+// W1 24 Aug → W8 18 Oct · W9 19–22 Oct ⚡ partial
+// Forms: ENQ+APP from sna_online_anytime_enq_vs_app_weekly.jsx (ENQ 30 + APP 5 unique, 22 Oct)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__19_.csv · 61 rows (all Registered) → 27 in-window
+//   34 pre-window excluded (before 24 Aug, €12,731.65) · 0 email dupes · 0 jean rows
+//   CTID490: 17 regs €5,147.75 (€309.75 ×9 · €295.00 ×8) · CTID423: 10 regs €4,532.00 (€462.00 ×6 · €440.00 ×4)
+// ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "10–16 Aug",    forms: 7,  regs: 9, revenue: 3188.50,  full: true  },
-  { week: "17–23 Aug",    forms: 0,  regs: 2, revenue: 590.00,   full: true  },
   { week: "24–30 Aug",    forms: 4,  regs: 1, revenue: 309.75,   full: true  },
   { week: "31 Aug–6 Sep", forms: 3,  regs: 6, revenue: 1966.50,  full: true  },
   { week: "7–13 Sep",     forms: 12, regs: 7, revenue: 2536.75,  full: true  },
   { week: "14–20 Sep",    forms: 3,  regs: 3, revenue: 1233.75,  full: true  },
   { week: "21–27 Sep",    forms: 3,  regs: 3, revenue: 1364.00,  full: true  },
   { week: "28 Sep–4 Oct", forms: 5,  regs: 2, revenue: 604.75,   full: true  },
-  { week: "5–7 Oct ⚡",   forms: 3,  regs: 0, revenue: 0.00,     full: false },
+  { week: "5–11 Oct",     forms: 4,  regs: 1, revenue: 295.00,   full: true  },
+  { week: "12–18 Oct",    forms: 0,  regs: 3, revenue: 929.25,   full: true  },
+  { week: "19–22 Oct ⚡",  forms: 1,  regs: 1, revenue: 440.00,   full: false },
 ];
 
 const fullWeeks    = data.filter(d => d.full);
@@ -58,7 +65,7 @@ const CustomTooltip = ({ active, payload, label }) => {
           </div>
         </div>
       </div>
-      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Wed)</p>}
+      {!d?.full && <p style={{ margin:"6px 0 0", color:"#fbbf24", fontSize:11 }}>⚡ Partial week (Mon–Thu)</p>}
     </div>
   );
 };
@@ -95,7 +102,7 @@ export default function App() {
           Weekly Combined Revenue Report
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          10 Aug – 7 Oct 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
+          24 Aug – 22 Oct 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
         </p>
       </div>
 
@@ -104,10 +111,11 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Note: </strong>
         CTID490 (SNA L5 OA) and CTID423 (SNA L6 OA) share combined reporting.
-        W1 (10–16 Aug) was the standout week with <strong style={{ color:"#f1f5f9" }}>9 registrations and €3,188.50 revenue</strong>; W5 (7–13 Sep) followed with 7 registrations and €2,536.75.
-        CTID423 (L6) contributed €6,046.00 from 14 registrations; CTID490 (L5) €5,748.00 from 19.
+        W3 (7–13 Sep) was the standout week with <strong style={{ color:"#f1f5f9" }}>7 registrations and €2,536.75 revenue</strong>; W2 (31 Aug–6 Sep) followed with 6 registrations and €1,966.50.
+        CTID490 (L5) contributed €5,147.75 from 17 registrations; CTID423 (L6) €4,532.00 from 10.
+        W8 (12–18 Oct) had 3 registrations (€929.25) despite no new forms that week.
         CR% &gt; 100% in some weeks (†) reflects Paythen payments landing in a later week than the originating form submission — expected, not an error.
-        23 pre-window registrations (before 10 Aug, €8,953.15) excluded from weekly counts.
+        34 pre-window registrations (before 24 Aug, €12,731.65) excluded from weekly counts.
       </div>
 
       {/* KPIs */}
@@ -236,7 +244,7 @@ export default function App() {
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
         † CR% &gt; 100% where Paythen payment date falls in a later week than the originating form submission — expected behaviour, not an error. ·
-        23 pre-window Paythen registrations (before 10 Aug, €8,953.15) excluded · Paythen fetched 7 Oct 2026
+        34 pre-window Paythen registrations (before 24 Aug, €12,731.65) excluded · Paythen fetched 22 Oct 2026
       </p>
     </div>
   );
