@@ -6,13 +6,12 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 22 Oct 2026 | W1 24 Aug → W8 18 Oct · W9 19–22 Oct 2026 (partial ⚡)
-// ENQ: 97 raw → 97 unique | APP: 5 raw → 5 unique (0 dups, 0 phone merges)
-// 0 rows outside window | CSV exports (local Irish time) | latest ENQ 15 Oct 10:27 (confirmed — none since), latest APP 30 Sep
-// Traffic source tab added 7 Oct 2026, CTID742 template · form + contact UTMs re-pulled 22 Oct 2026
+// Generated: 29 Oct 2026 | W1 31 Aug → W8 25 Oct · W9 26–29 Oct 2026 (partial ⚡)
+// ENQ: 94 raw → 94 unique | APP: 5 raw → 5 unique (0 dups, 0 phone merges)
+// 0 rows outside window | CSV exports (local Irish time) | latest ENQ 22 Oct 14:52 (export confirmed current), only 1 ENQ since 15 Oct 10:27 · latest APP 30 Sep
+// Traffic source tab added 7 Oct 2026, CTID742 template · form + contact UTMs re-pulled 29 Oct 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "24 Aug–30 Aug",    enq: 4,  app: 0, full: true  },
   { week: "31 Aug–6 Sep",     enq: 14, app: 1, full: true  },
   { week: "7 Sep–13 Sep",     enq: 17, app: 3, full: true  },
   { week: "14 Sep–20 Sep",    enq: 10, app: 0, full: true  },
@@ -20,7 +19,8 @@ export const data = [
   { week: "28 Sep–4 Oct",     enq: 6,  app: 1, full: true  },
   { week: "5 Oct–11 Oct",     enq: 14, app: 0, full: true  },
   { week: "12 Oct–18 Oct",    enq: 12, app: 0, full: true  },
-  { week: "19 Oct–22 Oct ⚡", enq: 0,  app: 0, full: false },
+  { week: "19 Oct–25 Oct",    enq: 1,  app: 0, full: true  },
+  { week: "26 Oct–29 Oct ⚡", enq: 0,  app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -33,8 +33,8 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, 24 Aug–22 Oct · 102 forms · 99 contacts) — CTID742 template, refreshed 22 Oct 2026 ──────
-// Source: form-submission UTMs + HubSpot contact utm_source / utm_medium (pulled 22 Oct 2026)
+// ── UTM TRAFFIC SOURCE (W1–W9, 31 Aug–29 Oct · 99 forms · 96 contacts) — CTID742 template, refreshed 29 Oct 2026 ──────
+// Source: form-submission UTMs + HubSpot contact utm_source / utm_medium (pulled 29 Oct 2026)
 // Priority when form and contact differ: Facebook / Instagram / Google Ads / AI search → HubSpot email → Website → Unknown
 // (a known form source is never overwritten by contact email; website only counts when nothing better exists)
 // Counted per form: the 3 contacts who submitted both ENQ and APP appear in both
@@ -44,13 +44,13 @@ const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 // website (no medium clue) → Website · chatgpt.com → AI search · blank / unfilled placeholders → Unknown
 // Order: largest first, Unknown last
 export const utmData = [
-  { name: "Facebook",         enq:  54, app:   2, color: "#60a5fa" },
+  { name: "Facebook",         enq:  52, app:   2, color: "#60a5fa" },
   { name: "Instagram",        enq:  14, app:   0, color: "#f472b6" },
-  { name: "Website",          enq:  12, app:   1, color: "#34d399" },
-  { name: "HubSpot email",    enq:   3, app:   0, color: "#fb923c" },
+  { name: "Website",          enq:  11, app:   1, color: "#34d399" },
+  { name: "HubSpot email",    enq:   4, app:   0, color: "#fb923c" },
   { name: "Google Ads",       enq:   3, app:   0, color: "#facc15" },
   { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
-  { name: "Unknown",          enq:  10, app:   2, color: "#475569" },
+  { name: "Unknown",          enq:   9, app:   2, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -145,7 +145,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            Form + HubSpot contact UTM source/medium · priority Facebook / Instagram / Google Ads → HubSpot email → Website · 24 Aug – 22 Oct 2026 · counted per form.
+            Form + HubSpot contact UTM source/medium · priority Facebook / Instagram / Google Ads → HubSpot email → Website · 31 Aug – 29 Oct 2026 · counted per form.
             Unknown = no UTMs recorded on form or contact, or unfilled ad placeholders.
           </p>
         </div>
@@ -214,7 +214,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          24 Aug – 22 Oct 2026 · Unique contacts · last form only per contact · W9 partial ⚡
+          31 Aug – 29 Oct 2026 · Unique contacts · last form only per contact · W9 partial ⚡
         </p>
       </div>
 
@@ -226,7 +226,7 @@ export default function App() {
         applications may be routing to the B2C Single Modules pipeline rather than the CTID379 application form.
         Cross-reference the B2C Single Modules report for a fuller picture of CTID379 applications.
         Overall app rate from this form: <strong style={{ color:"#f1f5f9" }}>{overallApp}%</strong>; no applications since 30 Sep.
-        No enquiries have been recorded since Wed 15 Oct, so W8 reflects 12–15 Oct only and W9 is 0 to date.
+        Enquiries have almost stopped since Wed 15 Oct — just 1 in W8 (Thu 22 Oct) and none in W9 to date — worth checking the enquiry form and ads.
       </div>
 
       {/* KPIs */}
@@ -352,7 +352,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID379 · SNA L6 LO · Generated 22 Oct 2026 · ENQ 97 raw → 97 unique · APP 5 raw → 5 unique (0 dups) · Latest ENQ 15 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Thu · traffic source: form + HubSpot contact UTMs, 22 Oct 2026
+        CTID379 · SNA L6 LO · Generated 29 Oct 2026 · ENQ 94 raw → 94 unique · APP 5 raw → 5 unique (0 dups) · Latest ENQ 22 Oct, latest APP 30 Sep · W9 partial ⚡ Mon–Thu · traffic source: form + HubSpot contact UTMs, 29 Oct 2026
       </p>
     </div>
   );

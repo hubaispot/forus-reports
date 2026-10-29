@@ -5,16 +5,15 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 22 Oct 2026 | W1 24 Aug → W8 18 Oct · W9 19–22 Oct 2026 (partial ⚡)
-// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (ENQ 97 + APP 5 unique, 22 Oct)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__19_.csv · 110 Registered rows → 109 unique emails → 41 in-window
-//   68 pre-window excluded (before 24 Aug, €30,845.28) · Price tiers: €461.83 ×18 · €455.00 ×17 · €462.00 ×6
+// Generated: 29 Oct 2026 | W1 31 Aug → W8 25 Oct · W9 26–29 Oct 2026 (partial ⚡)
+// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (ENQ 94 + APP 5 unique, 29 Oct)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__22_.csv · 112 Registered rows → 111 unique emails → 38 in-window
+//   73 pre-window excluded (before 31 Aug, €33,147.60) · Price tiers (in-window): €461.83 ×15 · €455.00 ×17 · €462.00 ×6
 // Excluded non-Registered: 1 Refunded Not Registered (Anna Marie Mulholland, 5 May)
-// Ella O'Neill: 2 Registered rows (20 May + 13 Oct) — 13 Oct confirmed genuine new registration, counted in W8
-// Cian Naylor (6 Oct): previously blank status, now Registered — counted in W7
+// Ella O'Neill: 2 Registered rows (20 May + 13 Oct) — 13 Oct confirmed genuine new registration, counted in W7
+// Cian Naylor (6 Oct): previously blank status, now Registered — counted in W6
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "24 Aug–30 Aug",    forms:  4, regs: 5, revenue: 2302.32, full: true  },
   { week: "31 Aug–6 Sep",     forms: 15, regs: 7, revenue: 3205.66, full: true  },
   { week: "7 Sep–13 Sep",     forms: 20, regs: 6, revenue: 2764.49, full: true  },
   { week: "14 Sep–20 Sep",    forms: 10, regs: 2, revenue:  917.00, full: true  },
@@ -22,7 +21,8 @@ export const data = [
   { week: "28 Sep–4 Oct",     forms:  7, regs: 6, revenue: 2757.49, full: true  },
   { week: "5 Oct–11 Oct",     forms: 14, regs: 4, revenue: 1840.66, full: true  },
   { week: "12 Oct–18 Oct",    forms: 12, regs: 3, revenue: 1371.83, full: true  },
-  { week: "19 Oct–22 Oct ⚡", forms:  0, regs: 2, revenue:  916.83, full: false },
+  { week: "19 Oct–25 Oct",    forms:  1, regs: 2, revenue:  916.83, full: true  },
+  { week: "26 Oct–29 Oct ⚡", forms:  0, regs: 2, revenue:  916.83, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +((d.regs / d.forms) * 100).toFixed(1) : 0,
@@ -97,7 +97,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          24 Aug – 22 Oct 2026 · W1–W8 complete + W9 partial ⚡ · Paythen: 68 pre-window registrations excluded
+          31 Aug – 29 Oct 2026 · W1–W8 complete + W9 partial ⚡ · Paythen: 73 pre-window registrations excluded
         </p>
       </div>
 
@@ -106,10 +106,10 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Note: </strong>
         CTID379 application form counts are likely <strong style={{ color: "#f1f5f9" }}>understated</strong> —
-        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 41)
+        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 38)
         provide a more complete signal of actual enrolments. Overall conversion rate from forms to Paythen
-        registrations: <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. No forms have been recorded since 15 Oct,
-        so W9 (19–22 Oct ⚡) shows 2 registrations (€916.83) against 0 forms.
+        registrations: <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. Only 1 form has been recorded since 15 Oct,
+        so W8 (19–25 Oct) shows 2 registrations against 1 form (†) and W9 (26–29 Oct ⚡) 2 registrations (€916.83) against 0 forms.
       </div>
 
       {/* KPI Cards */}
@@ -154,7 +154,7 @@ export default function App() {
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
               <XAxis dataKey="week" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={{ stroke: "#334155" }} tickLine={false} />
               <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false}
-                tickFormatter={v => v + "%"} domain={[0, 140]} />
+                tickFormatter={v => v + "%"} domain={[0, 220]} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(148,163,184,.06)" }} />
               <ReferenceLine y={overallCR} stroke="#64748b" strokeDasharray="4 3"
                 label={{ value: `Avg ${overallCR}%`, fill: "#64748b", fontSize: 11, position: "insideTopRight" }} />
@@ -236,8 +236,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID379 · SNA L6 LO · Generated 22 Oct 2026 · Forms: ENQ 97 + APP 5 unique contacts ·
-        Paythen: 110 Registered (109 unique) → 41 in-window · 68 pre-window excluded (before 24 Aug, €30,845.28) ·
+        CTID379 · SNA L6 LO · Generated 29 Oct 2026 · Forms: ENQ 94 + APP 5 unique contacts ·
+        Paythen: 112 Registered (111 unique) → 38 in-window · 73 pre-window excluded (before 31 Aug, €33,147.60) ·
         1 non-Registered excluded (refunded) · W9 partial ⚡ Mon–Thu
       </p>
       <p style={{ marginTop: 4, fontSize: 11, color: "#475569", textAlign: "center" }}>

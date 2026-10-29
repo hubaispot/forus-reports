@@ -8,21 +8,21 @@ import {
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
 // Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
-// W1 = Mon 24 Aug 2026 · W8 = Sun 18 Oct 2026 · W9 = 19–22 Oct 2026 ⚡ partial
+// W1 = Mon 31 Aug 2026 · W8 = Sun 25 Oct 2026 · W9 = 26–29 Oct 2026 ⚡ partial
 // Methodology: global dedup per form · email primary · phone fallback · most recent kept
-// Freshly processed 22 Oct 2026 (CSV, local Irish time) · 126 unique enquiries · 142 unique apps · 1 phone dupe merged (Rose Harty, ENQ)
+// Freshly processed 29 Oct 2026 (CSV, local Irish time) · 120 unique enquiries · 131 unique apps · 1 phone dupe merged (Rose Harty, ENQ)
 // Traffic source tab added 7 Oct 2026, aligned to CTID786 / CTID770+771 template 8 Oct 2026
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "24–30 Aug",     enq: 15, app: 17, full: true  },
-  { week: "31 Aug–6 Sep",  enq: 17, app: 26, full: true  },
+  { week: "31 Aug–6 Sep",  enq: 17, app: 27, full: true  },
   { week: "7–13 Sep",      enq: 11, app: 11, full: true  },
   { week: "14–20 Sep",     enq: 20, app: 19, full: true  },
   { week: "21–27 Sep",     enq: 8,  app: 18, full: true  },
   { week: "28 Sep–4 Oct",  enq: 16, app: 14, full: true  },
   { week: "5–11 Oct",      enq: 19, app: 16, full: true  },
   { week: "12–18 Oct",     enq: 13, app: 17, full: true  },
-  { week: "19–22 Oct ⚡",   enq: 7,  app: 4,  full: false },
+  { week: "19–25 Oct",     enq: 9,  app: 6,  full: true  },
+  { week: "26–29 Oct ⚡",   enq: 7,  app: 3,  full: false },
 ].map(d => ({
   ...d,
   total: d.enq + d.app,
@@ -39,22 +39,22 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq: "#fb923c", app: "#38bdf8", rate: "#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (24 Aug–22 Oct, 268 forms · 239 contacts) — refreshed 22 Oct 2026 ─
-// Source: form-submission UTM (enq-742 / app-742 exports) + HubSpot contact utm_source / utm_medium (pulled 22 Oct 2026)
+// ── UTM TRAFFIC SOURCE (31 Aug–29 Oct, 251 forms · 226 contacts · 25 in both) — refreshed 29 Oct 2026 ─
+// Source: form-submission UTM (enq-742 / app-742 exports) + HubSpot contact utm_source / utm_medium (pulled 29 Oct 2026)
 // Priority: Facebook → other known platform (Google Ads, Instagram, AI search) → HubSpot email → Website → Unknown
 // Known form source beats HubSpot email on the contact · website + medium clue (email / paid-social / ppc) → classified by medium
-// Counted per form: the 29 contacts who submitted both ENQ and APP appear in both
+// Counted per form: the 25 contacts who submitted both ENQ and APP appear in both
 // Mapping: adwords or medium ppc → Google Ads · fb / facebook, or medium paid-social → Facebook · ig → Instagram
 // hs_automation / hs_email / any email medium → HubSpot email · website (no medium clue) → Website
 // chatgpt.com / copilot.com → AI search · blank → Unknown · order: largest first, Unknown last
 export const utmData = [
-  { name: "Google Ads",       enq:  52, app:  56, color: "#facc15" },
-  { name: "Website",          enq:  23, app:  26, color: "#34d399" },
-  { name: "Facebook",         enq:  19, app:  11, color: "#60a5fa" },
-  { name: "HubSpot email",    enq:   6, app:   9, color: "#fb923c" },
+  { name: "Google Ads",       enq:  51, app:  49, color: "#facc15" },
+  { name: "Website",          enq:  24, app:  24, color: "#34d399" },
+  { name: "Facebook",         enq:  17, app:   9, color: "#60a5fa" },
+  { name: "HubSpot email",    enq:   6, app:  11, color: "#fb923c" },
   { name: "Instagram",        enq:   1, app:   1, color: "#f472b6" },
   { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
-  { name: "Unknown",          enq:  24, app:  39, color: "#475569" },
+  { name: "Unknown",          enq:  20, app:  37, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -149,7 +149,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            Form + HubSpot contact UTM source/medium · 24 Aug – 22 Oct 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Form + HubSpot contact UTM source/medium · 31 Aug – 29 Oct 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded on the contact.
           </p>
         </div>
@@ -226,7 +226,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          24 Aug – 22 Oct 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
+          31 Aug – 29 Oct 2026 · 8 full weeks + W9 partial ⚡ · Unique contacts · global dedup per form
         </p>
       </div>
 
@@ -237,11 +237,11 @@ export default function App() {
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
         CTID742 shows a <strong style={{ color: "#f1f5f9" }}>{overallApp}% overall application rate</strong> across
-        8 full weeks plus a partial W9, with applications matching or beating enquiries in 5 of 8 full weeks.
-        Peak volume was W2 (31 Aug–6 Sep) at 43 submissions with a 60% app rate; W5 (21–27 Sep)
-        hit the highest app rate at 69% despite the lowest enquiry week (8). W7 (5–11 Oct) brought the
-        second-highest enquiry count (19), and W8 converted back up to 57%. W9 (19–22 Oct ⚡) has
-        11 submissions after 3 days — pacing below the 32.1/wk average.
+        8 full weeks plus a partial W9, with applications matching or beating enquiries in 4 of 8 full weeks.
+        Peak volume was W1 (31 Aug–6 Sep) at 44 submissions with a 61% app rate; W4 (21–27 Sep)
+        hit the highest app rate at 69% despite the lowest enquiry week (8). W3 (14–20 Sep) brought the
+        highest enquiry count (20). W8 (19–25 Oct) was the weakest full week at 15 submissions and a 40%
+        app rate, and W9 (26–29 Oct ⚡) has 10 submissions to Thursday morning — pacing below the 30.1/wk average.
       </div>
 
       {/* KPIs */}
@@ -377,7 +377,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 22 Oct 2026 · W1–W9 processed from fresh CSV exports (Irish local time) · W9 partial (Mon 19 – Thu 22 Oct, to 09:14) · 1 phone-based duplicate merged (enquiry form) · traffic source from form + HubSpot contact UTMs, 22 Oct 2026
+        Updated 29 Oct 2026 · W1–W9 processed from fresh CSV exports (Irish local time) · W9 partial (Mon 26 – Thu 29 Oct, to 09:51) · 1 phone-based duplicate merged (enquiry form) · traffic source from form + HubSpot contact UTMs, 29 Oct 2026
       </p>
 
     </div>
