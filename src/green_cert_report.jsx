@@ -7,16 +7,15 @@ import {
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // Green Cert — Green Cert Programme Application + Paythen (CTID = "Green Cert")
 // Rolling window: last 8 completed Mon–Sun weeks + W9 partial
-// W1 = Mon 24 Aug 2026 · W8 = Sun 18 Oct 2026 · W9 = 19–23 Oct 2026 ⚡ partial
-// HubSpot: hubspot-form-submissions-green-cert-programme-applicatio-2026-10-23.csv
-//   467 raw → 1 jean excluded → 393 after email dedup (keep last) → 391 after phone fallback
-//   Form live from 19 Aug 2026; first deduped submission 24 Aug (W1)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__20_.csv · CTID contains "Green Cert" (104 rows)
-//   89 Registered (€425,696) · 10 "In progress" → Pipeline (€46,147) · 2 Refunded Not Registered excluded (€9,998)
-//   3 email dupes merged (keep last) · 0 pre-window rows · price tiers €4,450 / €4,999
+// W1 = Mon 31 Aug 2026 · W8 = Sun 25 Oct 2026 · W9 = 26–30 Oct 2026 ⚡ partial
+// HubSpot: hubspot-form-submissions-green-cert-programme-applicatio-2026-10-30.csv
+//   488 raw → 414 after email dedup (keep last) → 412 after phone fallback · 0 jean rows
+//   Form live from 19 Aug 2026; first in-window deduped submission 31 Aug (W1)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered.csv · CTID == "Green Cert" (107 rows)
+//   88 Registered (€421,246) · 13 "In progress" → Pipeline (€60,595) · 2 Refunded Not Registered excluded (€9,998)
+//   3 email dupes merged (keep last) · 1 pre-window row excluded (€4,450) · price tiers €4,450 / €4,999
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "24–30 Aug", sep: 1, jan: 0, regs: 1, regRev: 4450, pipe: 0, pipeRev: 0, full: true, live: true },
   { week: "31 Aug–6 Sep", sep: 3, jan: 0, regs: 1, regRev: 4999, pipe: 0, pipeRev: 0, full: true, live: true },
   { week: "7–13 Sep", sep: 113, jan: 36, regs: 27, regRev: 129483, pipe: 0, pipeRev: 0, full: true, live: true },
   { week: "14–20 Sep", sep: 80, jan: 25, regs: 21, regRev: 102783, pipe: 1, pipeRev: 4999, full: true, live: true },
@@ -24,7 +23,8 @@ export const data = [
   { week: "28 Sep–4 Oct", sep: 12, jan: 7, regs: 8, regRev: 39443, pipe: 2, pipeRev: 8900, full: true, live: true },
   { week: "5–11 Oct", sep: 0, jan: 15, regs: 2, regRev: 9449, pipe: 0, pipeRev: 0, full: true, live: true },
   { week: "12–18 Oct", sep: 0, jan: 14, regs: 1, regRev: 4450, pipe: 5, pipeRev: 22799, full: true, live: true },
-  { week: "19–23 Oct ⚡", sep: 0, jan: 15, regs: 1, regRev: 4999, pipe: 1, pipeRev: 4999, full: false, live: true },
+  { week: "19–25 Oct", sep: 0, jan: 24, regs: 1, regRev: 4999, pipe: 3, pipeRev: 14997, full: true, live: true },
+  { week: "26–30 Oct ⚡", sep: 0, jan: 13, regs: 0, regRev: 0, pipe: 1, pipeRev: 4450, full: false, live: true },
 ].map(d => {
   const apps = d.sep + d.jan;
   return {
@@ -36,28 +36,28 @@ export const data = [
   };
 });
 
-// Agriculture Level 5 Paths — counted per selection (42 applicants ticked 2+ paths)
+// Agriculture Level 5 Paths — counted per selection (46 applicants ticked 2+ paths)
 const PATHS = [
-  { name: "Beef/Sheep (Dry Stock)", sep: 178, jan: 82, color: "#a3e635" },
-  { name: "Dairy/Beef (Dairy)", sep: 102, jan: 44, color: "#38bdf8" },
-  { name: "Tillage Crops", sep: 34, jan: 13, color: "#fbbf24" },
-  { name: "Not stated", sep: 1, jan: 0, color: "#475569" },
+  { name: "Beef/Sheep (Dry Stock)", sep: 178, jan: 94, color: "#a3e635" },
+  { name: "Dairy/Beef (Dairy)", sep: 102, jan: 55, color: "#38bdf8" },
+  { name: "Tillage Crops", sep: 34, jan: 17, color: "#fbbf24" },
+  { name: "Not stated", sep: 0, jan: 0, color: "#475569" },
 ];
-const MULTI_PATH = { all: 42, sep: 29, jan: 13 };
+const MULTI_PATH = { all: 46, sep: 29, jan: 17 };
 
 // Where did you hear about us? — one answer per applicant
 const SOURCES = [
-  { name: "Facebook", sep: 136, jan: 55, color: "#3b82f6" },
-  { name: "Friends and Family", sep: 44, jan: 20, color: "#a3e635" },
-  { name: "Instagram", sep: 35, jan: 17, color: "#f472b6" },
-  { name: "Google", sep: 22, jan: 17, color: "#fbbf24" },
-  { name: "Forus Training Website", sep: 11, jan: 2, color: "#34d399" },
+  { name: "Facebook", sep: 136, jan: 65, color: "#3b82f6" },
+  { name: "Friends and Family", sep: 44, jan: 26, color: "#a3e635" },
+  { name: "Instagram", sep: 35, jan: 18, color: "#f472b6" },
+  { name: "Google", sep: 22, jan: 19, color: "#fbbf24" },
+  { name: "Forus Training Website", sep: 10, jan: 4, color: "#34d399" },
   { name: "Other", sep: 8, jan: 4, color: "#a78bfa" },
   { name: "Email", sep: 3, jan: 3, color: "#fb923c" },
   { name: "LinkedIn", sep: 2, jan: 0, color: "#0ea5e9" },
   { name: "findacourse.ie", sep: 1, jan: 1, color: "#f87171" },
   { name: "Leaflet", sep: 1, jan: 0, color: "#e2e8f0" },
-  { name: "Twitter", sep: 1, jan: 0, color: "#94a3b8" },
+  { name: "Twitter", sep: 1, jan: 1, color: "#94a3b8" },
   { name: "Not stated", sep: 6, jan: 2, color: "#475569" },
 ];
 
@@ -205,7 +205,7 @@ export default function GreenCertReport() {
           Weekly Green Cert Report — Applications, Paths, Sources &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          24 Aug – 23 Oct 2026 · 8 full weeks + W9 partial ⚡ · application form live from 19 Aug
+          31 Aug – 30 Oct 2026 · 8 full weeks + W9 partial ⚡ · application form live from 19 Aug
         </p>
       </div>
 
@@ -215,12 +215,12 @@ export default function GreenCertReport() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#a3e635" }}>📌 Key characteristic: </strong>
-        W3 (7–13 Sep) is the peak — <strong style={{ color: "#f1f5f9" }}>149 applications and 27 registrations</strong> worth
-        €129,483 (30% of registered revenue). Pipeline now stands at 10 "In progress" payments (€46,147), 5 of them
-        (€22,799) in W8 alone, while only 4 registrations landed in W7–W9 — so {pct(totalRegRev, totalRegRev + totalPipeRev)} of
-        collected revenue is fully registered. Since W7 every application has been for January 2027 (44 in W7–W9), which
-        accounts for {pct(totalJan, totalApps)} of all applications. Facebook is the source for just under half of all
-        applicants (191 of 391).
+        W2 (7–13 Sep) is the peak — <strong style={{ color: "#f1f5f9" }}>149 applications and 27 registrations</strong> worth
+        €129,483 (31% of registered revenue). Pipeline has grown to 13 "In progress" payments (€60,595), 8 of them
+        (€37,796) in W7–W8, while only 4 registrations landed in W6–W9 — so {pct(totalRegRev, totalRegRev + totalPipeRev)} of
+        collected revenue is fully registered. Since W6 every application has been for January 2027 (66 in W6–W9, with
+        W8's 24 the busiest week since W4), and January now accounts for {pct(totalJan, totalApps)} of all applications.
+        Facebook is the source for just under half of all applicants (201 of 412).
       </div>
 
       {/* KPI cards */}
@@ -354,8 +354,8 @@ export default function GreenCertReport() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center", lineHeight: 1.6 }}>
-        Updated 23 Oct 2026 · 391 deduped applications (467 raw) · Pipeline = Paythen rows with blank or "In progress" status ·
-        2 Refunded Not Registered (€9,998) excluded · 3 duplicate Paythen emails merged
+        Updated 30 Oct 2026 · 412 deduped applications (488 raw) · Pipeline = Paythen rows with blank or "In progress" status ·
+        2 Refunded Not Registered (€9,998) excluded · 3 duplicate Paythen emails merged · 1 pre-window payment (€4,450) excluded
       </p>
 
     </div>
