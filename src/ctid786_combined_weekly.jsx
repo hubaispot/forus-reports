@@ -5,14 +5,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "7–13 Sep",     forms: 19, regs: 2,  revenue:  997.50, full: true },
   { week: "14–20 Sep",    forms:  5, regs: 4,  revenue: 1995.00, full: true },
   { week: "21–27 Sep",    forms:  9, regs: 1,  revenue:  498.75, full: true },
   { week: "28 Sep–4 Oct", forms:  9, regs: 4,  revenue: 1971.25, full: true },
   { week: "5–11 Oct",     forms:  7, regs: 1,  revenue:  475.00, full: true },
   { week: "12–18 Oct",    forms: 19, regs: 3,  revenue: 1496.25, full: true },
   { week: "19–25 Oct",    forms: 11, regs: 3,  revenue: 1496.25, full: true },
-  { week: "26 Oct–1 Nov", forms:  6, regs: 2,  revenue:  997.50, full: true },
+  { week: "26 Oct–1 Nov", forms:  4, regs: 3,  revenue: 1496.25, full: true },
+  { week: "2–8 Nov",      forms: 11, regs: 3,  revenue: 1448.75, full: true },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : null,
@@ -87,7 +87,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          7 Sep – 1 Nov 2026 · 8 full weeks · IST boundaries · Unique contacts
+          14 Sep – 8 Nov 2026 · 8 full weeks · IST boundaries · Unique contacts
         </p>
       </div>
 
@@ -96,10 +96,10 @@ export default function App() {
         borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 12,
         color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W2 (14–20 Sep) and W4 (28 Sep–4 Oct) were the peak registration weeks — <strong style={{ color: "#f1f5f9" }}>4 registrations each
-        (€1,995 and €1,971)</strong>; W2's 80.0% CR is on just 5 forms. The two biggest form weeks converted poorly: W1 (7–13 Sep) and W6 (12–18 Oct)
-        each had 19 forms but only 2 and 3 registrations (10.5% / 15.8% CR). Conversion has improved since: W7 (19–25 Oct) 3 of 11 (27.3%) and
-        W8 (26 Oct–1 Nov) 2 of 6 (33.3%). Overall CR of 23.5% across 8 weeks with €9,928 expected revenue.
+        W1 (14–20 Sep) and W3 (28 Sep–4 Oct) were the peak registration weeks — <strong style={{ color: "#f1f5f9" }}>4 registrations each
+        (€1,995 and €1,971)</strong>; W1's 80.0% CR is on just 5 forms. The biggest form week converted poorly: W5 (12–18 Oct)
+        had 19 forms but only 3 registrations (15.8% CR). Registrations have held at 3/wk from W5 to W8: W7 (26 Oct–1 Nov) converted 3 of 4 (75.0%) and
+        W8 (2–8 Nov) 3 of 11 (27.3%). Overall CR of 29.3% across 8 weeks with €10,878 expected revenue.
       </div>
 
       {/* KPI cards */}
@@ -245,10 +245,10 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 16, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 7 Sep – 1 Nov 2026 · IST boundaries ·
-        HubSpot: 85 forms (46 ENQ / 39 APP; W1 reused from 27 Oct report) · Paythen: 20 registered (107 pre-window excluded, €52,478.75 · 0 post-window ·
-        1 "In progress" in window (€498.75) + 1 pre-window "App form o/st" excluded · 3 duplicate-email rows merged · 1 OA 1:1 row included) · Revenue tiers: €475.00 / €498.75 ·
-        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 3 Nov 2026
+        CTID786 · CS &amp; COOP LO L5 · 14 Sep – 8 Nov 2026 · IST boundaries ·
+        HubSpot: 75 forms (38 ENQ / 37 APP) · Paythen: 22 registered (109 pre-window excluded, €53,476.25 · 0 post-window ·
+        0 "In progress" in window + 1 pre-window "App form o/st" excluded · 3 duplicate-email rows merged · 1 OA 1:1 row included) · Revenue tiers: €475.00 / €498.75 ·
+        Sources: HubSpot CSV exports + Paythen Courses Expected Revenue CTID, 9 Nov 2026
       </p>
     </div>
   );

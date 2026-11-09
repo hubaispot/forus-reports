@@ -6,14 +6,14 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "7–13 Sep",      enq: 4, app: 6,  full: true  },
   { week: "14–20 Sep",     enq: 5, app: 13, full: true  },
   { week: "21–27 Sep",     enq: 0, app: 8,  full: true  },
   { week: "28 Sep–4 Oct",  enq: 3, app: 8,  full: true  },
   { week: "5–11 Oct",      enq: 5, app: 8,  full: true  },
   { week: "12–18 Oct",     enq: 1, app: 7,  full: true  },
   { week: "19–25 Oct",     enq: 1, app: 4,  full: true  },
-  { week: "26 Oct–1 Nov",  enq: 1, app: 8,  full: true  },
+  { week: "26 Oct–1 Nov",  enq: 1, app: 5,  full: true  },
+  { week: "2–8 Nov",       enq: 4, app: 11, full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -26,18 +26,18 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (7 Sep–1 Nov, 82 forms · 77 contacts) — refreshed 3 Nov 2026 ─────
+// ── UTM TRAFFIC SOURCE (14 Sep–8 Nov, 84 forms · 77 contacts) — refreshed 9 Nov 2026 ─────
 // Source: form-submission UTM (ENQ_HS / APP_HS exports) + HubSpot contact utm_source / utm_medium
 // Priority: Facebook → other known platform (Instagram, AI search, Google Ads) → HubSpot email → Website → Unknown
-// Counted per form: the 5 contacts who submitted both ENQ and APP appear in both
+// Counted per form: the 7 contacts who submitted both ENQ and APP appear in both
 // Mapping (CTID786 convention): fb / facebook → Facebook · ig → Instagram · website → Website
 // hs_automation / hs_email / any email medium → HubSpot email (e.g. website + medium email → HubSpot email)
 // chatgpt.com / copilot.com → AI search · {{utm_source}} (unresolved macro, no medium) / blank → Unknown
 export const utmData = [
-  { name: "Website",          enq:   5, app:  16, color: "#34d399" },
-  { name: "Facebook",         enq:   4, app:   7, color: "#60a5fa" },
-  { name: "HubSpot email",    enq:   3, app:   4, color: "#fb923c" },
-  { name: "AI search",        enq:   1, app:   1, color: "#a78bfa" },
+  { name: "Website",          enq:   4, app:  15, color: "#34d399" },
+  { name: "Facebook",         enq:   4, app:   8, color: "#60a5fa" },
+  { name: "HubSpot email",    enq:   5, app:   6, color: "#fb923c" },
+  { name: "AI search",        enq:   0, app:   1, color: "#a78bfa" },
   { name: "Instagram",        enq:   1, app:   1, color: "#f472b6" },
   { name: "Unknown",          enq:   6, app:  33, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
@@ -134,7 +134,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            Form + HubSpot contact UTM source/medium · 7 Sep – 1 Nov 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Form + HubSpot contact UTM source/medium · 14 Sep – 8 Nov 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded or unresolved {"{{utm_source}}"} placeholder.
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          7 Sep – 1 Nov 2026 · 8 completed weeks · Unique contacts · last form only per contact
+          14 Sep – 8 Nov 2026 · 8 completed weeks · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -215,9 +215,9 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         This combined course has a <strong style={{ color:"#f1f5f9" }}>very high application rate ({overallApp}%)</strong> —
         driven by OA (CTID770) direct applications with no enquiry step.
-        All 8 weeks exceeded 60% app rate 🔥. Applications peaked at 13 in W2 (14–20 Sep) and held at 7–8/week through W6.
-        W7 (19–25 Oct) dipped to 4 applications — the lowest in the window — before W8 (26 Oct–1 Nov) recovered to 8 (89% app rate).
-        Enquiries have run at just 1/week for three straight weeks (W6–W8), down from 3–5 in W4–W5.
+        All 8 weeks exceeded 60% app rate 🔥. Applications peaked at 13 in W1 (14–20 Sep) and held at 7–8/week through W5,
+        then dipped to 4 in W6 (19–25 Oct) and 5 in W7 (26 Oct–1 Nov).
+        W8 (2–8 Nov) rebounded to 11 applications — the highest since W1 — and enquiries rose to 4 after three straight weeks at 1/week (W5–W7).
       </div>
 
       {/* KPIs */}
@@ -227,7 +227,7 @@ export default function App() {
           { label:"Total Applications (OA)",     value:totalApp,       sub:`avg ${avgApp}/wk`,   color:COLORS.app  },
           { label:"Total Submissions",           value:total,          sub:"8 completed weeks", color:"#f1f5f9"   },
           { label:"Overall App Rate",            value:overallApp+"%", sub:"apps ÷ total",       color:"#34d399"   },
-          { label:"W8 (26 Oct–1 Nov)",              value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
+          { label:"W8 (2–8 Nov)",                   value:data[7].total,  sub:`${data[7].enq}e / ${data[7].app}a`, color:"#cbd5e1" },
         ].map(k => (
           <div key={k.label} style={{ background:"#1e293b", borderRadius:10, padding:"12px 18px",
             flex:"1 1 110px", border:"1px solid #334155" }}>
@@ -349,9 +349,11 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:11, color:"#475569", lineHeight:1.6 }}>
-        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) application form only.
-        All weeks (W1–W8) freshly processed from 3 Nov 2026 CSV exports. 7 Sep–11 Oct match the previous run; 12–18 Oct applications revised 8→7 (contact resubmitted 23 Oct — latest submission kept). No partial week included.
-        App rate % is not a standard funnel conversion rate. Source: HubSpot CSV exports, 3 Nov 2026; traffic source from form + HubSpot contact UTMs, 3 Nov 2026.
+        ⚠️ Enquiry column = CTID771 (LO) enquiry form only. Application column = CTID770 (OA) + CTID771 (LO) application forms, deduped together
+        (1 contact applied on both forms on 3 Nov — counted once, most recent CTID770 submission kept; all counted applications in the window are CTID770).
+        All weeks (W1–W8) freshly processed from 9 Nov 2026 CSV exports. 14 Sep–25 Oct match the previous run; 26 Oct–1 Nov applications revised 8→5
+        (3 contacts resubmitted 2–5 Nov — latest submission kept, now counted in W8). No partial week included.
+        App rate % is not a standard funnel conversion rate. Source: HubSpot CSV exports, 9 Nov 2026; traffic source from form + HubSpot contact UTMs, 9 Nov 2026.
       </p>
     </div>
   );
