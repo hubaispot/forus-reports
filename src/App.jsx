@@ -139,6 +139,7 @@ const NAV = {
   },
   ELC: {
     label: "ELC", color: "#34d399",
+    placeholder: true, // ELC reports hidden ("coming soon") — remove this line to restore the course reports below
     enqApp: {
       courses: [
         { id: "785",     label: "CTID785 · ELC L5 LO", Component: CTID785enq,  data: elc785Data, insightKey: "785-enqApp"      },
