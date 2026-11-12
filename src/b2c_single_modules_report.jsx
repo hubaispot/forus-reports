@@ -4,8 +4,10 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ─── RAW DEAL DATA (fetched 9 Nov 2026) ──────────────────────────────────────
-// Window: W1 14 Sep – W8 8 Nov 2026 (8 full weeks, no partial week). 541 deals fetched + 7 graduated; 478 kept.
+// ─── RAW DEAL DATA (fetched 12 Nov 2026) ─────────────────────────────────────
+// Window: W1 14 Sep – W9 12 Nov 2026 (8 full weeks + W9 partial). 562 deals fetched + 7 graduated; 498 kept.
+// 12 Nov run: W9 dup removed — 538532759740 Aisling Maguire Payroll TP app (keep latest 539900912861).
+//   Blank-name W9 app 538274380024 (Entrepreneurial Skills) kept, consistent with prior blank-name deals.
 // Excluded: 64 same-person/same-course duplicates (keep latest; SP+TP treated as one app pool;
 //   delivery switches OA/LO/CNY = same course; name-variant merges: Orla McGlynn/Mc glynn,
 //   Susan Lynch(-Concannon), M/Maria Teresa Merino). Junk: 521580193014 "xx Xxc", 522157212919 "Danielle",
@@ -497,6 +499,26 @@ const RAW_DEALS = [
   { id:"538073360591", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Lisamarie dunlea", createdate:"2026-11-07T15:48:05Z", stage:"won", amount:440 },
   { id:"538060982478", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Mia Muldarry", createdate:"2026-11-07T19:55:13Z", stage:"won", amount:170 },
   { id:"538119880943", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Anastasia Vasiuta", createdate:"2026-11-07T22:12:31Z", stage:"app", amount:0 },
+  { id:"538131274994", dealname:"FAR First Aid Responder (FAR CNY DHP) - Mullingar for Dikeledi Mushapho", createdate:"2026-11-09T00:39:36Z", stage:"app", amount:0 },
+  { id:"538267400417", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Anitta Antony", createdate:"2026-11-09T11:23:49Z", stage:"won", amount:295 },
+  { id:"538288929005", dealname:"Plant Identification Care and Maintenance - Online Anytime 1:1 (4N1186 OA DHO) -  for Adeniyi Sanusi", createdate:"2026-11-09T14:53:02Z", stage:"app", amount:0 },
+  { id:"538274380024", dealname:"Entrepreneurial Skills - Online Anytime 1:1 (5N1951 OA DBU) -  for  ", createdate:"2026-11-09T17:37:32Z", stage:"app", amount:295 },
+  { id:"538535969005", dealname:"Biology - Online Anytime 1:1 (5N2746 OA DHC) -  for Killian Walsh", createdate:"2026-11-09T22:44:19Z", stage:"app", amount:295 },
+  { id:"538534405336", dealname:"Special Needs Assisting - Live and Online (5N1786 LO DSN) - Zoom for SABRINA TOBIN", createdate:"2026-11-10T08:54:13Z", stage:"app", amount:295 },
+  { id:"538469995714", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Kelly Mullaney", createdate:"2026-11-10T09:32:49Z", stage:"won", amount:440 },
+  { id:"538911871182", dealname:"Supervisory Management - Online Anytime 1:1 (6N4329 OA DBU) -  for Gloria Isibor Isibor", createdate:"2026-11-10T16:00:10Z", stage:"app", amount:380 },
+  { id:"539072130261", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Leanne Devaney", createdate:"2026-11-10T17:46:29Z", stage:"app", amount:440 },
+  { id:"539061519574", dealname:"Work Experience (Healthcare) - Online Anytime 1:1 (5N1356 OA DHC) -  for Anthony Matheka", createdate:"2026-11-10T21:09:58Z", stage:"app", amount:295 },
+  { id:"539544814787", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Keira Leonard", createdate:"2026-11-10T22:35:36Z", stage:"app", amount:455 },
+  { id:"539588938947", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Keira Leonard", createdate:"2026-11-10T22:49:28Z", stage:"won", amount:455 },
+  { id:"539537685729", dealname:"Special Needs Assisting - Online Anytime 1:1 (6N1957 OA DSN) -  for Kristopher Stewart", createdate:"2026-11-11T00:53:46Z", stage:"won", amount:455 },
+  { id:"539900912861", dealname:"Payroll Manual and Computerised - Online Anytime 1:1 (5N1546 OA DBU) -  for aisling maguire", createdate:"2026-11-11T17:10:35Z", stage:"app", amount:395 },
+  { id:"539826246877", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Cliff Williams", createdate:"2026-11-11T17:52:20Z", stage:"won", amount:440 },
+  { id:"539974380792", dealname:"Special Needs Assisting - Live and Online (6N1957 LO DSN) - Zoom for Abbi Healy", createdate:"2026-11-11T18:58:04Z", stage:"app", amount:440 },
+  { id:"539742617843", dealname:"Biology - Online Anytime 1:1 (5N2746 OA DHC) -  for Patrycja Wozniak", createdate:"2026-11-11T20:58:06Z", stage:"app", amount:295 },
+  { id:"539724654841", dealname:"Special Needs Assisting - Online Anytime 1:1 (5N1786 OA DSN) -  for Karen Mooney", createdate:"2026-11-11T21:05:55Z", stage:"app", amount:295 },
+  { id:"539926257853", dealname:"Digital Marketing - Online Anytime 1:1 (5N1364 OA DBU) -  for Alisa Kamara", createdate:"2026-11-11T21:23:27Z", stage:"won", amount:295 },
+  { id:"539755505879", dealname:"Barista Training (1169 CNY DBU) - Mullingar for Kayla Comiskey Hogan", createdate:"2026-11-12T09:47:43Z", stage:"app", amount:0 },
 ];
 
 // ─── PARSING ─────────────────────────────────────────────────────────────────
@@ -571,6 +593,7 @@ const WEEKS = [
   { wk:"W6", label:"19 Oct–25 Oct", start:new Date("2026-10-18T23:00:00Z"), end:new Date("2026-10-25T23:59:59Z"), full:true  },
   { wk:"W7", label:"26 Oct–1 Nov", start:new Date("2026-10-26T00:00:00Z"), end:new Date("2026-11-01T23:59:59Z"), full:true  },
   { wk:"W8", label:"2 Nov–8 Nov", start:new Date("2026-11-02T00:00:00Z"), end:new Date("2026-11-08T23:59:59Z"), full:true  },
+  { wk:"W9", label:"9 Nov–12 Nov ⚡", start:new Date("2026-11-09T00:00:00Z"), end:new Date("2026-11-12T23:59:59Z"), full:false },
 ];
 
 function countWeek(deals, wk) {
@@ -775,7 +798,7 @@ export default function App() {
           Single Module Applications &amp; Conversions
         </h1>
         <p style={{ margin:0, color:C.sub, fontSize:13 }}>
-          14 Sep – 8 Nov 2026 · W1–W8 · deal create date · 8 full weeks
+          14 Sep – 12 Nov 2026 · W1–W9 · deal create date · ⚡ W9 partial week
         </p>
       </div>
 
@@ -1055,7 +1078,7 @@ export default function App() {
       </div>
 
       <p style={{ marginTop:16, fontSize:10, color:C.muted, textAlign:"right" }}>
-        Data: HubSpot B2C (Single Modules) pipeline · fetched 09 Nov 2026 · deal create date as week anchor · 64 duplicates + 6 junk records excluded · 9 Closed Lost DND apps excluded · 7 graduated deals (pipeline 110199236) retained, 4 Closed Lost graduates excluded · null Barista won amounts set to €170
+        Data: HubSpot B2C (Single Modules) pipeline · fetched 12 Nov 2026 · deal create date as week anchor · 65 duplicates + 6 junk records excluded · 9 Closed Lost DND apps excluded · 7 graduated deals (pipeline 110199236) retained, 4 Closed Lost graduates excluded · null Barista won amounts set to €170
       </p>
     </div>
   );
