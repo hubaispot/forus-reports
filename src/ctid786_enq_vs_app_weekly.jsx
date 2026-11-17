@@ -6,7 +6,6 @@ import {
 } from "recharts";
 
 export const data = [
-  { week: "14–20 Sep",      enq: 1,  app: 4,  full: true  },
   { week: "21–27 Sep",      enq: 5,  app: 4,  full: true  },
   { week: "28 Sep–4 Oct",   enq: 5,  app: 4,  full: true  },
   { week: "5–11 Oct",       enq: 3,  app: 4,  full: true  },
@@ -14,6 +13,7 @@ export const data = [
   { week: "19–25 Oct",      enq: 7,  app: 4,  full: true  },
   { week: "26 Oct–1 Nov",   enq: 0,  app: 4,  full: true  },
   { week: "2–8 Nov",        enq: 4,  app: 7,  full: true  },
+  { week: "9–15 Nov",       enq: 5,  app: 6,  full: true  },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -26,23 +26,23 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W8, 14 Sep – 8 Nov 2026 · 75 forms · 72 contacts) — refreshed 9 Nov 2026 ────
+// ── UTM TRAFFIC SOURCE (W1–W8, 21 Sep – 15 Nov 2026 · 81 forms · 76 contacts) — refreshed 17 Nov 2026 ────
 // Sources: ENQ786 + APP786 form-submission UTMs, plus HubSpot contact utm_source / utm_medium
-// Counted per form: the 3 contacts who submitted both ENQ and APP appear in both
+// Counted per form: the 5 contacts who submitted both ENQ and APP appear in both
 // Priority across form + contact UTMs: Facebook/Instagram (Meta) & other known sources → HubSpot email → Website → Unknown
 // Mapping: fb / facebook / paid_social / Facebook_* medium → Facebook · ig → Instagram · website → Website
 // hs_automation / hs_email / email medium → HubSpot email · chatgpt.com / copilot.com → AI search · adwords / ppc → Google Ads
 // {{utm_source}} (unresolved macro, no medium) / blank → Unknown
 // Conflicts resolved: 1 ENQ contact form = Facebook, contact = hs_automation email → Facebook (form source wins);
-// 2 ENQ contacts form = website, contact medium = paid_social / Facebook_Mobile_Feed → Facebook (website is near-unknown)
+// 2 ENQ contacts form = website, contact medium = paid_social → Facebook (website is near-unknown)
 export const utmData = [
-  { name: "Facebook",         enq:  30, app:  14, color: "#60a5fa" },
-  { name: "Website",          enq:   1, app:   8, color: "#34d399" },
-  { name: "HubSpot email",    enq:   0, app:   4, color: "#fb923c" },
+  { name: "Facebook",         enq:  34, app:  16, color: "#60a5fa" },
+  { name: "Website",          enq:   1, app:   6, color: "#34d399" },
+  { name: "HubSpot email",    enq:   0, app:   3, color: "#fb923c" },
   { name: "Instagram",        enq:   0, app:   0, color: "#f472b6" },
   { name: "AI search",        enq:   1, app:   0, color: "#a78bfa" },
   { name: "Google Ads",       enq:   1, app:   0, color: "#facc15" },
-  { name: "Unknown",          enq:   5, app:  11, color: "#475569" },
+  { name: "Unknown",          enq:   5, app:  14, color: "#475569" },
 ].map(d => ({ ...d, combined: d.enq + d.app }));
 
 const UTM_FORMS = [
@@ -137,7 +137,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            Form + HubSpot contact UTM source/medium · W1–W8 (14 Sep – 8 Nov 2026) · counted per form (contacts who submitted both ENQ and APP count in each).
+            Form + HubSpot contact UTM source/medium · W1–W8 (21 Sep – 15 Nov 2026) · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded or unresolved {"{{utm_source}}"} placeholder.
           </p>
         </div>
@@ -206,7 +206,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          14 Sep – 8 Nov 2026 · Irish time boundaries · Unique contacts · last form only per contact
+          21 Sep – 15 Nov 2026 · Irish time boundaries · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -214,11 +214,10 @@ export default function App() {
       <div style={{ background:"rgba(52,211,153,0.08)", border:"1px solid #34d399", borderRadius:8,
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
-        <strong style={{ color:"#f1f5f9" }}>W5 (12–18 Oct) was the busiest week at 19 submissions</strong> —
-        led by 13 enquiries, the highest enquiry week in the window. Applications held at 4/wk in every other week through W7 (6 in W5);
-        W1's 80% 🔥 app rate is on very low volume (5 total).
-        <strong style={{ color:"#f1f5f9" }}> Enquiries fell to zero in W7 (26 Oct–1 Nov) but recovered to 4 in W8 (2–8 Nov)</strong>, when applications rose to 7 —
-        the highest weekly application count in the window. Overall app rate {overallApp}%.
+        <strong style={{ color:"#f1f5f9" }}>W4 (12–18 Oct) was the busiest week at 19 submissions</strong> —
+        led by 13 enquiries, the highest enquiry week in the window. Applications held at 4/wk in every other week through W6 (6 in W4).
+        <strong style={{ color:"#f1f5f9" }}> Enquiries fell to zero in W6 (26 Oct–1 Nov) but recovered to 4 in W7 and 5 in W8 (9–15 Nov)</strong>.
+        Applications peaked at 7 in W7 (2–8 Nov) and held at 6 in W8. Overall app rate {overallApp}%.
       </div>
 
       {/* KPIs */}
@@ -348,10 +347,10 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop:16, fontSize:11, color:"#475569", textAlign:"center" }}>
-        CTID786 · CS &amp; COOP LO L5 · 14 Sep – 8 Nov 2026 · Irish time boundaries ·
-        Unique contacts (last submission per contact) · 38 ENQ / 37 APP · No test records excluded · No duplicates merged ·
-        All weeks (W1–W8) freshly processed from 9 Nov 2026 CSV exports · traffic source from form + HubSpot contact UTMs, 9 Nov 2026 ·
-        26 Oct–1 Nov applications revised 6→4 (2 applicants resubmitted in W8 — latest submission kept)
+        CTID786 · CS &amp; COOP LO L5 · 21 Sep – 15 Nov 2026 · Irish time boundaries ·
+        Unique contacts (last submission per contact) · 42 ENQ / 39 APP · No test records excluded · No duplicates merged ·
+        All weeks (W1–W8) freshly processed from 17 Nov 2026 CSV exports · W1–W7 match the previous run ·
+        traffic source from form + HubSpot contact UTMs, 17 Nov 2026
       </p>
     </div>
   );
