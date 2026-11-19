@@ -7,23 +7,24 @@ import {
 // ── DATA ─────────────────────────────────────────────────────────────────────
 // CTID742 — SNA Level 5 & 6 (Live and Online)
 // Rolling window: last 8 completed Mon–Sun weeks · W9 partial if included
-// W1 = Mon 14 Sep 2026 · W8 = Sun 8 Nov 2026 · W9 = 9–12 Nov 2026 ⚡ partial
-// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 12 Nov 2026)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__26_.csv
-//   58 in-window regs · 116 pre-window regs (1 Apr–12 Sep, €83,213.93) excluded
-//   0 email dupes · 0 jean rows · 7 Refunded Not Registered + 1 App form o/st + 1 In progress (Emma Allen, 10 Nov — excluded per Jean) excluded
-//   Price tiers: €733.95 ×33 · €689.00 ×22 · €709.49 ×2 · €734.00 ×1
+// W1 = Mon 21 Sep 2026 · W8 = Sun 15 Nov 2026 · W9 = 16–19 Nov 2026 ⚡ partial
+// Forms: from ctid742_enq_vs_app_weekly.jsx (freshly processed 19 Nov 2026)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__30_.csv
+//   52 in-window regs · 125 pre-window regs (1 Apr–19 Sep, €89,684.63) excluded
+//   0 email dupes · 0 jean rows · 7 Refunded Not Registered + 1 App form o/st excluded
+//   Emma Allen (10 Nov) now Registered (was In progress on 12 Nov) — included in W8
+//   Price tiers: €733.95 ×29 · €689.00 ×20 · €709.49 ×2 · €734.00 ×1
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "14–20 Sep",     forms: 39, regs: 9,  revenue: 6470.70,  full: true  },
   { week: "21–27 Sep",     forms: 25, regs: 15, revenue: 10559.75, full: true  },
   { week: "28 Sep–4 Oct",  forms: 30, regs: 7,  revenue: 5092.70,  full: true  },
   { week: "5–11 Oct",      forms: 35, regs: 5,  revenue: 3624.80,  full: true  },
   { week: "12–18 Oct",     forms: 28, regs: 9,  revenue: 6466.78,  full: true  },
   { week: "19–25 Oct",     forms: 16, regs: 3,  revenue: 2111.95,  full: true  },
-  { week: "26 Oct–1 Nov",  forms: 18, regs: 4,  revenue: 2890.85,  full: true  },
+  { week: "26 Oct–1 Nov",  forms: 17, regs: 4,  revenue: 2890.85,  full: true  },
   { week: "2–8 Nov",       forms: 25, regs: 6,  revenue: 4313.80,  full: true  },
-  { week: "9–12 Nov ⚡",    forms: 14, regs: 0,  revenue: 0,        full: false },
+  { week: "9–15 Nov",      forms: 23, regs: 2,  revenue: 1467.90,  full: true  },
+  { week: "16–19 Nov ⚡",   forms: 14, regs: 1,  revenue: 689.00,   full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +(d.regs / d.forms * 100).toFixed(1) : 0
@@ -103,7 +104,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations &amp; Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          14 Sep – 12 Nov 2026 · 8 full weeks + W9 partial ⚡ · 116 pre-window regs (€83,213.93) excluded
+          21 Sep – 19 Nov 2026 · 8 full weeks + W9 partial ⚡ · 125 pre-window regs (€89,684.63) excluded
         </p>
       </div>
 
@@ -113,11 +114,11 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7
       }}>
         <strong style={{ color: "#34d399" }}>📌 Key characteristic: </strong>
-        W2 (21–27 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>15 registrations from 25 forms (60.0% CR)</strong> generating
-        €10,559.75 (25% of in-window revenue). W1 (14–20 Sep) was the peak forms week (39) and converted 9 registrations; W4 (5–11 Oct)
-        had 35 forms but the lowest full-week CR at 14.3%. W6–W8 brought 13 registrations (€9,316.60), with W8 (2–8 Nov) recovering
-        to 24.0% CR (6 regs, €4,313.80). Overall CR is {overallCR}% across 8 full weeks plus W9. W9 (9–12 Nov ⚡) has 0 registrations
-        from 14 forms so far — Paythen data runs to 11 Nov.
+        W1 (21–27 Sep) is the standout week — <strong style={{ color: "#f1f5f9" }}>15 registrations from 25 forms (60.0% CR)</strong> generating
+        €10,559.75 (28% of in-window revenue). W3 (5–11 Oct) was the peak forms week (35) but converted only 5 registrations (14.3%).
+        W5–W8 brought 15 registrations (€10,784.50); W7 (2–8 Nov) was the strongest of those at 24.0% CR (6 regs, €4,313.80), while
+        W8 (9–15 Nov) had the lowest full-week CR at 8.7% (2 regs from 23 forms). Overall CR is {overallCR}% across 8 full weeks plus W9.
+        W9 (16–19 Nov ⚡) has 1 registration from 14 forms so far — Paythen data runs to 18 Nov.
       </div>
 
       {/* KPI cards */}
@@ -254,7 +255,7 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 14, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        Updated 12 Nov 2026 · 58 in-window registrations · 116 pre-window regs (€83,213.93) excluded · 9 non-Registered rows excluded (7 refunded, 1 app form o/st, 1 in progress) · no duplicate emails detected
+        Updated 19 Nov 2026 · 52 in-window registrations · 125 pre-window regs (€89,684.63) excluded · 8 non-Registered rows excluded (7 refunded, 1 app form o/st) · no duplicate emails detected
       </p>
 
     </div>

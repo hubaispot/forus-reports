@@ -5,24 +5,25 @@ import {
 } from "recharts";
 
 // ── CTID379 — SNA Level 6 – Live and Online ───────────────────────────────
-// Generated: 12 Nov 2026 | W1 14 Sep → W8 8 Nov · W9 9–12 Nov 2026 (partial ⚡)
-// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (ENQ 86 + APP 1 unique, 12 Nov; jean + jean+ alias test rows excluded)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__26_.csv · 122 Registered rows → 121 unique emails → 35 in-window
-//   86 pre-window excluded (before 14 Sep, €39,117.75) · Price tiers in window: €455.00 ×17 · €461.83 ×13 · €462.00 ×3 · €440.00 ×1 · €194.25 ×1
+// Generated: 19 Nov 2026 | W1 21 Sep → W8 15 Nov · W9 16–19 Nov 2026 (partial ⚡)
+// Forms: ENQ+APP from ctid379_enq_vs_app_weekly.jsx (ENQ 82 + APP 1 unique, 19 Nov; 0 jean test rows in export)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__30_.csv · 126 Registered rows → 125 unique emails → 1 reassigned → 36 in-window
+//   88 pre-window excluded (before 21 Sep, €40,034.75) · Price tiers in window: €455.00 ×20 · €461.83 ×13 · €462.00 ×2 · €194.25 ×1
+//   Kristopher Stewart (11 Nov, €440.00): tagged CTID379 but course is L6 Online Anytime 6N1957 OA — moved to CTID423 (SNA OA report) per Jean, 19 Nov
 // Excluded non-Registered: 1 Refunded Not Registered (Anna Marie Mulholland, 5 May)
-// Ella O'Neill: 2 Registered rows (20 May + 13 Oct) — both genuine (reconfirmed 12 Nov); 20 May pre-window, 13 Oct counted in W5
-// Cian Naylor (6 Oct): previously blank status, now Registered — counted in W4
+// Ella O'Neill: 2 Registered rows (20 May + 13 Oct) — both genuine (reconfirmed 12 Nov); 20 May pre-window, 13 Oct counted in W4
+// Cian Naylor (6 Oct): Registered — counted in W3
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "14 Sep–20 Sep",    forms: 10, regs: 2, revenue:  917.00, full: true  },
   { week: "21 Sep–27 Sep",    forms: 20, regs: 6, revenue: 2743.66, full: true  },
   { week: "28 Sep–4 Oct",     forms:  7, regs: 6, revenue: 2757.49, full: true  },
   { week: "5 Oct–11 Oct",     forms: 14, regs: 4, revenue: 1840.66, full: true  },
-  { week: "12 Oct–18 Oct",    forms: 12, regs: 3, revenue: 1371.83, full: true  },
+  { week: "12 Oct–18 Oct",    forms: 11, regs: 3, revenue: 1371.83, full: true  },
   { week: "19 Oct–25 Oct",    forms:  1, regs: 2, revenue:  916.83, full: true  },
   { week: "26 Oct–1 Nov",     forms:  5, regs: 3, revenue: 1371.83, full: true  },
   { week: "2 Nov–8 Nov",      forms: 13, regs: 6, revenue: 2482.91, full: true  },
-  { week: "9 Nov–12 Nov ⚡",   forms:  5, regs: 3, revenue: 1356.83, full: false },
+  { week: "9 Nov–15 Nov",     forms:  6, regs: 3, revenue: 1371.83, full: true  },
+  { week: "16 Nov–19 Nov ⚡",  forms:  6, regs: 3, revenue: 1365.00, full: false },
 ].map(d => ({
   ...d,
   cr: d.forms > 0 ? +((d.regs / d.forms) * 100).toFixed(1) : 0,
@@ -97,7 +98,7 @@ export default function App() {
           Weekly Combined Report — Forms, Registrations & Revenue
         </h1>
         <p style={{ margin: 0, color: "#94a3b8", fontSize: 13 }}>
-          14 Sep – 12 Nov 2026 · W1–W8 complete + W9 partial ⚡ · Paythen: 86 pre-window registrations excluded
+          21 Sep – 19 Nov 2026 · W1–W8 complete + W9 partial ⚡ · Paythen: 88 pre-window registrations excluded
         </p>
       </div>
 
@@ -106,11 +107,11 @@ export default function App() {
         padding: "10px 14px", marginBottom: 20, fontSize: 12, color: "#94a3b8", lineHeight: 1.7 }}>
         <strong style={{ color: "#fb923c" }}>📌 Note: </strong>
         CTID379 application form counts are likely <strong style={{ color: "#f1f5f9" }}>understated</strong> —
-        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 35)
+        some applications may route to the B2C Single Modules pipeline. Paythen registrations (in-window: 36)
         provide a more complete signal of actual enrolments. Overall conversion rate from forms to Paythen
-        registrations: <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W2 (21–27 Sep) and W8 (2–8 Nov) led with 6
-        registrations each; W6 (19–25 Oct) shows 2 registrations against 1 form (†). W9 (9–12 Nov ⚡) has 3 registrations
-        (€1,356.83) so far; Paythen data runs to 11 Nov.
+        registrations: <strong style={{ color: "#f1f5f9" }}>{overallCR}%</strong>. W1 (21–27 Sep), W2 (28 Sep–4 Oct) and W7 (2–8 Nov) led with 6
+        registrations each; W5 (19–25 Oct) shows 2 registrations against 1 form (†). W8 (9–15 Nov) converted 3 from 6 forms (50.0%).
+        W9 (16–19 Nov ⚡) has 3 registrations (€1,365.00) so far; Paythen data runs to 18 Nov.
       </div>
 
       {/* KPI Cards */}
@@ -237,8 +238,8 @@ export default function App() {
 
       {/* Footer */}
       <p style={{ marginTop: 12, fontSize: 11, color: "#475569", textAlign: "center" }}>
-        CTID379 · SNA L6 LO · Generated 12 Nov 2026 · Forms: ENQ 86 + APP 1 unique contacts ·
-        Paythen: 122 Registered (121 unique) → 35 in-window · 86 pre-window excluded (before 14 Sep, €39,117.75) ·
+        CTID379 · SNA L6 LO · Generated 19 Nov 2026 · Forms: ENQ 82 + APP 1 unique contacts ·
+        Paythen: 126 Registered (125 unique) → 36 in-window (1 reassigned to CTID423) · 88 pre-window excluded (before 21 Sep, €40,034.75) ·
         1 non-Registered excluded (refunded) · W9 partial ⚡ Mon–Thu
       </p>
       <p style={{ marginTop: 4, fontSize: 11, color: "#475569", textAlign: "center" }}>

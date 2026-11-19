@@ -13,12 +13,11 @@ import {
 //                 append " ⚡" to the week label e.g. "9–11 Jun ⚡"
 // If include_current_week = false, all 8 rows have full: true — no ⚡ row.
 // ─────────────────────────────────────────────────────────────────────────────
-// CTID490 + CTID423 — SNA Online Anytime · Generated 12 Nov 2026
-// W1 14 Sep → W8 8 Nov · W9 9–12 Nov ⚡ partial · HubSpot XLSX → Sheets CSV (UTC → Europe/Dublin)
-// ENQ 423 + 490: 26 raw (21 + 5) → 24 unique (repeats: Lauren Grant ×3) · APP: CTID423 only (CTID490 has no application form), 2 raw → 2 unique
+// CTID490 + CTID423 — SNA Online Anytime · Generated 19 Nov 2026
+// W1 21 Sep → W8 15 Nov · W9 16–19 Nov ⚡ partial · HubSpot XLSX → Sheets CSV (UTC → Europe/Dublin)
+// ENQ 423 + 490: 26 raw (20 + 6) → 24 unique (repeats: Lauren Grant ×3) · APP: CTID423 only (CTID490 has no application form), 2 raw → 2 unique
 // 0 cross-CTID overlaps · 0 phone dupes · 0 jean/jean+ test rows · 0 rows outside window
 export const data = [
-  { week: "14–20 Sep",       enq: 3, app: 0, full: true  },
   { week: "21–27 Sep",       enq: 3, app: 0, full: true  },
   { week: "28 Sep–4 Oct",    enq: 4, app: 1, full: true  },
   { week: "5–11 Oct",        enq: 3, app: 1, full: true  },
@@ -26,7 +25,8 @@ export const data = [
   { week: "19–25 Oct",       enq: 2, app: 0, full: true  },
   { week: "26 Oct–1 Nov",    enq: 3, app: 0, full: true  },
   { week: "2–8 Nov",         enq: 3, app: 0, full: true  },
-  { week: "9–12 Nov ⚡",      enq: 3, app: 0, full: false },
+  { week: "9–15 Nov",        enq: 5, app: 0, full: true  },
+  { week: "16–19 Nov ⚡",     enq: 1, app: 0, full: false },
 ].map(d => ({ ...d, total: d.enq + d.app, appRate: (d.enq + d.app) > 0 ? +(d.app / (d.enq + d.app) * 100).toFixed(0) : 0 }));
 
 const fullWeeks  = data.filter(d => d.full);
@@ -39,12 +39,12 @@ const overallApp = Math.round(totalApp / total * 100);
 
 const COLORS = { enq:"#fb923c", app:"#38bdf8", rate:"#a78bfa" };
 
-// ── UTM TRAFFIC SOURCE (W1–W9, 14 Sep–12 Nov · 26 forms · 26 contacts) — CTID742 template, refreshed 12 Nov 2026 ──────
-// Source: form-submission UTMs (CTID423 ENQ and CTID423 APP exports carry UTM columns) + HubSpot contact utm_source / utm_medium (pulled 12 Nov 2026)
-// CTID490 ENQ export has no UTM columns → contact UTMs only for those 5 forms (CTID490 has no application form)
+// ── UTM TRAFFIC SOURCE (W1–W9, 21 Sep–19 Nov · 26 forms · 26 contacts) — CTID742 template, refreshed 19 Nov 2026 ──────
+// Source: form-submission UTMs (CTID423 ENQ export carries UTM columns) + HubSpot contact utm_source / utm_medium (pulled 19 Nov 2026)
+// CTID490 ENQ and CTID423 APP exports have no UTM columns this run → contact UTMs only for those 8 forms (CTID490 has no application form)
 // Priority: Facebook → Google Ads / Instagram → HubSpot email → AI search → Website → Unknown
 // Known form source beats HubSpot email on the contact · website + medium clue (email / paid-social / ppc / Facebook_*) → classified by medium
-// Website upgraded from contact: Natasha Boyd → Google Ads · Mary Condon, Annette Kenny → Facebook · 5 CTID490 enquiries Unknown → Website
+// Website upgraded from contact: Rebecca O'Boyle → Google Ads · Mary Condon, Annette Kenny → Facebook · 6 CTID490 enquiries Unknown → Website
 // Counted per form: no contacts submitted both ENQ and APP · zero-count categories hidden from the pie · order: largest first, Unknown last
 export const utmData = [
   { name: "Website",          enq:  19, app:   0, color: "#34d399" },
@@ -148,7 +148,7 @@ const UtmPanel = ({ form, setForm, showUnknown, setShowUnknown }) => {
             </p>
           )}
           <p style={{ margin: "6px 4px 0", fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>
-            Form + HubSpot contact UTM source/medium · 14 Sep – 12 Nov 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
+            Form + HubSpot contact UTM source/medium · 21 Sep – 19 Nov 2026 · counted per form (contacts who submitted both ENQ and APP count in each).
             Unknown = no UTMs recorded on the contact.
           </p>
         </div>
@@ -218,7 +218,7 @@ export default function App() {
           Weekly Form Submissions — Enquiry vs Application
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          14 Sep – 12 Nov 2026 · Unique contacts · last form only per contact
+          21 Sep – 19 Nov 2026 · Unique contacts · last form only per contact
         </p>
       </div>
 
@@ -228,8 +228,9 @@ export default function App() {
         <strong style={{ color:"#34d399" }}>📌 Key characteristic: </strong>
         SNA OA (CTID490 + CTID423) shows a <strong style={{ color:"#f1f5f9" }}>healthy enquiry flow but low application conversion</strong> —
         enquiries average {avgEnq}/wk against {avgApp} applications/wk, an overall app rate of {overallApp}%.
-        The only applications in the window came in W3 (28 Sep–4 Oct) and W4 (5–11 Oct), one each, with none since 7 Oct;
-        W5 (12–18 Oct) had no submissions on either form. Enquiries combine both CTIDs (CTID423: 19, CTID490: 5);
+        The only applications in the window came in W2 (28 Sep–4 Oct) and W3 (5–11 Oct), one each, with none since 7 Oct;
+        W4 (12–18 Oct) had no submissions on either form. W8 (9–15 Nov) was the best enquiry week at 5.
+        Enquiries combine both CTIDs (CTID423: 18, CTID490: 6);
         applications are CTID423 only, as CTID490 has no application form. No cross-CTID overlaps this window
         (Lauren Grant's 3 same-day CTID423 enquiries counted once).
       </div>

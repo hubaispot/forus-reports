@@ -4,15 +4,15 @@ import {
   Tooltip, ResponsiveContainer, Legend, ReferenceLine
 } from "recharts";
 
-// ── CTID490 + CTID423 — SNA Online Anytime · Generated 12 Nov 2026 ────────────
-// W1 14 Sep → W8 8 Nov · W9 9–12 Nov ⚡ partial
-// Forms: ENQ+APP from sna_online_anytime_enq_vs_app_weekly.jsx (ENQ 24 [423: 19 · 490: 5] + APP 2 unique [CTID423 only — CTID490 has no application form], 12 Nov)
-// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__26_.csv · 66 rows (all Registered) → 18 in-window
-//   48 pre-window excluded (before 14 Sep, €17,544.65) · 0 email dupes · 0 jean/jean+ rows
-//   CTID490: 8 regs €2,448.50 (€309.75 ×6 · €295.00 ×2) · CTID423: 10 regs €4,554.00 (€462.00 ×7 · €440.00 ×3)
+// ── CTID490 + CTID423 — SNA Online Anytime · Generated 19 Nov 2026 ────────────
+// W1 21 Sep → W8 15 Nov · W9 16–19 Nov ⚡ partial
+// Forms: ENQ+APP from sna_online_anytime_enq_vs_app_weekly.jsx (ENQ 24 [423: 18 · 490: 6] + APP 2 unique [CTID423 only — CTID490 has no application form], 19 Nov)
+// Paythen: Courses_Expected_Revenue_CTID_-_Filtered__30_.csv · 66 rows (all Registered) + 1 reassigned → 16 in-window
+//   51 pre-window excluded (before 21 Sep, €18,778.40) · 0 email dupes · 0 jean/jean+ rows
+//   Kristopher Stewart (11 Nov, €440.00): tagged "SNA L6 LO - CTID379" but course is L6 Online Anytime 6N1957 OA — moved to CTID423 per Jean, 19 Nov
+//   CTID490: 7 regs €2,138.75 (€309.75 ×5 · €295.00 ×2) · CTID423: 9 regs €4,070.00 (€462.00 ×5 · €440.00 ×4)
 // ─────────────────────────────────────────────────────────────────────────────
 export const data = [
-  { week: "14–20 Sep",    forms: 3,  regs: 3, revenue: 1233.75,  full: true  },
   { week: "21–27 Sep",    forms: 3,  regs: 3, revenue: 1364.00,  full: true  },
   { week: "28 Sep–4 Oct", forms: 5,  regs: 2, revenue: 604.75,   full: true  },
   { week: "5–11 Oct",     forms: 4,  regs: 1, revenue: 295.00,   full: true  },
@@ -20,7 +20,8 @@ export const data = [
   { week: "19–25 Oct",    forms: 2,  regs: 1, revenue: 440.00,   full: true  },
   { week: "26 Oct–1 Nov", forms: 3,  regs: 2, revenue: 771.75,   full: true  },
   { week: "2–8 Nov",      forms: 3,  regs: 2, revenue: 902.00,   full: true  },
-  { week: "9–12 Nov ⚡",   forms: 3,  regs: 1, revenue: 462.00,   full: false },
+  { week: "9–15 Nov",     forms: 5,  regs: 2, revenue: 902.00,   full: true  },
+  { week: "16–19 Nov ⚡",  forms: 1,  regs: 0, revenue: 0,        full: false },
 ];
 
 const fullWeeks    = data.filter(d => d.full);
@@ -102,7 +103,7 @@ export default function App() {
           Weekly Combined Revenue Report
         </h1>
         <p style={{ margin:0, color:"#94a3b8", fontSize:13 }}>
-          14 Sep – 12 Nov 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
+          21 Sep – 19 Nov 2026 · 8 completed weeks + W9 ⚡ · Unique contacts
         </p>
       </div>
 
@@ -111,11 +112,11 @@ export default function App() {
         padding:"10px 14px", marginBottom:20, fontSize:12, color:"#94a3b8", lineHeight:1.7 }}>
         <strong style={{ color:"#34d399" }}>📌 Note: </strong>
         CTID490 (SNA L5 OA) and CTID423 (SNA L6 OA) share combined reporting.
-        W2 (21–27 Sep) was the top revenue week with <strong style={{ color:"#f1f5f9" }}>3 registrations and €1,364.00</strong>; W1 (14–20 Sep) and W5 (12–18 Oct) also had 3 registrations each.
-        CTID423 (L6) contributed €4,554.00 from 10 registrations; CTID490 (L5) €2,448.50 from 8. Applications are CTID423 only (CTID490 has no application form).
-        W5 (12–18 Oct) had 3 registrations (€929.25) despite no new forms that week.
+        W1 (21–27 Sep) was the top revenue week with <strong style={{ color:"#f1f5f9" }}>3 registrations and €1,364.00</strong>; W4 (12–18 Oct) also had 3 registrations.
+        CTID423 (L6) contributed €4,070.00 from 9 registrations; CTID490 (L5) €2,138.75 from 7. Applications are CTID423 only (CTID490 has no application form).
+        W4 (12–18 Oct) had 3 registrations (€929.25) despite no new forms that week. W8 includes Kristopher Stewart (€440.00), tagged CTID379 in Paythen but an L6 Online Anytime registration.
         CR% &gt; 100% in some weeks (†) reflects Paythen payments landing in a later week than the originating form submission — expected, not an error.
-        48 pre-window registrations (before 14 Sep, €17,544.65) excluded from weekly counts.
+        51 pre-window registrations (before 21 Sep, €18,778.40) excluded from weekly counts.
       </div>
 
       {/* KPIs */}
@@ -244,7 +245,7 @@ export default function App() {
       {/* Footer */}
       <p style={{ marginTop:12, fontSize:11, color:"#475569", textAlign:"center" }}>
         † CR% &gt; 100% where Paythen payment date falls in a later week than the originating form submission — expected behaviour, not an error. ·
-        48 pre-window Paythen registrations (before 14 Sep, €17,544.65) excluded · Paythen data to 11 Nov, processed 12 Nov 2026
+        51 pre-window Paythen registrations (before 21 Sep, €18,778.40) excluded · 1 registration reassigned from CTID379 (Kristopher Stewart) · Paythen data to 11 Nov, processed 19 Nov 2026
       </p>
     </div>
   );
